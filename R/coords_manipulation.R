@@ -24,6 +24,7 @@ coords_from_city <- function(city = NULL,
                              state = NULL,
                              county = NULL) {
   require("RJSONIO")
+  print("A cray message")
 
   CountryCoded <- paste("&countrycodes=", country_code, sep = "")
   extras <- c(city = city, state = state, region = region, county = county)
@@ -273,7 +274,7 @@ add_coords_manually <- function(csv_file, db_name) {
 #' if the map has to be done per region instead of per city.
 #'
 #' @export
-#' @examples
+#'
 #'
 webscrap_no_city <- function(db_name,
                              dat,

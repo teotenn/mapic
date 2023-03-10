@@ -154,7 +154,7 @@ with_default_aesthetics <- function(colors = NA, sizes = NA, legends = NA) {
 }
 
 ## TEST
-with_default_map_aes(list(dots_orgs = "orange"), list(text_city = 12))
+## with_default_map_aes(list(dots_orgs = "orange"), list(text_city = 12))
 
 
 

@@ -3,7 +3,7 @@
 ** TODO [#A] Change the use of tibbles and other external packages where possible
 ** TODO [#A] I am missing another important part here
 ** TODO [#B] Document all the functions
-** TODO [#B] Make the basic functions a package
+** DONE [#B] Make the basic functions a package
 ** TODO [#B] Test the package
 ** TODO [#B] Make a changelog
 ** TODO [#C] Dev possibility to use mySQL aside of SQLite

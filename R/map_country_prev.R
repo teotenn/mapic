@@ -2,7 +2,7 @@ map_country_prev <- function(country,
                              x_limits = NULL,
                              y_limits = NULL,
                              show_coords = FALSE,
-                             map_aes = cspii_aesthetics) {
+                             map_aes = default_aesthetics) {
   require(maps)
   require(ggplot2)
 
@@ -11,7 +11,7 @@ map_country_prev <- function(country,
   stopifnot(is.logical(show_coords))
   stopifnot("Name of the country should be character" = is.character(country))
 
-  map_aes <- create_map_aes(map_aes)
+  ##map_aes <- create_map_aes(map_aes)
 
   if (!country %in% map_data('world')$region) {
     stop(paste("Country name not recognized",
@@ -50,7 +50,7 @@ map_country_prev <- function(country,
   ## make a df with only the country to overlap
   map_data_country <- map_data('world')[map_data('world')$region == country, ]
   ## The map (maps + ggplot2 )
-  ggplot() +
+  the_map <- ggplot() +
     ## First layer: worldwide map
     geom_polygon(data = map_data("world"),
                  aes(x = long, y = lat, group = group),
@@ -68,5 +68,7 @@ map_country_prev <- function(country,
     ggtitle(paste0("A map of ", country)) +
     scale_x_continuous(n.breaks = 20) +
     scale_y_continuous(n.breaks = 20) +
-    return(map_country_theme)
+    map_country_theme
+
+  the_map
 }
