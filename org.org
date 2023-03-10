@@ -1,0 +1,11 @@
+* TO-DO
+** TODO [#A] Organize this file
+** TODO [#A] Change the use of tibbles and other external packages where possible
+** TODO [#A] I am missing another important part here
+** TODO [#B] Document all the functions
+** TODO [#B] Make the basic functions a package
+** TODO [#B] Test the package
+** TODO [#B] Make a changelog
+** TODO [#C] Dev possibility to use mySQL aside of SQLite
+Create two objects (or more) SQLite and MySQL, each with the require details AND table name. Then, apply the method based on the class of object selected. Use inheritance as well. Kind of father =db_class=, child =db_sqlite=
+** TODO [#C] Create the basic map with cities on top of the prev map using ggplot style
