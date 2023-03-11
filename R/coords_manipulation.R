@@ -103,13 +103,13 @@ coords_from_city <- function(city = NULL,
 #' If bugs are found regarding this behaviour conflicting with the database, please report it immediately.
 #' @export
 webscrap_to_db <- function(db_name,
-                               dat,
-                               city = "City",
-                               country = "Country",
-                               region = NULL,
-                               state = NULL,
-                               county = NULL,
-                               db_backup_after = 10) {
+                           dat,
+                           city = "City",
+                           country = "Country",
+                           region = NULL,
+                           state = NULL,
+                           county = NULL,
+                           db_backup_after = 10) {
     require(RSQLite)
     require(dplyr)
 
@@ -161,7 +161,7 @@ webscrap_to_db <- function(db_name,
             } else {
                 ## If not not yet exists, go to OSM API
                 coords <- coords_from_city(rcity, rcountry,
-                                           Region = rg, State = st, County = ct)
+                                           region = rg, state = st, county = ct)
                 ## DF exact replica of DB
                 coords <- cbind(ID = dat_local[["ID"]][i],
                                 City = rcity,

@@ -1,0 +1,158 @@
+library(testthat)
+
+##make_test_dat <- function() {
+## Create testing data
+t.dat <- data.frame(ID = c(1:10),
+                    Name = sprintf("org%d", seq(1:10)),
+                    Type = "None",
+                    Registration_year = c(2001:2010),
+                    End_year = 2021,
+                    Country = "MX",
+                    Region = c("Mexico",
+                               "Baja California Norte",
+                               "Mexico",
+                               "Jalisco",
+                               "Queretaro",
+                               "Baja California Norte",
+                               "Mexico",
+                               "Morelos",
+                               "Mexico",
+                               "Estado de Mexico"),
+                    City = c("Ciudad de Mexico",
+                             "Tijuana",
+                             "Ciudad de Mexico",
+                             "Guadalajara",
+                             "Queretaro",
+                             "Tijuana",
+                             "Ciudad de Mexico",
+                             "Cuernavaca",
+                             "Ciudad de Mexico",
+                             "Texcoco"),
+                    Source = "None")
+t.dat.copy <- t.dat
+
+
+### ---------- T E S T S ---------- ###
+test_that("coords_from_city: Found results", {
+  ## Case:
+  ## obtaining coords from open street maps for CITY ONLY
+  found <- coords_from_city(city = t.dat$City[1],
+                            country_code = t.dat$Country[1])
+  ## Case:
+  ## obtaining coords from open street maps Using region
+  found_region <- coords_from_city(city = t.dat$City[2],
+                                   country_code = t.dat$Country[2],
+                                   region = t.dat$Region[2])
+  ## Case:
+  ## obtaining coords from open street maps Using state
+  found_state <- coords_from_city(city = t.dat$City[2],
+                                  country_code = t.dat$Country[2],
+                                  state = t.dat$Region[2])
+  ## TESTS
+  expect_s3_class(found, "data.frame")
+  expect_equal(ncol(found), 3)
+  expect_s3_class(found_state, "data.frame")
+  expect_equal(ncol(found_state), 3)
+  expect_s3_class(found_region, "data.frame")
+  expect_equal(ncol(found_region), 3)
+})
+
+
+test_that("coords_from_city: Not found results", {
+  ## Case:
+  ## No results found
+  not_found <- coords_from_city(city = t.dat$City[1],
+                                country_code = t.dat$Country[1],
+                                state = t.dat$Region[1])
+  ## Case:
+  ## Not found coords due to wrong state or region
+  not_found_state <- coords_from_city(city = t.dat$City[1],
+                                      country_code = t.dat$Country[1],
+                                      state = t.dat$Region[1])
+  ## TESTS
+  expect_s3_class(not_found, "data.frame")
+  expect_equal(ncol(not_found), 3)
+  expect_s3_class(not_found_state, "data.frame")
+  expect_equal(ncol(not_found_state), 3)
+})
+
+
+## TEST FUNCTION: <webscrap_to_sqlite> -------------------------------|
+
+## Find a suitable test, for now test results below
+webscrap_to_db(db_name = "test.sqlite",
+               dat = t.dat,
+               city = "City",
+               country = "Country",
+               state = "Region",
+               db_backup_after = 5)
+## RESULTS:
+## 1) Not found Ciudad de Mexico
+## 2) Found everything else
+## 3) Tijuana already in DB
+## ------------------------------------------------------------------|
+
+test_that("import_db_as_df: returns a data frame", {
+    db_as_df <- import_db_as_df("test.sqlite")
+    ## TESTS
+    expect_s3_class(db_as_df, "data.frame")
+    expect_equal(nrow(filter(db_as_df, is.na(lat))), 4)
+    expect_equal(ncol(db_as_df), 9)
+    expect_vector(db_as_df$City, ptype = character())
+    expect_setequal(unique(db_as_df$Country), "MX")
+})
+
+
+test_that("remove_na_from_db", {
+    remove_na_from_db("test.sqlite")
+    db_as_df <- import_db_as_df("test.sqlite")
+    ## TESTS
+    expect_equal(nrow(db_as_df), 6)
+    expect_equal(nrow(filter(db_as_df, is.na(lat))), 0)
+})
+
+
+test_that("compare_db_data: error", {
+    expect_error(compare_db_data("test.sqlite", c(1, 2, 3)),
+                 "Incorrect data format")
+})
+
+
+test_that("compare_db_data: returns a data frame", {
+    missing <- compare_db_data("test.sqlite", t.dat)
+    ## TESTS
+    expect_s3_class(missing, "data.frame")
+    expect_equal(nrow(missing), 4)
+    expect_equal(ncol(missing), 9)
+    expect_vector(missing$City, ptype = character())
+    expect_setequal(missing$Country, rep("MX", 4))
+})
+
+
+test_that("combine_csv_sql: from data.frame", {
+    combined <- combine_csv_sql(db_file = "test.sqlite",
+                                csv_file = t.dat)
+    ## TESTS
+    expect_s3_class(combined, "data.frame")
+    expect_equal(nrow(combined), 6)
+    expect_equal(ncol(combined), 14)
+    expect_vector(combined$City, ptype = character())
+    expect_vector(combined$lon, ptype = double())
+    expect_setequal(combined$Country, rep("MX", 6))
+})
+
+
+test_that("add_coords_manually", {
+    to_add <- data.frame(ID = 1, City = "Ciudad de Mexico",
+                         Country = "MX", Region = "",
+                         State = "Mexico", County = "",
+                         osm_name = "", lon = 12, lat = 13)
+    add_coords_manually(to_add, "test.sqlite")
+    df_added <- import_db_as_df("test.sqlite")
+    webscrap_to_db("test.sqlite", t.dat, state = "Region")
+    df_complete <- import_db_as_df("test.sqlite")
+    expect_equal(nrow(df_added), 7)
+    expect_equal(nrow(df_complete), 10)
+})
+
+file.remove("test.sqlite")

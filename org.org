@@ -1,10 +1,11 @@
 * TO-DO
-** TODO [#A] Organize this file
+** TODO [#A] Test the package
+*** TODO Test passed but messages "A cray message" are unexpected. Check!
+*** TODO Some functions still miss test. Do!
 ** TODO [#A] Change the use of tibbles and other external packages where possible
-** TODO [#A] I am missing another important part here
+** TODO [#A] Organize this file
 ** TODO [#B] Document all the functions
 ** DONE [#B] Make the basic functions a package
-** TODO [#B] Test the package
 ** TODO [#B] Make a changelog
 ** TODO [#C] Dev possibility to use mySQL aside of SQLite
 Create two objects (or more) SQLite and MySQL, each with the require details AND table name. Then, apply the method based on the class of object selected. Use inheritance as well. Kind of father =db_class=, child =db_sqlite=
