@@ -24,7 +24,6 @@ coords_from_city <- function(city = NULL,
                              state = NULL,
                              county = NULL) {
   require("RJSONIO")
-  print("A cray message")
 
   CountryCoded <- paste("&countrycodes=", country_code, sep = "")
   extras <- c(city = city, state = state, region = region, county = county)
@@ -293,9 +292,9 @@ webscrap_no_city <- function(db_name,
   }
   dat$City <- as.character(NA)
 
-  webscrap_to_sqlite(db_name = db_name,
-                     dat = dat,
-                     region = region,
-                     state = state,
-                     county = county)
+  webscrap_to_db(db_name = db_name,
+                 dat = dat,
+                 region = region,
+                 state = state,
+                 county = county)
 }

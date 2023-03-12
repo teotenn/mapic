@@ -155,4 +155,21 @@ test_that("add_coords_manually", {
     expect_equal(nrow(df_complete), 10)
 })
 
+
+test_that("webscrap_no_city", {
+  new_state <- data.frame(ID = 11,
+                          Name = "org11",
+                          Type = "none",
+                          Registration_year = 2005,
+                          End_year = NA,
+                          Country = "MX",
+                          Region = "Tlaxcala",
+                          City = NA,
+                          Source = "none")
+  webscrap_no_city("test.sqlite", new_state, "Country", state = "Region")
+  df_added <- import_db_as_df("test.sqlite")
+  expect_equal(nrow(df_added), 11)
+})
+
+
 file.remove("test.sqlite")
