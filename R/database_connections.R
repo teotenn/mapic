@@ -12,10 +12,9 @@
 #' @examples
 #' x <- import_db_as_df("my_data.sqlite")
 import_db_as_df <- function(db_file) {
-    require(dplyr)
     require(RSQLite)
     con <- dbConnect(drv = RSQLite::SQLite(), dbname = db_file)
-    db <- as_tibble(dbReadTable(con, "orgs"))
+    db <- dbReadTable(con, "orgs")
     dbDisconnect(con)
     return(db)
 }
@@ -71,27 +70,27 @@ combine_csv_sql <- function(db_file, csv_file, city = "City") {
 
   if (is.character(csv_file)) {
     if (grepl(".csv", csv_file, fixed = TRUE)) {
-      tib <- read_csv(csv_file)
+      local_df <- read.csv(csv_file)
     } else {
       stop("Incorrect file format for data")
     }
   } else if (is.data.frame(csv_file)) {
-    tib <- csv_file
+    local_df <- csv_file
   } else {
     stop("Incorrect data format")
   }
 
-  cols_to_exclude <- names(tib)[names(tib) %in% c("Country", "Region", "State", "County")]
+  cols_to_exclude <- names(local_df)[names(local_df) %in% c("Country", "Region", "State", "County")]
   if (length(cols_to_exclude) != 0) {
-    tib <- select(tib, -all_of(cols_to_exclude))
+    local_df <- select(local_df, -all_of(cols_to_exclude))
   }
-  if (!any(names(tib) == city)) {
+  if (!any(names(local_df) == city)) {
     stop(paste("Field", city, "not found in data frame", sep = " "))
   }
 
-  names(tib)[names(tib) == city] <- "City"
+  names(local_df)[names(local_df) == city] <- "City"
   db <- import_db_as_df(db_file)
-  result <- inner_join(tib, db, by = c("ID", "City"))
+  result <- inner_join(local_df, db, by = c("ID", "City"))
   return(result)
 }
 
@@ -121,16 +120,16 @@ compare_db_data <- function(db_file, dat) {
   require(RSQLite)
   if (is.character(dat)) {
     if (grepl(".csv", dat, fixed = TRUE)) {
-      tib <- read_csv(dat)
+      local_df <- read.csv(dat)
     } else {
       stop("Incorrect file format for data")
     }
   } else if (is.data.frame(dat)) {
-    tib <- dat
+    local_df <- dat
   } else {
     stop("Incorrect data format")
   }
   db <- import_db_as_df(db_file)
-  filtered <- filter(tib, !(as.character(ID) %in% as.character(db$ID)))
+  filtered <- filter(local_df, !(as.character(ID) %in% as.character(db$ID)))
   return(filtered)
 }

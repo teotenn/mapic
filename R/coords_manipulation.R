@@ -126,7 +126,7 @@ webscrap_to_db <- function(db_name,
                      lon REAL,
                      lat REAL)")
     ## And load it
-    db <- as_tibble(dbReadTable(con, "orgs"))
+    db <- dbReadTable(con, "orgs")
     ## Filtering the data
     new_coords <- data.frame()
     dat_local <- compare_db_data(db_name, dat)
@@ -218,34 +218,34 @@ webscrap_to_db <- function(db_name,
 add_coords_manually <- function(csv_file, db_name) {
   require(dplyr)
   require(RSQLite)
-  require(readr)
+  #require(readr)
 
   if (is.character(csv_file)) {
     if (grepl(".csv", csv_file, fixed = TRUE)) {
-      tib <- read_csv(csv_file, show_col_types = FALSE)
+      local_df <- read.csv(csv_file)
     } else {
       stop("Incorrect file format for data")
     }
   } else if (is.data.frame(csv_file)) {
-    tib <- csv_file
+    local_df <- csv_file
   } else {
     stop("Incorrect data format")
   }
 
   db_df <- import_db_as_df(db_name)
-  if (any(!names(db_df) %in% names(tib))) {
+  if (any(!names(db_df) %in% names(local_df))) {
     stop(cat("The dataset with the missing info is missing columns or the names are not correct.\nCorrect names of the fields/columns are:\n",
              names(db_df), "\n"))
-  } else if (any(tib$ID %in% db_df$ID)) {
+  } else if (any(local_df$ID %in% db_df$ID)) {
     stop(cat("The following ID fields are already present in the database:\n",
-             tib$ID[tib$ID %in% db_df$ID], "\n"))
-  } else if (any(is.na(tib$lon) | is.na(tib$lat) | is.na(tib$ID))) {
+             local_df$ID[local_df$ID %in% db_df$ID], "\n"))
+  } else if (any(is.na(local_df$lon) | is.na(local_df$lat) | is.na(local_df$ID))) {
     stop("Data missing for either ID, lat or long")
   } else {
-    tib <- tib %>% mutate_all(~replace(., is.na(.), ""))
+    local_df <- local_df %>% mutate_all(~replace(., is.na(.), ""))
     ## Send the values to DB and
     con <- dbConnect(drv = SQLite(), dbname = db_name)
-    dbWriteTable(con, "orgs", tib, append = TRUE)
+    dbWriteTable(con, "orgs", local_df, append = TRUE)
     dbDisconnect(con)
   }
 }

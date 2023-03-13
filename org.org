@@ -1,8 +1,4 @@
 * TO-DO
-** TODO [#A] Test the package
-*** TODO Test passed but messages "A cray message" are unexpected. Check!
-*** TODO Some functions still miss test. Do!
-** TODO [#A] Change the use of tibbles and other external packages where possible
 ** TODO [#A] Organize this file
 ** TODO [#B] Document all the functions
 ** DONE [#B] Make the basic functions a package

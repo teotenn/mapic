@@ -1,8 +1,7 @@
 library(testthat)
 
-##make_test_dat <- function() {
 ## Create testing data
-t.dat <- data.frame(ID = c(1:10),
+t_dat <- data.frame(ID = c(1:10),
                     Name = sprintf("org%d", seq(1:10)),
                     Type = "None",
                     Registration_year = c(2001:2010),
@@ -29,25 +28,24 @@ t.dat <- data.frame(ID = c(1:10),
                              "Ciudad de Mexico",
                              "Texcoco"),
                     Source = "None")
-t.dat.copy <- t.dat
 
 
 ### ---------- T E S T S ---------- ###
 test_that("coords_from_city: Found results", {
   ## Case:
   ## obtaining coords from open street maps for CITY ONLY
-  found <- coords_from_city(city = t.dat$City[1],
-                            country_code = t.dat$Country[1])
+  found <- coords_from_city(city = t_dat$City[1],
+                            country_code = t_dat$Country[1])
   ## Case:
   ## obtaining coords from open street maps Using region
-  found_region <- coords_from_city(city = t.dat$City[2],
-                                   country_code = t.dat$Country[2],
-                                   region = t.dat$Region[2])
+  found_region <- coords_from_city(city = t_dat$City[2],
+                                   country_code = t_dat$Country[2],
+                                   region = t_dat$Region[2])
   ## Case:
   ## obtaining coords from open street maps Using state
-  found_state <- coords_from_city(city = t.dat$City[2],
-                                  country_code = t.dat$Country[2],
-                                  state = t.dat$Region[2])
+  found_state <- coords_from_city(city = t_dat$City[2],
+                                  country_code = t_dat$Country[2],
+                                  state = t_dat$Region[2])
   ## TESTS
   expect_s3_class(found, "data.frame")
   expect_equal(ncol(found), 3)
@@ -61,14 +59,14 @@ test_that("coords_from_city: Found results", {
 test_that("coords_from_city: Not found results", {
   ## Case:
   ## No results found
-  not_found <- coords_from_city(city = t.dat$City[1],
-                                country_code = t.dat$Country[1],
-                                state = t.dat$Region[1])
+  not_found <- coords_from_city(city = t_dat$City[1],
+                                country_code = t_dat$Country[1],
+                                state = t_dat$Region[1])
   ## Case:
   ## Not found coords due to wrong state or region
-  not_found_state <- coords_from_city(city = t.dat$City[1],
-                                      country_code = t.dat$Country[1],
-                                      state = t.dat$Region[1])
+  not_found_state <- coords_from_city(city = t_dat$City[1],
+                                      country_code = t_dat$Country[1],
+                                      state = t_dat$Region[1])
   ## TESTS
   expect_s3_class(not_found, "data.frame")
   expect_equal(ncol(not_found), 3)
@@ -81,7 +79,7 @@ test_that("coords_from_city: Not found results", {
 
 ## Find a suitable test, for now test results below
 webscrap_to_db(db_name = "test.sqlite",
-               dat = t.dat,
+               dat = t_dat,
                city = "City",
                country = "Country",
                state = "Region",
@@ -119,7 +117,7 @@ test_that("compare_db_data: error", {
 
 
 test_that("compare_db_data: returns a data frame", {
-    missing <- compare_db_data("test.sqlite", t.dat)
+    missing <- compare_db_data("test.sqlite", t_dat)
     ## TESTS
     expect_s3_class(missing, "data.frame")
     expect_equal(nrow(missing), 4)
@@ -131,7 +129,7 @@ test_that("compare_db_data: returns a data frame", {
 
 test_that("combine_csv_sql: from data.frame", {
     combined <- combine_csv_sql(db_file = "test.sqlite",
-                                csv_file = t.dat)
+                                csv_file = t_dat)
     ## TESTS
     expect_s3_class(combined, "data.frame")
     expect_equal(nrow(combined), 6)
@@ -149,7 +147,7 @@ test_that("add_coords_manually", {
                          osm_name = "", lon = 12, lat = 13)
     add_coords_manually(to_add, "test.sqlite")
     df_added <- import_db_as_df("test.sqlite")
-    webscrap_to_db("test.sqlite", t.dat, state = "Region")
+    webscrap_to_db("test.sqlite", t_dat, state = "Region")
     df_complete <- import_db_as_df("test.sqlite")
     expect_equal(nrow(df_added), 7)
     expect_equal(nrow(df_complete), 10)
