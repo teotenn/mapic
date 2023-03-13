@@ -109,13 +109,13 @@ webscrap_to_db <- function(db_name,
                            state = NULL,
                            county = NULL,
                            db_backup_after = 10) {
-    require(RSQLite)
-    require(dplyr)
+  require(RSQLite)
+  require(dplyr)
 
-    ## Connect to db and table
-    con <- dbConnect(drv = SQLite(), dbname = db_name)
-    dbExecute(conn = con,
-              "CREATE TABLE IF NOT EXISTS orgs
+  ## Connect to db and table
+  con <- dbConnect(drv = SQLite(), dbname = db_name)
+  dbExecute(conn = con,
+            "CREATE TABLE IF NOT EXISTS orgs
                     (ID INTEGER UNIQUE,
                      City TEXT,
                      Country TEXT, 
@@ -125,75 +125,75 @@ webscrap_to_db <- function(db_name,
                      osm_name TEXT,
                      lon REAL,
                      lat REAL)")
-    ## And load it
-    db <- dbReadTable(con, "orgs")
-    ## Filtering the data
-    new_coords <- data.frame()
-    dat_local <- compare_db_data(db_name, dat)
-    df_len <- nrow(dat_local)
+  ## And load it
+  db <- dbReadTable(con, "orgs")
+  ## Filtering the data
+  new_coords <- data.frame()
+  dat_local <- compare_db_data(db_name, dat)
+  df_len <- nrow(dat_local)
 
-    ## As long as DB and DF have different sizes repeat:
-    if (df_len != 0) {
-        ## Resize as specified
-        dat_local <- dat_local[c(1:db_backup_after), ]
-        dat_local <- filter(dat_local, rowSums(is.na(dat_local)) != ncol(dat_local))
+  ## As long as DB and DF have different sizes repeat:
+  if (df_len != 0) {
+    ## Resize as specified
+    dat_local <- dat_local[c(1:db_backup_after), ]
+    dat_local <- filter(dat_local, rowSums(is.na(dat_local)) != ncol(dat_local))
 
-        ## ---- Iteration to web-scrap data ---- ##
-        ## For loop to webscrapping
-        for (i in 1:nrow(dat_local)) {
-            print(paste0("Searching entry ", dat_local[["ID"]][i]))
-            ## Abstracting info
-            rg <- ifelse(is.null(region), "", dat_local[[region]][i])
-            st <- ifelse(is.null(state), "", dat_local[[state]][i])
-            ct <- ifelse(is.null(county), "", dat_local[[county]][i])
-            rcity <- dat_local[[city]][i]
-            rcountry <- dat_local[[country]][i]
+    ## ---- Iteration to web-scrap data ---- ##
+    ## For loop to webscrapping
+    for (i in 1:nrow(dat_local)) {
+      print(paste0("Searching entry ", dat_local[["ID"]][i]))
+      ## Abstracting info
+      rg <- ifelse(is.null(region), "", dat_local[[region]][i])
+      st <- ifelse(is.null(state), "", dat_local[[state]][i])
+      ct <- ifelse(is.null(county), "", dat_local[[county]][i])
+      rcity <- dat_local[[city]][i]
+      rcountry <- dat_local[[country]][i]
 
-            ##-- Get the coords -- ##
-            ## First search in DB
-            search_query <- filter(db, City == rcity, Country == rcountry,
-                                   Region == rg, State == st, County == ct)
-            if (nrow(search_query) != 0) {
-                coords <- search_query[1, ]
-                coords$ID <- dat_local[["ID"]][i]
-                print("Found from memory")
-            } else {
-                ## If not not yet exists, go to OSM API
-                coords <- coords_from_city(rcity, rcountry,
-                                           region = rg, state = st, county = ct)
-                ## DF exact replica of DB
-                coords <- cbind(ID = dat_local[["ID"]][i],
-                                City = rcity,
-                                Country = rcountry,
-                                Region = rg,
-                                State = st,
-                                County = ct,
-                                coords)
-            }
-            new_coords <- rbind(new_coords, coords)
-        }
-
-        ## Send only the new results to DB and close connection
-        dbWriteTable(con, "orgs", new_coords, append = TRUE)
-        dbDisconnect(con)
-
-        ## repeat
-        webscrap_to_db(db_name = db_name,
-                           dat = dat,
-                           city = city,
-                           country = country,
-                           region = region,
-                           state = state,
-                           county = county,
-                           db_backup_after = db_backup_after)
-    } else { ## Exit info
-        db_final <- import_db_as_df(db_name)
-        size <- nrow(db_final)
-        not_found <- nrow(db_final[is.na(db_final$lat), ])
-        message(paste("Search finished.\n",
-                      size, "entries searched.\n",
-                      not_found, "ENTRIES NOT FOUND"))
+      ##-- Get the coords -- ##
+      ## First search in DB
+      search_query <- filter(db, City == rcity, Country == rcountry,
+                             Region == rg, State == st, County == ct)
+      if (nrow(search_query) != 0) {
+        coords <- search_query[1, ]
+        coords$ID <- dat_local[["ID"]][i]
+        print("Found from memory")
+      } else {
+        ## If not not yet exists, go to OSM API
+        coords <- coords_from_city(rcity, rcountry,
+                                   region = rg, state = st, county = ct)
+        ## DF exact replica of DB
+        coords <- cbind(ID = dat_local[["ID"]][i],
+                        City = rcity,
+                        Country = rcountry,
+                        Region = rg,
+                        State = st,
+                        County = ct,
+                        coords)
+      }
+      new_coords <- rbind(new_coords, coords)
     }
+
+    ## Send only the new results to DB and close connection
+    dbWriteTable(con, "orgs", new_coords, append = TRUE)
+    dbDisconnect(con)
+
+    ## repeat
+    webscrap_to_db(db_name = db_name,
+                   dat = dat,
+                   city = city,
+                   country = country,
+                   region = region,
+                   state = state,
+                   county = county,
+                   db_backup_after = db_backup_after)
+  } else { ## Exit info
+    db_final <- import_db_as_df(db_name)
+    size <- nrow(db_final)
+    not_found <- nrow(db_final[is.na(db_final$lat), ])
+    message(paste("Search finished.\n",
+                  size, "entries searched.\n",
+                  not_found, "ENTRIES NOT FOUND"))
+  }
 }
 
 
@@ -218,7 +218,6 @@ webscrap_to_db <- function(db_name,
 add_coords_manually <- function(csv_file, db_name) {
   require(dplyr)
   require(RSQLite)
-  #require(readr)
 
   if (is.character(csv_file)) {
     if (grepl(".csv", csv_file, fixed = TRUE)) {

@@ -12,11 +12,11 @@
 #' @examples
 #' x <- import_db_as_df("my_data.sqlite")
 import_db_as_df <- function(db_file) {
-    require(RSQLite)
-    con <- dbConnect(drv = RSQLite::SQLite(), dbname = db_file)
-    db <- dbReadTable(con, "orgs")
-    dbDisconnect(con)
-    return(db)
+  require(RSQLite)
+  con <- dbConnect(drv = RSQLite::SQLite(), dbname = db_file)
+  db <- dbReadTable(con, "orgs")
+  dbDisconnect(con)
+  return(db)
 }
 
 
@@ -65,7 +65,6 @@ remove_na_from_db <- function(db_file) {
 #' @export
 combine_csv_sql <- function(db_file, csv_file, city = "City") {
   require(dplyr)
-  require(readr)
   require(RSQLite)
 
   if (is.character(csv_file)) {
