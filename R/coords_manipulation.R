@@ -49,10 +49,18 @@ coords_from_city <- function(city = NULL,
   , sep = ""
   )
   tmp_file <- "../temp"
-  response <- try({
-    download.file(link, destfile = tmp_file, method = "wget", quiet = T, extra = "-r -p --random-wait")
-    ##  GET(link, authenticate("", "", type = "basic"), write_disk(tmp_file, overwrite = T))
-  })
+
+  response <- try(
+  {
+    GET(link, write_disk(tmp_file, overwrite = T))
+  },
+  silent = TRUE)
+  
+  if(class(response) == "try-error") {
+    response <- try({
+      download.file(link, destfile = tmp_file, method = "wget", quiet = T, extra = "-r -p --random-wait")
+    })
+  }
 
   if(class(response) == "try-error") {
     stop(response[1])
