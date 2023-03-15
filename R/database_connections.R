@@ -9,8 +9,6 @@
 #' in the database with name \code{db_file}
 #'
 #' @export
-#' @examples
-#' x <- import_db_as_df("my_data.sqlite")
 import_db_as_df <- function(db_file) {
   require(RSQLite)
   con <- dbConnect(drv = RSQLite::SQLite(), dbname = db_file)
@@ -33,8 +31,6 @@ import_db_as_df <- function(db_file) {
 #' an SQL query.
 #'
 #' @export
-#' @examples
-#' remove_na_from_db("my_data.sqlite")
 remove_na_from_db <- function(db_file) {
   require(RSQLite)
   con <- dbConnect(drv = RSQLite::SQLite(), dbname = db_file)

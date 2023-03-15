@@ -2,7 +2,7 @@
 % Please edit documentation in R/database_connections.R
 \name{compare_db_data}
 \alias{compare_db_data}
-\title{compare database to data AAA}
+\title{compare database to data}
 \usage{
 compare_db_data(db_file, dat)
 }

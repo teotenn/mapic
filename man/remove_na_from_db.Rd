@@ -17,9 +17,6 @@ Removes all the values that were not found in the OSM query and thus contain emp
 \code{lat} and \code{lon}. It is IMPORANT to consider that the function modifes the database directly from
 an SQL query.
 }
-\examples{
-remove_na_from_db("my_data.sqlite")
-}
 \author{
 Manuel Teodoro
 }

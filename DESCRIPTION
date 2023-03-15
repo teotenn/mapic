@@ -6,7 +6,7 @@ Authors@R:
 Description: What the package does (one paragraph).
 Depends: R (>= 4.0.0)
 Imports:
-   maps (>= 3.3.0), ggplot2, stringr (>= 1.5.0), dplyr, RJSONIO, RSQLite (>= 2.2.3), glue, purrr
+   maps (>= 3.3.0), ggplot2, stringr (>= 1.5.0), dplyr, jsonlite, httr, RSQLite (>= 2.2.3), glue, purrr
 License: GPL-3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

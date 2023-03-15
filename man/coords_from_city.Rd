@@ -9,7 +9,9 @@ coords_from_city(
   country_code,
   region = NULL,
   state = NULL,
-  county = NULL
+  county = NULL,
+  choose_when_multiple = FALSE,
+  silent = FALSE
 )
 }
 \arguments{
@@ -22,6 +24,8 @@ coords_from_city(
 \item{state}{Optional, state name}
 
 \item{county}{Optional, county name}
+
+\item{silent}{If TRUE, silences the messages from the function}
 }
 \value{
 Returns a 1-row data frame, containing latitude, longitude and osm name.

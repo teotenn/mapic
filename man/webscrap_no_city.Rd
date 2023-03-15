@@ -11,7 +11,8 @@ webscrap_no_city(
   region = NULL,
   state = NULL,
   county = NULL,
-  city = NULL
+  city = NULL,
+  silent = FALSE
 )
 }
 \arguments{
@@ -27,6 +28,8 @@ and at least names of the cities, country and date of registration of the Org.}
 \item{state}{Optional. String with the name of the column with the state names}
 
 \item{county}{Optional. String with the name of the column with the county names}
+
+\item{silent}{If TRUE, silences the messages from the function}
 }
 \value{
 Creates a table (if not yet exists) called "orgs" in the given SQLite data base. The table contains the ID,

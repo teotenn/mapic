@@ -12,7 +12,8 @@ webscrap_to_db(
   region = NULL,
   state = NULL,
   county = NULL,
-  db_backup_after = 10
+  db_backup_after = 10,
+  silent = FALSE
 )
 }
 \arguments{
@@ -30,6 +31,8 @@ numbers, and at least names of the cities, country and date of registration of t
 \item{state}{Optional. String with the name of the column with the state names}
 
 \item{county}{Optional. String with the name of the column with the county names}
+
+\item{silent}{If TRUE, silences the messages from the function}
 }
 \value{
 Creates a table (if not yet exists) called "orgs" in the given SQLite data base. The table contains

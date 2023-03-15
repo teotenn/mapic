@@ -8,6 +8,7 @@
 #' @param region Optional, region name. This option is NOT RECOMENDED, it's functioning is not wel docummented.
 #' @param state Optional, state name
 #' @param county Optional, county name
+#' @param silent If TRUE, silences the messages from the function
 #'
 #' @return Returns a 1-row data frame, containing latitude, longitude and osm name.
 #'
@@ -104,6 +105,7 @@ coords_from_city <- function(city = NULL,
 #' @param state Optional. String with the name of the column with the state names
 #' @param county Optional. String with the name of the column with the county names
 #' @param region String with the name of the column with the region names. NOT RECOMENDED.
+#' @param silent If TRUE, silences the messages from the function
 #'
 #' @return Creates a table (if not yet exists) called "orgs" in the given SQLite data base. The table contains
 #' the ID, city name and country code obtained for the data inside the tibble \code{dat}, together with the
@@ -296,6 +298,7 @@ add_coords_manually <- function(csv_file, db_name) {
 #' @param state Optional. String with the name of the column with the state names
 #' @param county Optional. String with the name of the column with the county names
 #' @param region NOT RECOMENDED. String with the name of the column with the region names.
+#' @param silent If TRUE, silences the messages from the function
 #'
 #' @return Creates a table (if not yet exists) called "orgs" in the given SQLite data base. The table contains the ID,
 #' country code and the extra field(s) provided, together with the latitude and longitude of the region/state/county,

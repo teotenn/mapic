@@ -16,9 +16,6 @@ in the database with name \code{db_file}
 \description{
 Imports the database as a tibble data frame
 }
-\examples{
-x <- import_db_as_df("my_data.sqlite")
-}
 \author{
 Manuel Teodoro
 }
