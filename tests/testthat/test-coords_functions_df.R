@@ -35,17 +35,20 @@ test_that("coords_from_city: Found results", {
   ## Case:
   ## obtaining coords from open street maps for CITY ONLY
   found <- coords_from_city(city = t_dat$City[1],
-                            country_code = t_dat$Country[1])
+                            country_code = t_dat$Country[1],
+                            silent = TRUE)
   ## Case:
   ## obtaining coords from open street maps Using region
   found_region <- coords_from_city(city = t_dat$City[2],
                                    country_code = t_dat$Country[2],
-                                   region = t_dat$Region[2])
+                                   region = t_dat$Region[2],
+                                   silent = TRUE)
   ## Case:
   ## obtaining coords from open street maps Using state
   found_state <- coords_from_city(city = t_dat$City[2],
                                   country_code = t_dat$Country[2],
-                                  state = t_dat$Region[2])
+                                  state = t_dat$Region[2],
+                                  silent = TRUE)
   ## TESTS
   expect_s3_class(found, "data.frame")
   expect_equal(ncol(found), 3)
@@ -61,12 +64,14 @@ test_that("coords_from_city: Not found results", {
   ## No results found
   not_found <- coords_from_city(city = t_dat$City[1],
                                 country_code = t_dat$Country[1],
-                                state = t_dat$Region[1])
+                                state = t_dat$Region[1],
+                                silent = TRUE)
   ## Case:
   ## Not found coords due to wrong state or region
   not_found_state <- coords_from_city(city = t_dat$City[1],
                                       country_code = t_dat$Country[1],
-                                      state = t_dat$Region[1])
+                                      state = t_dat$Region[1],
+                                      silent = TRUE)
   ## TESTS
   expect_s3_class(not_found, "data.frame")
   expect_equal(ncol(not_found), 3)
@@ -83,7 +88,8 @@ webscrap_to_db(db_name = "test.sqlite",
                city = "City",
                country = "Country",
                state = "Region",
-               db_backup_after = 5)
+               db_backup_after = 5,
+               silent = TRUE)
 ## RESULTS:
 ## 1) Not found Ciudad de Mexico
 ## 2) Found everything else
@@ -147,7 +153,7 @@ test_that("add_coords_manually", {
                          osm_name = "", lon = 12, lat = 13)
     add_coords_manually(to_add, "test.sqlite")
     df_added <- import_db_as_df("test.sqlite")
-    webscrap_to_db("test.sqlite", t_dat, state = "Region")
+    webscrap_to_db("test.sqlite", t_dat, state = "Region", silent = TRUE)
     df_complete <- import_db_as_df("test.sqlite")
     expect_equal(nrow(df_added), 7)
     expect_equal(nrow(df_complete), 10)
@@ -164,7 +170,7 @@ test_that("webscrap_no_city", {
                           Region = "Tlaxcala",
                           City = NA,
                           Source = "none")
-  webscrap_no_city("test.sqlite", new_state, "Country", state = "Region")
+  webscrap_no_city("test.sqlite", new_state, "Country", state = "Region", silent = T)
   df_added <- import_db_as_df("test.sqlite")
   expect_equal(nrow(df_added), 11)
 })

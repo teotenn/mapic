@@ -9,7 +9,8 @@ webscrap_to_db(db_name = "test.sqlite",
                city = "City",
                country = "Country",
                state = "Region",
-               db_backup_after = 5)
+               db_backup_after = 5,
+               silent = TRUE)
 
 test_that("remove_na_from_db", {
     remove_na_from_db("test.sqlite")

@@ -22,8 +22,11 @@ coords_from_city <- function(city = NULL,
                              country_code,
                              region = NULL,
                              state = NULL,
-                             county = NULL) {
-  require("RJSONIO")
+                             county = NULL,
+                             choose_when_multiple = FALSE,
+                             silent = FALSE) {
+  require(jsonlite)
+  require(httr)
 
   CountryCoded <- paste("&countrycodes=", country_code, sep = "")
   extras <- c(city = city, state = state, region = region, county = county)
@@ -38,30 +41,46 @@ coords_from_city <- function(city = NULL,
   }
 
   ## get data
-  response <- paste(
+  link <- paste(
     "http://nominatim.openstreetmap.org/search?city="
   , extrasCoded
   , CountryCoded
   , "&format=json"
   , sep = ""
   )
-  x <- fromJSON(response)
+  tmp_file <- "../temp"
+  response <- try({
+    download.file(link, destfile = tmp_file, method = "wget", quiet = T, extra = "-r -p --random-wait")
+    ##  GET(link, authenticate("", "", type = "basic"), write_disk(tmp_file, overwrite = T))
+  })
 
-  ## retrieve coords
-  if (is.vector(x)) {
-    message(paste("Found", x[[1]]$display_name))
-    lon <- x[[1]]$lon
-    lat <- x[[1]]$lat
-    osm_name <- x[[1]]$display_name
-    coords <- data.frame("lon" = lon, "lat" = lat, "osm_name" = osm_name)
-  } else {
-    message(paste("No results found for", extrasCoded, country_code))
-    coords <- data.frame("lon" = NA, "lat" = NA, "osm_name" = as.character(NA))
+  if(class(response) == "try-error") {
+    stop(response[1])
+  } else if (class(response) == "response") {
+    response_status <- http_status(response)
+    if (response_status$category != "Success") {
+      stop(response_status$message)
+    }
   }
+
+  filecon <- file(tmp_file, "r")
+  rlines <- readLines(filecon, ok = T, n = 1, warn = F)
+  target <- fromJSON(rlines)
+  close(filecon)
+  unlink(tmp_file)
+
+  if (length(target) == 0) {
+    if (!silent) message(paste("No results found for", extrasCoded, country_code))
+    coords <- data.frame("lon" = NA, "lat" = NA, "osm_name" = as.character(NA))
+  } else if (nrow(target) == 1) {
+    coords <- data.frame(lon = target$lon[1], lat = target$lat[1], osm_name = target$display_name[1])
+  } else {
+    coords <- data.frame(lon = target$lon[1], lat = target$lat[1], osm_name = target$display_name[1])
+  }
+   
   ## return a df
   return(coords)
 }
-
 
 
 #' @title webscrap to database
@@ -108,7 +127,8 @@ webscrap_to_db <- function(db_name,
                            region = NULL,
                            state = NULL,
                            county = NULL,
-                           db_backup_after = 10) {
+                           db_backup_after = 10,
+                           silent = FALSE) {
   require(RSQLite)
   require(dplyr)
 
@@ -141,7 +161,7 @@ webscrap_to_db <- function(db_name,
     ## ---- Iteration to web-scrap data ---- ##
     ## For loop to webscrapping
     for (i in 1:nrow(dat_local)) {
-      print(paste0("Searching entry ", dat_local[["ID"]][i]))
+      if (!silent) print(paste0("Searching entry ", dat_local[["ID"]][i]))
       ## Abstracting info
       rg <- ifelse(is.null(region), "", dat_local[[region]][i])
       st <- ifelse(is.null(state), "", dat_local[[state]][i])
@@ -156,11 +176,12 @@ webscrap_to_db <- function(db_name,
       if (nrow(search_query) != 0) {
         coords <- search_query[1, ]
         coords$ID <- dat_local[["ID"]][i]
-        print("Found from memory")
+        if (!silent) print("Found from memory")
       } else {
         ## If not not yet exists, go to OSM API
         coords <- coords_from_city(rcity, rcountry,
-                                   region = rg, state = st, county = ct)
+                                   region = rg, state = st, county = ct,
+                                   silent = silent)
         ## DF exact replica of DB
         coords <- cbind(ID = dat_local[["ID"]][i],
                         City = rcity,
@@ -185,14 +206,18 @@ webscrap_to_db <- function(db_name,
                    region = region,
                    state = state,
                    county = county,
-                   db_backup_after = db_backup_after)
+                   db_backup_after = db_backup_after,
+                   silent = silent)
   } else { ## Exit info
     db_final <- import_db_as_df(db_name)
     size <- nrow(db_final)
     not_found <- nrow(db_final[is.na(db_final$lat), ])
-    message(paste("Search finished.\n",
-                  size, "entries searched.\n",
-                  not_found, "ENTRIES NOT FOUND"))
+
+    if (!silent) {
+      message(paste("Search finished.\n",
+                    size, "entries searched.\n",
+                    not_found, "ENTRIES NOT FOUND"))
+    }
   }
 }
 
@@ -280,7 +305,8 @@ webscrap_no_city <- function(db_name,
                              region = NULL,
                              state = NULL,
                              county = NULL,
-                             city = NULL) {
+                             city = NULL,
+                             silent = FALSE) {
   if (!missing(city)) {
     warning("As from v2.3.1 the parameter <city> is not used anymore. Please remove it to avoid this warning.")
   }
@@ -295,5 +321,6 @@ webscrap_no_city <- function(db_name,
                  dat = dat,
                  region = region,
                  state = state,
-                 county = county)
+                 county = county,
+                 silent = silent)
 }
