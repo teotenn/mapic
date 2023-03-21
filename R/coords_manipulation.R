@@ -26,8 +26,7 @@ coords_from_city <- function(city = NULL,
                              county = NULL,
                              choose_when_multiple = FALSE,
                              silent = FALSE) {
-  require(jsonlite)
-  require(httr)
+  require(RJSONIO)
 
   CountryCoded <- paste("&countrycodes=", country_code, sep = "")
   extras <- c(city = city, state = state, region = region, county = county)
@@ -43,52 +42,49 @@ coords_from_city <- function(city = NULL,
 
   ## get data
   link <- paste(
-    "http://nominatim.openstreetmap.org/search?city="
+    "https://nominatim.openstreetmap.org/search?city="
   , extrasCoded
   , CountryCoded
   , "&format=json"
   , sep = ""
   )
-  tmp_file <- "../temp"
 
-  response <- try(
-  {
-    GET(link, write_disk(tmp_file, overwrite = T))
-  },
-  silent = TRUE)
-  
-  if(class(response) == "try-error") {
-    response <- try({
-      download.file(link, destfile = tmp_file, method = "wget", quiet = T, extra = "-r -p --random-wait")
-    })
-  }
+  response <- try({fromJSON(link)},
+                  silent = TRUE)
 
-  if(class(response) == "try-error") {
+  if (class(response) == "try-error") {
     stop(response[1])
   } else if (class(response) == "response") {
     response_status <- http_status(response)
     if (response_status$category != "Success") {
       stop(response_status$message)
     }
-  }
+  } else if (is.list(response)) {
+    
+    if (length(response) == 0) {
+      if (!silent) message(paste("No results found for", extrasCoded))
+      coords <- data.frame("lon" = NA, "lat" = NA, "osm_name" = as.character(NA))
+      
+    } else if (length(response) == 1) {
+      if (!silent) message(paste("Found", response[[1]]$display_name))
+      coords <- data.frame(
+        lon = response[[1]]$lon,
+        lat = response[[1]]$lat,
+        osm_name = response[[1]]$display_name
+      )
+      
+    } else {
+      if (!silent) message(paste("Several entries found for", city, country_code))
+      coords <- data.frame(
+        lon = response[[1]]$lon,
+        lat = response[[1]]$lat,
+        osm_name = response[[1]]$display_name
+      )
+    }
 
-  filecon <- file(tmp_file, "r")
-  rlines <- readLines(filecon, ok = T, n = 1, warn = F)
-  target <- fromJSON(rlines)
-  close(filecon)
-  unlink(tmp_file)
-
-  if (length(target) == 0) {
-    if (!silent) message(paste("No results found for", extrasCoded, country_code))
-    coords <- data.frame("lon" = NA, "lat" = NA, "osm_name" = as.character(NA))
-  } else if (nrow(target) == 1) {
-    coords <- data.frame(lon = target$lon[1], lat = target$lat[1], osm_name = target$display_name[1])
-  } else {
-    coords <- data.frame(lon = target$lon[1], lat = target$lat[1], osm_name = target$display_name[1])
+    ## return a df
+    return(coords)
   }
-   
-  ## return a df
-  return(coords)
 }
 
 
