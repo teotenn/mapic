@@ -29,6 +29,8 @@ and at least names of the cities, country and date of registration of the Org.}
 
 \item{county}{Optional. String with the name of the column with the county names}
 
+\item{city}{As from version 2.3.1, this parameter is not necessary and it will be deprecated.}
+
 \item{silent}{If TRUE, silences the messages from the function}
 }
 \value{

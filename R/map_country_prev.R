@@ -1,3 +1,22 @@
+#' @title Map country preview
+#' @author Manuel Teodoro
+#' @description Creates the base map of the country
+#'
+#' @param country A string. Name of the country, as defined in the package \code{maps}.
+#' @param x_limits A vector of size 2 containing the horizontal limits of the map.
+#' @param y_limits A vector of size 2 containing the vertical limits of the map.
+#' @param show_coords If \code{TRUE}, the coordinates are shown in the map. It is particularly
+#' useful to set the x and y limits.
+#' @param map_aes Object of class \code{map_master_aes} containing the aesthetics required for
+#' the creation of the map.
+#'
+#' @return The map.
+#'
+#' @details Plots the map.
+#'
+#' @export
+#' @examples
+#' map_country_prev("Brazil")
 map_country_prev <- function(country,
                              x_limits = NULL,
                              y_limits = NULL,
@@ -11,13 +30,12 @@ map_country_prev <- function(country,
   stopifnot(is.logical(show_coords))
   stopifnot("Name of the country should be character" = is.character(country))
 
-  ##map_aes <- create_map_aes(map_aes)
-
   if (!country %in% map_data('world')$region) {
     stop(paste("Country name not recognized",
                "To see a list of recognized countries run",
                "<unique(maps::map_data('world')$region)>", sep = "\n"))
   }
+  
   ## If coords limits missing, print worldwide map with coordinates system to allow
   ## User observe coords for reference
   if (missing(x_limits) || missing(y_limits)) {
@@ -30,6 +48,7 @@ map_country_prev <- function(country,
          !all(grepl("^-?[0-9.]+$", c(x_limits, y_limits)))) {
       stop("Limits for X and Y coords should be provided as vectors with two numeric values")
     } else {
+      
       ## All the received inputs are correct.
       ## Let's define our custom theme for the final map
       map_country_theme <- theme_bw() +
@@ -54,13 +73,13 @@ map_country_prev <- function(country,
     ## First layer: worldwide map
     geom_polygon(data = map_data("world"),
                  aes(x = long, y = lat, group = group),
-                 color = "#574166", #map_aes$colors$border_countries, # border countries
-                 fill = "#f0f0f0") + #map_aes$colors$empty_countries) + # empty countries
+                 color = map_aes$colors$border_countries, # border countries
+                 fill = map_aes$colors$empty_countries) + # empty countries
     ## Second layer: Country map
     geom_polygon(data = map_data_country,
                  aes(x = long, y = lat, group = group),
-                 color = "#574166", #map_aes$colors$border_countries, # border target country
-                 fill = "black") + #map_aes$colors$target_country) + # target country
+                 color = map_aes$colors$border_countries, # border target country
+                 fill = map_aes$colors$target_country) + # target country
     coord_map() +
     coord_fixed(1.3,
                 xlim = x_limits,

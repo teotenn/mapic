@@ -32,6 +32,8 @@ numbers, and at least names of the cities, country and date of registration of t
 
 \item{county}{Optional. String with the name of the column with the county names}
 
+\item{db_backup_after}{Number of iteration after which the data is sent to the database.}
+
 \item{silent}{If TRUE, silences the messages from the function}
 }
 \value{

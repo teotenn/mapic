@@ -8,6 +8,7 @@
 #' @param region Optional, region name. This option is NOT RECOMENDED, it's functioning is not wel docummented.
 #' @param state Optional, state name
 #' @param county Optional, county name
+#' @param choose_when_multiple Not implemented yet!
 #' @param silent If TRUE, silences the messages from the function
 #'
 #' @return Returns a 1-row data frame, containing latitude, longitude and osm name.
@@ -101,6 +102,7 @@ coords_from_city <- function(city = NULL,
 #' @param state Optional. String with the name of the column with the state names
 #' @param county Optional. String with the name of the column with the county names
 #' @param region String with the name of the column with the region names. NOT RECOMENDED.
+#' @param db_backup_after Number of iteration after which the data is sent to the database.
 #' @param silent If TRUE, silences the messages from the function
 #'
 #' @return Creates a table (if not yet exists) called "orgs" in the given SQLite data base. The table contains
@@ -295,6 +297,7 @@ add_coords_manually <- function(csv_file, db_name) {
 #' @param county Optional. String with the name of the column with the county names
 #' @param region NOT RECOMENDED. String with the name of the column with the region names.
 #' @param silent If TRUE, silences the messages from the function
+#' @param city As from version 2.3.1, this parameter is not necessary and it will be deprecated.
 #'
 #' @return Creates a table (if not yet exists) called "orgs" in the given SQLite data base. The table contains the ID,
 #' country code and the extra field(s) provided, together with the latitude and longitude of the region/state/county,

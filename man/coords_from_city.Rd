@@ -25,6 +25,8 @@ coords_from_city(
 
 \item{county}{Optional, county name}
 
+\item{choose_when_multiple}{Not implemented yet!}
+
 \item{silent}{If TRUE, silences the messages from the function}
 }
 \value{

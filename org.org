@@ -1,6 +1,6 @@
 #+TODO: TODO(t) PROGRESS(p) | DONE(d) CANCELLED(x)
 * Plans and TO-DO file
-* TODO v2.4.1 Migration
+* TODO v2.4.1 Migration and Maps
 ** TODO Document all the functions created so far
 ** TODO Make a README
 * v2.4.2 Basic map
