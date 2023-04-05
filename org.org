@@ -1,15 +1,13 @@
 #+TODO: TODO(t) PROGRESS(p) | DONE(d) CANCELLED(x)
 * Plans and TO-DO file
-* TODO v2.4.1 Migration and Maps
-** TODO Document all the functions created so far
-** TODO Make a README
+* DONE v2.4.1 Migration and Maps
 * v2.4.2 Basic map
 ** TODO Make a changelog
 ** TODO Complete Aesthetics OOP
 ** TODO Create the basic map with cities on top of the prev map using ggplot style
 ** TODO Test missing functionalities
 * v2.4.3 Complete Maps
-** Complete maps creation (several years, labels, etc.)
+** TODO Complete maps creation (several years, labels, etc.)
 ** TODO Tag version 2.4.2
 * v2.5
 ** TODO [#C] Dev possibility to use mySQL aside of SQLite (and maybe others)

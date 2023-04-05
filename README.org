@@ -1,0 +1,12 @@
+#+TITLE: Mapic README
+#+AUTHOR: teoten
+#+EMAIL: teoten@gmail.com
+#+LANGUAGE: en
+#+STYLE: <style type="text/css">#outline-container-introduction{ clear:both; }</style>
+#+BABEL: :exports both
+
+This is a personal R package to facilitate the creation of Maps of Infrastructure per City (MAPIC). The package is currently not functional. When the first functional and stable version is ready, it will be announced here an the current README file will be improved.
+
+For now, details of the development and the concept can be found in the blog [[https://blog.rwhitedwarf.com/]] under the tag [[https://blog.rwhitedwarf.com/tags/maps-app][maps-app]].
+
+The project is under the GNU GENERAL PUBLIC LICENSE Version 3 (GPL-3). Your are free to copy it and reproduce it.
