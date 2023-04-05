@@ -1,6 +1,6 @@
 Package: mapic
 Title: Map Infrastructure per city
-Version: 2.4.1
+Version: 2.4.2
 Authors@R: 
     person("Manuel", "Teodoro", , "teotenn@proton.me", role = c("aut", "cre"))
 Description: Create simple maps of infrastructure per city of any country using maps and ggplot2 libraries.

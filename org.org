@@ -10,6 +10,6 @@
 ** TODO Complete maps creation (several years, labels, etc.)
 ** TODO Tag version 2.4.2
 * v2.5
-** TODO [#C] Dev possibility to use mySQL aside of SQLite (and maybe others)
+** TODO Dev possibility to use mySQL aside of SQLite (and maybe others)
 Create two objects (or more) SQLite and MySQL, each with the require details AND table name. Then, apply the method based on the class of object selected. Use inheritance as well. Kind of father =db_class=, child =db_sqlite=
 * v3.0 Shiny app
