@@ -1,6 +1,6 @@
 #+TITLE: Mapic README
 #+AUTHOR: teoten
-#+EMAIL: teoten@gmail.com
+#+EMAIL: teoten@proton.me
 #+LANGUAGE: en
 #+STYLE: <style type="text/css">#outline-container-introduction{ clear:both; }</style>
 #+BABEL: :exports both

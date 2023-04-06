@@ -1,34 +1,6 @@
 library(testthat)
-
-## Create testing data
-t_dat <- data.frame(ID = c(1:10),
-                    Name = sprintf("org%d", seq(1:10)),
-                    Type = "None",
-                    Registration_year = c(2001:2010),
-                    End_year = 2021,
-                    Country = "MX",
-                    Region = c("Mexico",
-                               "Baja California Norte",
-                               "Mexico",
-                               "Jalisco",
-                               "Queretaro",
-                               "Baja California Norte",
-                               "Mexico",
-                               "Morelos",
-                               "Mexico",
-                               "Estado de Mexico"),
-                    City = c("Ciudad de Mexico",
-                             "Tijuana",
-                             "Ciudad de Mexico",
-                             "Guadalajara",
-                             "Queretaro",
-                             "Tijuana",
-                             "Ciudad de Mexico",
-                             "Cuernavaca",
-                             "Ciudad de Mexico",
-                             "Texcoco"),
-                    Source = "None")
-
+data(mexico)
+t_dat <- mexico
 
 ### ---------- T E S T S ---------- ###
 test_that("coords_from_city: Found results", {
