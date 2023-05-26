@@ -13,3 +13,7 @@
 ** TODO Dev possibility to use mySQL aside of SQLite (and maybe others)
 Create two objects (or more) SQLite and MySQL, each with the require details AND table name. Then, apply the method based on the class of object selected. Use inheritance as well. Kind of father =db_class=, child =db_sqlite=
 * v3.0 Shiny app
+* Ideas
+** Possibility of control over the ammount of orgs per size of the dots, since very few look desserted while several thousands are overloading it.
+** Consider adding "automatic" labels within the map, but also simple external labels.
+** Consider adding whatermark

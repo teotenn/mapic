@@ -23,7 +23,7 @@
 #' The external version generates a sepparated plot that has to be called sepparately.
 #'
 #' @export
-#' @examples
+#' 
 mapic_year_internal <- function(x, ...) UseMethod("mapic_year_internal")
 
 mapic_year_internal.default <- function(year,

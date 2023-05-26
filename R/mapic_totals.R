@@ -23,7 +23,7 @@
 #' The external version generates a sepparated plot that has to be called sepparately.
 #'
 #' @export
-#' @examples
+#'
 mapic_totals_internal <- function(x, ...) UseMethod("mapic_totals_internal")
 
 mapic_totals_internal.default <- function(totals,
