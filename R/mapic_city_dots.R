@@ -23,9 +23,10 @@
 #' @details It generates the dots to be added to the base map, showing the ammount of elements per city in a given year.
 #'
 #' @export
-#'
 mapic_city_dots <- function(x, ...) UseMethod("mapic_city_dots")
 
+#' @method mapic_city_dots default
+#' @export
 mapic_city_dots.default <- function(.df,
                                      year,
                                      column_names = list(
@@ -83,7 +84,7 @@ mapic_city_dots.default <- function(.df,
                                 n >= 301 ~ dot_sizes[9],
                                 TRUE ~ NA))
 
-  ##################### MAIN MAP #######################
+  ## Main map
   mapic_points <- list(
     geom_point(data = filt,
                aes(x, y, size = dot_size),
@@ -113,6 +114,8 @@ mapic_city_dots.default <- function(.df,
   return(mapic_points)
 }
 
+#' @method mapic_city_dots mapicHolder
+#' @export
 mapic_city_dots.mapicHolder <- function(.mapic_holder,
                                         .df,
                                         year,

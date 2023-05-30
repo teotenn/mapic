@@ -26,6 +26,8 @@
 #'
 mapic_totals_internal <- function(x, ...) UseMethod("mapic_totals_internal")
 
+#' @method mapic_totals_internal default
+#' @export
 mapic_totals_internal.default <- function(totals,
                                           x_limits,
                                           y_limits,
@@ -76,6 +78,8 @@ mapic_totals_internal.default <- function(totals,
     return(ptotals)
 }
 
+#' @method mapic_totals_internal mapicHolder
+#' @export
 mapic_totals_internal.mapicHolder <- function(.mapic_holder,
                                               totals_label = "Totals") {
   data_totals <- sum(.mapic_holder$data$map$n)
@@ -88,5 +92,74 @@ mapic_totals_internal.mapicHolder <- function(.mapic_holder,
   .mapic_holder[["mapic_totals"]] <- mapic_totals
   .mapic_holder[["totals"]] <- data_totals
   .mapic_holder[["mapic"]] <- .mapic_holder[["mapic"]] + mapic_totals
+  return(.mapic_holder)
+}
+
+
+
+#' @export
+mapic_totals_external <- function(x, ...) UseMethod("mapic_totals_external")
+
+#' @method mapic_totals_external default
+#' @export
+mapic_totals_external.default <- function(totals,
+                                          totals_label = "Totals",
+                                          map_colors = default_map_colors) {
+  require(ggplot2)
+
+  ## Constant values for a good visualization
+  rectangle_wide <- 4
+  rectangle_high <- 9.5
+  num_position_x <- 2
+  num_position_y <- 3.6
+  num_size <- 20
+  text_position_x <- 2
+  text_position_y <- 7.6
+  text_size <- 7.5
+
+  ptotals <- ggplot() +
+    geom_rect(
+      aes(xmin = 0, xmax = rectangle_wide,
+          ymin = 0, ymax = rectangle_high),
+      color = "#283151",
+      fill = map_colors$background_legend,
+      alpha = 9 / 10) +
+    geom_text(
+      aes(
+        x = num_position_x,
+        y = num_position_y,
+        label = totals),
+      size = num_size,
+      family = "Montserrat",
+      fontface = "bold",
+      alpha = 9 / 10,
+      color = map_colors$text_legend) +
+    geom_text(
+      aes(
+        x = text_position_x,
+        y = text_position_y,
+        label = "Organizations"),
+      size = text_size,
+      family = "Montserrat",
+      fontface = "bold",
+      alpha = 9 / 10,
+      color = map_colors$text_legend) +
+    theme_bw() 
+
+  return(ptotals)
+}
+
+#' @method mapic_totals_external mapicHolder
+#' @export
+mapic_totals_external.mapicHolder <- function(.mapic_holder,
+                                              totals_label = "Totals") {
+  data_totals <- sum(.mapic_holder$data$map$n)
+  mapic_totals <- mapic_totals_external(totals = data_totals,
+                                        totals_label = totals_label,
+                                        map_colors = .mapic_holder$colors)
+
+  .mapic_holder[["mapic_totals"]] <- mapic_totals + .mapic_holder[["theme_map"]]
+  .mapic_holder[["totals"]] <- data_totals
+
   return(.mapic_holder)
 }

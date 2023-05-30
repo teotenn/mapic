@@ -23,9 +23,11 @@
 #' The external version generates a sepparated plot that has to be called sepparately.
 #'
 #' @export
-#' 
+#'
 mapic_year_internal <- function(x, ...) UseMethod("mapic_year_internal")
 
+#' @method mapic_year_internal default
+#' @export
 mapic_year_internal.default <- function(year,
                                         x_limits,
                                         y_limits,
@@ -78,6 +80,8 @@ mapic_year_internal.default <- function(year,
   return(pyears)
 }
 
+#' @method mapic_year_internal mapicHolder
+#' @export
 mapic_year_internal.mapicHolder <- function(.mapic_holder,
                                             year_label = "Year") {
   mapic_year <- mapic_year_internal(year = .mapic_holder$year,
@@ -88,5 +92,67 @@ mapic_year_internal.mapicHolder <- function(.mapic_holder,
 
   .mapic_holder[["mapic_year"]] <- mapic_year
   .mapic_holder[["mapic"]] <- .mapic_holder[["mapic"]] + mapic_year
+  return(.mapic_holder)
+}
+
+
+#' @export
+mapic_year_external <- function(x, ...) UseMethod("mapic_year_external")
+
+#' @method mapic_year_external default
+#' @export
+mapic_year_external.default <- function(year,
+                                        year_label = "Year",
+                                        map_colors = default_map_colors) {
+  require(ggplot2)
+
+  ## Constant values for a good visualization
+  rectangle_wide <- 4
+  rectangle_high <- 9.5
+  num_position_x <- 2
+  num_position_y <- 3.6
+  num_size <- 20
+  text_position_x <- 2
+  text_position_y <- 7.6
+  text_size <- 8.5
+
+  pyears <- ggplot() +
+    geom_rect(
+      aes(xmin = 0, xmax = rectangle_wide,
+          ymin = 0, ymax = rectangle_high),
+      color = map_colors$text_legend,
+      fill = map_colors$text_legend,
+      alpha = 9 / 10) +
+    geom_text(
+      aes(x = num_position_x,
+          y = num_position_y,
+          label = year),
+      size = num_size,
+      family = "Montserrat",
+      fontface = "bold",
+      color = map_colors$background_legend) +
+    geom_text(
+      aes(x = text_position_x,
+          y = text_position_y,
+          label = year_label),
+      size = text_size,
+      family = "Montserrat",
+      fontface = "bold",
+      alpha = 9 / 10,
+      color = map_colors$background_legend) +
+    theme_bw()
+
+  return(pyears)
+}
+
+#' @method mapic_year_external mapicHolder
+#' @export
+mapic_year_external.mapicHolder <- function(.mapic_holder,
+                                            year_label = "Year") {
+  mapic_year <- mapic_year_external(year = .mapic_holder$year,
+                                    year_label = year_label,
+                                    map_colors = .mapic_holder$colors)
+
+  .mapic_holder[["mapic_year"]] <- mapic_year + .mapic_holder[["theme_map"]]
   return(.mapic_holder)
 }

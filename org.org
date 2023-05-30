@@ -2,14 +2,17 @@
 * Plans and TO-DO file
 * DONE v2.4.1 Migration and Maps
 * v2.4.2 Basic map
-** TODO Make a changelog
-** TODO Complete Aesthetics OOP
-** TODO Create the basic map with cities on top of the prev map using ggplot style
-** TODO Test missing functionalities
+** DONE OOP for colors
+** DONE Create the basic map with cities on top of the prev map using ggplot style
+** DONE Test missing functionalities (non-graphical)
+** PROGRESS Complete maps creation (years, totals, etc.)
 * v2.4.3 Complete Maps
-** TODO Complete maps creation (several years, labels, etc.)
 ** TODO Tag version 2.4.2
+** TODO Test missing functionalities (graphical)
 * v2.5
+** TODO Make a changelog
+** TODO Complete Aesthetics control OOP (font type, face, etc.)
+** TODO Allow modification of Constant values in year and total labels
 ** TODO Dev possibility to use mySQL aside of SQLite (and maybe others)
 Create two objects (or more) SQLite and MySQL, each with the require details AND table name. Then, apply the method based on the class of object selected. Use inheritance as well. Kind of father =db_class=, child =db_sqlite=
 * v3.0 Shiny app

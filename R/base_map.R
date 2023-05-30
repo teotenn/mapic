@@ -52,8 +52,7 @@ base_map <- function(country,
                "<unique(maps::map_data('world')$region)>", sep = "\n"))
   }
 
-  ## If coords limits missing, print worldwide map with coordinates system to allow
-  ## User observe coords for reference
+  ## Allow user observe coords for reference
   if (missing(x_limits) || missing(y_limits)) {
     warning("X and/or Y limits not provided.\nPrinting worldwide map.")
     map_country_theme <- theme(panel.background = element_rect(fill = map_colors$oceans))
@@ -65,8 +64,7 @@ base_map <- function(country,
       stop("Limits for X and Y coords should be provided as vectors with two numeric values")
     } else {
 
-      ## All the received inputs are correct.
-      ## Let's define our custom theme for the final map
+      ## Custom theme for the final map
       map_country_theme <- theme_bw() +
         theme(panel.background = element_rect(fill = map_colors$oceans),
               legend.position = "none",
@@ -82,9 +80,10 @@ base_map <- function(country,
     }
   }
 
-  ## make a df with only the country to overlap
+  ## Get the target cpuntry data
   map_data_country <- map_data("world")[map_data("world")$region == country, ]
-  ## The map (maps + ggplot2 )
+
+  ## The map
   mapic <- ggplot() +
     ## First layer: worldwide map
     geom_polygon(data = map_data("world"),
@@ -107,6 +106,7 @@ base_map <- function(country,
       list(
         mapic = mapic,
         base_map = mapic,
+        theme_map = map_country_theme,
         x_limits = x_limits,
         y_limits = y_limits,
         colors = map_colors
