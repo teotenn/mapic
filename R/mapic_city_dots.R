@@ -13,6 +13,7 @@
 #' \item start_year : Column containing the starting year.
 #' \item end_year : Optional. Column containing the ending year.
 #' }
+#' @param legend_position Overwrites ggplot's \code{theme(legend.position)}. See theme's help for details.
 #' @param dot_size Default 1. Proportional sizes of the dots.
 #' @param map_colors An object of class \code{map_colors} containing the details of the colors for the maps.
 #' Not necessary if an object of class \code{mapicHolder} is passed.
@@ -28,15 +29,16 @@ mapic_city_dots <- function(x, ...) UseMethod("mapic_city_dots")
 #' @method mapic_city_dots default
 #' @export
 mapic_city_dots.default <- function(.df,
-                                     year,
-                                     column_names = list(
-                                       lat = "lat",
-                                       lon = "lon",
-                                       cities = "city",
-                                       start_year = "year",
-                                       end_year = NULL),
-                                     dot_size = 1,
-                                     map_colors = default_map_colors) {
+                                    year,
+                                    column_names = list(
+                                      lat = "lat",
+                                      lon = "lon",
+                                      cities = "city",
+                                      start_year = "year",
+                                      end_year = NULL),
+                                    legend_position = "bottom",
+                                    dot_size = 1,
+                                    map_colors = default_map_colors) {
   require(dplyr)
   require(tidyr)
   require(stringr)
@@ -108,7 +110,7 @@ mapic_city_dots.default <- function(.df,
                color = map_colors$dots_orgs,
                shape = 19,
                size = 5),
-    theme(legend.position = "bottom")
+    theme(legend.position = legend_position)
   )
 
   return(mapic_points)
@@ -125,11 +127,14 @@ mapic_city_dots.mapicHolder <- function(.mapic_holder,
                                           cities = "city",
                                           start_year = "year",
                                           end_year = NULL),
+                                        legend_external = TRUE,
+                                        legend_position = "bottom",
                                         dot_size = 1) {
   require(dplyr)
   require(tidyr)
   require(stringr)
 
+  ## Check required fields
   mandatory_cols <- c("lat", "lon", "cities", "start_year")
   if (!all(mandatory_cols %in% names(column_names))) {
     stop("Column names missing!")
@@ -140,12 +145,24 @@ mapic_city_dots.mapicHolder <- function(.mapic_holder,
     }
   }
 
-  mapic_dots <- mapic_city_dots(.df = .df,
+  ## Make map using default method
+  if (legend_external) {
+    mapic_dots <- mapic_city_dots(.df = .df,
                                 year = year,
                                 column_names = column_names,
+                                legend_position = "none",
                                 dot_size = dot_size,
                                 map_colors = .mapic_holder$colors)
+    } else {
+      mapic_dots <- mapic_city_dots(.df = .df,
+                                    year = year,
+                                    column_names = column_names,
+                                    legend_position = legend_position,
+                                    dot_size = dot_size,
+                                    map_colors = .mapic_holder$colors)
+    }
 
+  ## Papere the data
   data_for_map <- .df  %>%
     mutate(year_final = replace_na(!!sym(column_names$end_year), year + 1),
            city_name = str_to_sentence(!!sym(column_names$cities))) %>%
@@ -155,6 +172,78 @@ mapic_city_dots.mapicHolder <- function(.mapic_holder,
               y = median(!!sym(column_names$lat), na.rm = TRUE),
               n = n())
 
+  ## Empty theme for labels
+  empty_theme <- theme_bw() +
+    theme(legend.position = "none",
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          axis.line = element_line(colour = "white"),
+          axis.title.x = element_blank(),
+          axis.text.x = element_blank(),
+          axis.ticks.x = element_blank(),
+          axis.title.y = element_blank(),
+          axis.text.y = element_blank(),
+          axis.ticks.y = element_blank(),
+          plot.margin = unit(c(-0, -0, -0, -0), "cm"))
+
+  ## legend_external
+  if (legend_external) {
+    ## Dots base size
+    base_size <- 5
+    dot_sizes <- c(0.5 * (base_size * dot_size),
+                   1 * (base_size * dot_size),
+                   2 * (base_size * dot_size),
+                   3 * (base_size * dot_size),
+                   4 * (base_size * dot_size),
+                   5 * (base_size * dot_size),
+                   7 * (base_size * dot_size),
+                   8 * (base_size * dot_size),
+                   9 * (base_size * dot_size))
+
+    external_legends <- data.frame(
+      n = c(1, 2, 6, 11, 31, 51, 101, 201, 301),
+      x = c(1, 1.08, 1.18, 1.32, 1.48, 1.68, 1.92, 2.22, 2.55),
+      labs = c("1", "2-5", "6-10", "11-30",
+               "31-50", "51-100", "101-200",
+               "201-300", ">300"),
+      y = 1) %>%
+      mutate(dot_size = case_when(n == 1 ~ dot_sizes[1],
+                                  n == 2 ~ dot_sizes[2],
+                                  n == 6 ~ dot_sizes[3],
+                                  n == 11 ~ dot_sizes[4],
+                                  n == 31 ~ dot_sizes[5],
+                                  n == 51 ~ dot_sizes[6],
+                                  n == 101 ~ dot_sizes[7],
+                                  n == 201 ~ dot_sizes[8],
+                                  n == 301 ~ dot_sizes[9])) %>%
+    ggplot(aes(x, y)) +
+      geom_point(
+        aes(size = dot_size),
+        color = .mapic_holder$colors$dots_orgs,
+        alpha = 7 / 10,
+        shape = 19) +
+      scale_size_identity(
+        "",
+        breaks = c(2.5, 5, 10, 15, 20, 25, 35, 40, 45),
+        ## labels = labs,
+        labels = c("1", "2-5", "6-10", "11-30",
+                   "31-50", "51-100", "101-200",
+                   "201-300", ">300"),
+        guide = guide_legend(label.position = "bottom",
+                             label.vjust = 0,
+                             nrow = 1)) +
+      geom_text(
+        aes(label = labs),
+        hjust = 0.5,
+        vjust = 7.5,
+        family = "Montserrat") +
+    xlim(1, 2.65) +
+      empty_theme
+
+    .mapic_holder[["legend"]] <- external_legends
+  }
+
+  .mapic_holder[["theme_labels"]] <- empty_theme
   .mapic_holder[["mapic_dots"]] <- mapic_dots
   .mapic_holder[["year"]] <- year
   .mapic_holder[["data"]] <- list(base = .df, map = data_for_map)

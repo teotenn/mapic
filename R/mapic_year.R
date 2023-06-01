@@ -153,6 +153,6 @@ mapic_year_external.mapicHolder <- function(.mapic_holder,
                                     year_label = year_label,
                                     map_colors = .mapic_holder$colors)
 
-  .mapic_holder[["mapic_year"]] <- mapic_year + .mapic_holder[["theme_map"]]
+  .mapic_holder[["mapic_year"]] <- mapic_year + .mapic_holder[["theme_labels"]]
   return(.mapic_holder)
 }

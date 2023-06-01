@@ -106,7 +106,6 @@ base_map <- function(country,
       list(
         mapic = mapic,
         base_map = mapic,
-        theme_map = map_country_theme,
         x_limits = x_limits,
         y_limits = y_limits,
         colors = map_colors

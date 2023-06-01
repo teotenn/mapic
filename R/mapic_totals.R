@@ -158,7 +158,7 @@ mapic_totals_external.mapicHolder <- function(.mapic_holder,
                                         totals_label = totals_label,
                                         map_colors = .mapic_holder$colors)
 
-  .mapic_holder[["mapic_totals"]] <- mapic_totals + .mapic_holder[["theme_map"]]
+  .mapic_holder[["mapic_totals"]] <- mapic_totals + .mapic_holder[["theme_labels"]]
   .mapic_holder[["totals"]] <- data_totals
 
   return(.mapic_holder)
