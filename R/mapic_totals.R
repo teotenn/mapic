@@ -1,4 +1,4 @@
-#' @title Mapic totals
+#' @title Mapic totals generic
 #' @author Manuel Teodoro
 #' @description Generates the label of the total elements included in the map,
 #' either as internal or external label, depending which function is being called.
@@ -15,10 +15,10 @@
 #' @param map_colors An object of class \code{map_colors} containing the details of the colors for the maps.
 #' Not necessary if an object of class \code{mapicHolder} is passed.
 #'
-#' @return If the map is creating using an object of class \code{mapicHolder}, it returns the same object with added
+#' @return If the map is created using an object of class \code{mapicHolder}, it returns the same object with added
 #' information and map elements. Otherwise, it returns a \code{ggplot} object.
 #'
-#' @details It generates the labels to show which years is being mapped.
+#' @details It generates the labels to show the total values mapped.
 #' The internal version currently plots only on the lower-left corner of the map.
 #' The external version generates a sepparated plot that has to be called sepparately.
 #'
@@ -27,6 +27,7 @@
 mapic_totals_internal <- function(x, ...) UseMethod("mapic_totals_internal")
 
 #' @method mapic_totals_internal default
+#' @describeIn mapic_totals_internal Default
 #' @export
 mapic_totals_internal.default <- function(totals,
                                           x_limits,
@@ -79,6 +80,7 @@ mapic_totals_internal.default <- function(totals,
 }
 
 #' @method mapic_totals_internal mapicHolder
+#' @describeIn mapic_totals_internal mapicHolder
 #' @export
 mapic_totals_internal.mapicHolder <- function(.mapic_holder,
                                               totals_label = "Totals") {
@@ -96,11 +98,12 @@ mapic_totals_internal.mapicHolder <- function(.mapic_holder,
 }
 
 
-
+#' @rdname mapic_totals_internal
 #' @export
 mapic_totals_external <- function(x, ...) UseMethod("mapic_totals_external")
 
 #' @method mapic_totals_external default
+#' @rdname mapic_totals_internal
 #' @export
 mapic_totals_external.default <- function(totals,
                                           totals_label = "Totals",
@@ -150,6 +153,7 @@ mapic_totals_external.default <- function(totals,
 }
 
 #' @method mapic_totals_external mapicHolder
+#' @rdname mapic_totals_internal
 #' @export
 mapic_totals_external.mapicHolder <- function(.mapic_holder,
                                               totals_label = "Totals") {

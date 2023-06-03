@@ -2,14 +2,32 @@
 % Please edit documentation in R/mapic_year.R
 \name{mapic_year_internal}
 \alias{mapic_year_internal}
-\title{Mapic year}
+\alias{mapic_year_internal.default}
+\alias{mapic_year_internal.mapicHolder}
+\alias{mapic_year_external}
+\alias{mapic_year_external.default}
+\alias{mapic_year_external.mapicHolder}
+\title{Mapic year generic}
 \usage{
 mapic_year_internal(x, ...)
+
+\method{mapic_year_internal}{default}(
+  year,
+  x_limits,
+  y_limits,
+  year_label = "Year",
+  map_colors = default_map_colors
+)
+
+\method{mapic_year_internal}{mapicHolder}(.mapic_holder, year_label = "Year")
+
+mapic_year_external(x, ...)
+
+\method{mapic_year_external}{default}(year, year_label = "Year", map_colors = default_map_colors)
+
+\method{mapic_year_external}{mapicHolder}(.mapic_holder, year_label = "Year")
 }
 \arguments{
-\item{.mapic_holder}{Object of class \code{mapicHolder} as returned from the function
-\code{base_map} and \code{mapic_city_dots} (optional).}
-
 \item{year}{The year to be plot, as \code{numeric}.
 Not necessary if an object of class \code{mapicHolder} is passed.}
 
@@ -23,20 +41,30 @@ Not necessary for external or if an object of class \code{mapicHolder} is passed
 
 \item{map_colors}{An object of class \code{map_colors} containing the details of the colors for the maps.
 Not necessary if an object of class \code{mapicHolder} is passed.}
+
+\item{.mapic_holder}{Object of class \code{mapicHolder} as returned from the function
+\code{base_map} and \code{mapic_city_dots} (optional).}
 }
 \value{
-If the map is creating using an object of class \code{mapicHolder}, it returns the same object with added
+If the map is created using an object of class \code{mapicHolder}, it returns the same object with added
 information and map elements. Otherwise, it returns a \code{ggplot} object.
 }
 \description{
-Generates the label of the year to be map, either as internal or external,
+Generates the label of the year to be mapped, either as internal or external,
 depending which function is being called.
 }
 \details{
-It generates the labels to show which years is being mapped.
+It generates the labels to show which year is being mapped.
 The internal version currently plots only on the lower-left corner of the map.
 The external version generates a sepparated plot that has to be called sepparately.
 }
+\section{Methods (by class)}{
+\itemize{
+\item \code{mapic_year_internal(default)}: Default
+
+\item \code{mapic_year_internal(mapicHolder)}: mapicHolder
+
+}}
 \author{
 Manuel Teodoro
 }

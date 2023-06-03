@@ -14,6 +14,8 @@
 #' \item end_year : Optional. Column containing the ending year.
 #' }
 #' @param legend_position Overwrites ggplot's \code{theme(legend.position)}. See theme's help for details.
+#' @param legend_external Boolean. If an object of class \code{mapicHolder} is used, the legends can be
+#' extracted from the map and passed as an element of the object, as \code{object$legend}.
 #' @param dot_size Default 1. Proportional sizes of the dots.
 #' @param map_colors An object of class \code{map_colors} containing the details of the colors for the maps.
 #' Not necessary if an object of class \code{mapicHolder} is passed.
@@ -27,6 +29,7 @@
 mapic_city_dots <- function(x, ...) UseMethod("mapic_city_dots")
 
 #' @method mapic_city_dots default
+#' @describeIn mapic_city_dots Default
 #' @export
 mapic_city_dots.default <- function(.df,
                                     year,
@@ -117,6 +120,7 @@ mapic_city_dots.default <- function(.df,
 }
 
 #' @method mapic_city_dots mapicHolder
+#' @describeIn mapic_city_dots Default
 #' @export
 mapic_city_dots.mapicHolder <- function(.mapic_holder,
                                         .df,

@@ -2,13 +2,34 @@
 % Please edit documentation in R/mapic_city_dots.R
 \name{mapic_city_dots}
 \alias{mapic_city_dots}
+\alias{mapic_city_dots.default}
+\alias{mapic_city_dots.mapicHolder}
 \title{Mapic City Dots}
 \usage{
 mapic_city_dots(x, ...)
+
+\method{mapic_city_dots}{default}(
+  .df,
+  year,
+  column_names = list(lat = "lat", lon = "lon", cities = "city", start_year = "year",
+    end_year = NULL),
+  legend_position = "bottom",
+  dot_size = 1,
+  map_colors = default_map_colors
+)
+
+\method{mapic_city_dots}{mapicHolder}(
+  .mapic_holder,
+  .df,
+  year,
+  column_names = list(lat = "lat", lon = "lon", cities = "city", start_year = "year",
+    end_year = NULL),
+  legend_external = TRUE,
+  legend_position = "bottom",
+  dot_size = 1
+)
 }
 \arguments{
-\item{.mapic_holder}{Object of class \code{mapicHolder} as returned from the function \code{base_map} (optional).}
-
 \item{.df}{Object of class \code{data.frame} containing the data to be included in the map. Preferably as return from the function \code{combine_csv_sql}. See \code{column_names} for a list of required fields.}
 
 \item{year}{The year to be plot, as \code{numeric}.}
@@ -28,6 +49,11 @@ mapic_city_dots(x, ...)
 
 \item{map_colors}{An object of class \code{map_colors} containing the details of the colors for the maps.
 Not necessary if an object of class \code{mapicHolder} is passed.}
+
+\item{.mapic_holder}{Object of class \code{mapicHolder} as returned from the function \code{base_map} (optional).}
+
+\item{legend_external}{Boolean. If an object of class \code{mapicHolder} is used, the legends can be
+extracted from the map and passed as an element of the object, as \code{object$legend}.}
 }
 \value{
 If the map is creating using an object of class \code{mapicHolder}, it returns the same object with added
@@ -39,6 +65,13 @@ Generates the plot of dots per city with its size based on amount of organizatio
 \details{
 It generates the dots to be added to the base map, showing the ammount of elements per city in a given year.
 }
+\section{Methods (by class)}{
+\itemize{
+\item \code{mapic_city_dots(default)}: Default
+
+\item \code{mapic_city_dots(mapicHolder)}: Default
+
+}}
 \author{
 Manuel Teodoro
 }

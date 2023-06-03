@@ -1,6 +1,6 @@
-#' @title Mapic year
+#' @title Mapic year generic
 #' @author Manuel Teodoro
-#' @description Generates the label of the year to be map, either as internal or external,
+#' @description Generates the label of the year to be mapped, either as internal or external,
 #' depending which function is being called.
 #'
 #' @param .mapic_holder Object of class \code{mapicHolder} as returned from the function
@@ -15,10 +15,10 @@
 #' @param map_colors An object of class \code{map_colors} containing the details of the colors for the maps.
 #' Not necessary if an object of class \code{mapicHolder} is passed.
 #'
-#' @return If the map is creating using an object of class \code{mapicHolder}, it returns the same object with added
+#' @return If the map is created using an object of class \code{mapicHolder}, it returns the same object with added
 #' information and map elements. Otherwise, it returns a \code{ggplot} object.
 #'
-#' @details It generates the labels to show which years is being mapped.
+#' @details It generates the labels to show which year is being mapped.
 #' The internal version currently plots only on the lower-left corner of the map.
 #' The external version generates a sepparated plot that has to be called sepparately.
 #'
@@ -27,6 +27,7 @@
 mapic_year_internal <- function(x, ...) UseMethod("mapic_year_internal")
 
 #' @method mapic_year_internal default
+#' @describeIn mapic_year_internal Default
 #' @export
 mapic_year_internal.default <- function(year,
                                         x_limits,
@@ -81,6 +82,7 @@ mapic_year_internal.default <- function(year,
 }
 
 #' @method mapic_year_internal mapicHolder
+#' @describeIn mapic_year_internal mapicHolder
 #' @export
 mapic_year_internal.mapicHolder <- function(.mapic_holder,
                                             year_label = "Year") {
@@ -96,10 +98,12 @@ mapic_year_internal.mapicHolder <- function(.mapic_holder,
 }
 
 
+#' @rdname mapic_year_internal
 #' @export
 mapic_year_external <- function(x, ...) UseMethod("mapic_year_external")
 
 #' @method mapic_year_external default
+#' @rdname mapic_year_internal
 #' @export
 mapic_year_external.default <- function(year,
                                         year_label = "Year",
@@ -146,6 +150,7 @@ mapic_year_external.default <- function(year,
 }
 
 #' @method mapic_year_external mapicHolder
+#' @rdname mapic_year_internal
 #' @export
 mapic_year_external.mapicHolder <- function(.mapic_holder,
                                             year_label = "Year") {
