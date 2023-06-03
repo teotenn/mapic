@@ -52,10 +52,10 @@ test_that("coords_from_city: Not found results", {
 })
 
 
-## TEST FUNCTION: <webscrap_to_sqlite> -------------------------------|
+## TEST FUNCTION: <api_to_sqlite> -------------------------------|
 
 ## Find a suitable test, for now test results below
-webscrap_to_db(db_name = "test.sqlite",
+api_to_db(db_name = "test.sqlite",
                dat = t_dat,
                city = "City",
                country = "Country",
@@ -125,14 +125,14 @@ test_that("add_coords_manually", {
                          osm_name = "", lon = 12, lat = 13)
     add_coords_manually(to_add, "test.sqlite")
     df_added <- import_db_as_df("test.sqlite")
-    webscrap_to_db("test.sqlite", t_dat, state = "Region", silent = TRUE)
+    api_to_db("test.sqlite", t_dat, state = "Region", silent = TRUE)
     df_complete <- import_db_as_df("test.sqlite")
     expect_equal(nrow(df_added), 7)
     expect_equal(nrow(df_complete), 10)
 })
 
 
-test_that("webscrap_no_city", {
+test_that("api_no_city", {
   new_state <- data.frame(ID = 11,
                           Name = "org11",
                           Type = "none",
@@ -142,7 +142,7 @@ test_that("webscrap_no_city", {
                           Region = "Tlaxcala",
                           City = NA,
                           Source = "none")
-  webscrap_no_city("test.sqlite", new_state, "Country", state = "Region", silent = T)
+  api_no_city("test.sqlite", new_state, "Country", state = "Region", silent = T)
   df_added <- import_db_as_df("test.sqlite")
   expect_equal(nrow(df_added), 11)
 })

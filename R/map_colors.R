@@ -92,7 +92,6 @@ default_map_colors <- define_map_colors(dots_orgs = "#493252",
 #' @export
 #' @examples
 #' my_colors <- with_default_colors(list(dots_orgs = "#000000")
-## with_default_aesthetics <- function(colors = NA, sizes = NA, legends = NA) {
 with_default_colors <- function(list_colors = NA) {
   require(purrr)
   modified_map_colors <- default_map_colors

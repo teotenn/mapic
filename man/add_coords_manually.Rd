@@ -21,7 +21,7 @@ Add missing values manually, from as csv file, tibble or data frame to SQLite ta
 \details{
 Note that if one missing city appears several times, you can provide the lat and long via this
 function only once, making sure that all the fields for this city match, and then run again
-\code{webscrap_to_sqlite} which will find it in the database and set it for all other values to be searched.
+\code{api_to_sqlite} which will find it in the database and set it for all other values to be searched.
 }
 \author{
 Manuel Teodoro

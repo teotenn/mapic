@@ -22,6 +22,8 @@ mapic_city_dots(x, ...)
 \item end_year : Optional. Column containing the ending year.
 }}
 
+\item{legend_position}{Overwrites ggplot's \code{theme(legend.position)}. See theme's help for details.}
+
 \item{dot_size}{Default 1. Proportional sizes of the dots.}
 
 \item{map_colors}{An object of class \code{map_colors} containing the details of the colors for the maps.
