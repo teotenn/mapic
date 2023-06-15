@@ -89,10 +89,11 @@ coords_from_city <- function(city = NULL,
 }
 
 
-#' @title webscrap to database
+#' @title api to database
 #' @author Manuel Teodoro
 #'
-#' @description Retrieve coordinates from a list of countries and send it to a sql DB
+#' @description Based on a list of countries, retrieve coordinates from OSM api and
+#' send the results to a sql DB
 #'
 #' @param db_name name of the SQLite database. If not exists, it will be created
 #' @param dat The tibble containing the data. It MUST contain a collumn called 'ID' with UNIQUE identification
@@ -128,7 +129,7 @@ coords_from_city <- function(city = NULL,
 #' If necessary, it is easy to convert all such values to \code{NA} in R.
 #' If bugs are found regarding this behaviour conflicting with the database, please report it immediately.
 #' @export
-webscrap_to_db <- function(db_name,
+api_to_db <- function(db_name,
                            dat,
                            city = "City",
                            country = "Country",
@@ -167,7 +168,7 @@ webscrap_to_db <- function(db_name,
     dat_local <- filter(dat_local, rowSums(is.na(dat_local)) != ncol(dat_local))
 
     ## ---- Iteration to web-scrap data ---- ##
-    ## For loop to webscrapping
+    ## For loop to api connection
     for (i in 1:nrow(dat_local)) {
       if (!silent) print(paste0("Searching entry ", dat_local[["ID"]][i]))
       ## Abstracting info
@@ -207,7 +208,7 @@ webscrap_to_db <- function(db_name,
     dbDisconnect(con)
 
     ## repeat
-    webscrap_to_db(db_name = db_name,
+    api_to_db(db_name = db_name,
                    dat = dat,
                    city = city,
                    country = country,
@@ -244,7 +245,7 @@ webscrap_to_db <- function(db_name,
 #'
 #' @details Note that if one missing city appears several times, you can provide the lat and long via this
 #' function only once, making sure that all the fields for this city match, and then run again
-#' \code{webscrap_to_sqlite} which will find it in the database and set it for all other values to be searched.
+#' \code{api_to_sqlite} which will find it in the database and set it for all other values to be searched.
 #'
 #' @export
 #'
@@ -284,7 +285,7 @@ add_coords_manually <- function(csv_file, db_name) {
 
 
 
-#' @title webscrap no city
+#' @title api no city
 #' @author Manuel Teodoro
 #'
 #' @description Performs the webs crapping ignoring city names
@@ -309,7 +310,7 @@ add_coords_manually <- function(csv_file, db_name) {
 #' @export
 #'
 #'
-webscrap_no_city <- function(db_name,
+api_no_city <- function(db_name,
                              dat,
                              country,
                              region = NULL,
@@ -327,7 +328,7 @@ webscrap_no_city <- function(db_name,
   }
   dat$City <- as.character(NA)
 
-  webscrap_to_db(db_name = db_name,
+  api_to_db(db_name = db_name,
                  dat = dat,
                  region = region,
                  state = state,

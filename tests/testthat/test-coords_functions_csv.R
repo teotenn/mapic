@@ -4,7 +4,7 @@ the_file <- "test_file.csv"
 t_dat <- read.csv(the_file)
 
 
-webscrap_to_db(db_name = "test.sqlite",
+api_to_db(db_name = "test.sqlite",
                dat = t_dat,
                city = "City",
                country = "Country",
