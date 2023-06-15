@@ -3,7 +3,9 @@
 #' @description Generates the plot of dots per city with its size based on amount of organizations.
 #'
 #' @param .mapic_holder Object of class \code{mapicHolder} as returned from the function \code{base_map} (optional).
-#' @param .df Object of class \code{data.frame} containing the data to be included in the map. Preferably as return from the function \code{combine_csv_sql}. See \code{column_names} for a list of required fields.
+#' @param .df Object of class \code{data.frame} containing the data to be included in the map.
+#' Preferably as return from the function \code{combine_csv_sql}. See \code{column_names} for a
+#' list of required fields.
 #' @param year The year to be plot, as \code{numeric}.
 #' @param column_names A \code{list} with the names of the columns containing the values to be used for the map.
 #' \enumerate{
@@ -47,6 +49,9 @@ mapic_city_dots.default <- function(.df,
   require(stringr)
   require(ggplot2)
 
+  column_names <- column_names[lengths(column_names) != 0]
+  year__ <- year
+
   mandatory_cols <- c("lat", "lon", "cities", "start_year")
   if (!all(mandatory_cols %in% names(column_names))) {
     stop("Column names missing!")
@@ -71,12 +76,13 @@ mapic_city_dots.default <- function(.df,
 
   ## Main data to plot
   filt <- .df  %>%
-    mutate(year_final = replace_na(!!sym(column_names$end_year), year + 1),
+    mutate_at(vars(column_names$end_year), ~replace_na(., year__ + 1)) %>%
+    mutate(year_final = !!sym(column_names$end_year),
            city_name = str_to_sentence(!!sym(column_names$cities))) %>%
-    filter(year_final > year & !!sym(column_names$start_year) <= year) %>%
+    filter(year_final > year__ & !!sym(column_names$start_year) <= year__) %>%
     group_by(city_name) %>%
-    summarise(x = median(!!sym(column_names$lon), na.rm = TRUE),
-              y = median(!!sym(column_names$lat), na.rm = TRUE),
+    summarise(x = mean(!!sym(column_names$lon), na.rm = TRUE),
+              y = mean(!!sym(column_names$lat), na.rm = TRUE),
               n = n()) %>%
     mutate(dot_size = case_when(n == 1 ~ dot_sizes[1],
                                 n >= 2 & n <= 5 ~ dot_sizes[2],
@@ -138,6 +144,9 @@ mapic_city_dots.mapicHolder <- function(.mapic_holder,
   require(tidyr)
   require(stringr)
 
+  column_names <- column_names[lengths(column_names) != 0]
+  year__ <- year
+
   ## Check required fields
   mandatory_cols <- c("lat", "lon", "cities", "start_year")
   if (!all(mandatory_cols %in% names(column_names))) {
@@ -152,14 +161,14 @@ mapic_city_dots.mapicHolder <- function(.mapic_holder,
   ## Make map using default method
   if (legend_external) {
     mapic_dots <- mapic_city_dots(.df = .df,
-                                year = year,
+                                year = year__,
                                 column_names = column_names,
                                 legend_position = "none",
                                 dot_size = dot_size,
                                 map_colors = .mapic_holder$colors)
     } else {
       mapic_dots <- mapic_city_dots(.df = .df,
-                                    year = year,
+                                    year = year__,
                                     column_names = column_names,
                                     legend_position = legend_position,
                                     dot_size = dot_size,
@@ -168,9 +177,10 @@ mapic_city_dots.mapicHolder <- function(.mapic_holder,
 
   ## Papere the data
   data_for_map <- .df  %>%
-    mutate(year_final = replace_na(!!sym(column_names$end_year), year + 1),
+    mutate_at(vars(column_names$end_year), ~replace_na(., year__ + 1)) %>%
+    mutate(year_final = !!sym(column_names$end_year),
            city_name = str_to_sentence(!!sym(column_names$cities))) %>%
-    filter(year_final > year & !!sym(column_names$start_year) <= year) %>%
+    filter(year_final > year__ & !!sym(column_names$start_year) <= year__) %>%
     group_by(city_name) %>%
     summarise(x = median(!!sym(column_names$lon), na.rm = TRUE),
               y = median(!!sym(column_names$lat), na.rm = TRUE),
@@ -229,7 +239,6 @@ mapic_city_dots.mapicHolder <- function(.mapic_holder,
       scale_size_identity(
         "",
         breaks = c(2.5, 5, 10, 15, 20, 25, 35, 40, 45),
-        ## labels = labs,
         labels = c("1", "2-5", "6-10", "11-30",
                    "31-50", "51-100", "101-200",
                    "201-300", ">300"),
@@ -249,7 +258,7 @@ mapic_city_dots.mapicHolder <- function(.mapic_holder,
 
   .mapic_holder[["theme_labels"]] <- empty_theme
   .mapic_holder[["mapic_dots"]] <- mapic_dots
-  .mapic_holder[["year"]] <- year
+  .mapic_holder[["year"]] <- year__
   .mapic_holder[["data"]] <- list(base = .df, map = data_for_map)
   .mapic_holder[["mapic"]] <- .mapic_holder[["mapic"]] + mapic_dots
   return(.mapic_holder)
