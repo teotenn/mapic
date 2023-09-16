@@ -96,7 +96,7 @@ coords_from_city <- function(city = NULL,
 #' send the results to a sql DB
 #'
 #' @param db_name name of the SQLite database. If not exists, it will be created
-#' @param dat The tibble containing the data. It MUST contain a collumn called 'ID' with UNIQUE identification
+#' @param dat The data frame containing the data. It MUST contain a collumn called 'ID' with UNIQUE identification
 #' numbers, and at least names of the cities, country and date of registration of the Org.
 #' @param city String with the name of the column with the city names
 #' @param country String with the name of the column with the country codes (2-letter)
@@ -129,7 +129,7 @@ coords_from_city <- function(city = NULL,
 #' If necessary, it is easy to convert all such values to \code{NA} in R.
 #' If bugs are found regarding this behaviour conflicting with the database, please report it immediately.
 #' @export
-api_to_db <- function(db_name,
+api_to_db <- function(mdb,
                            dat,
                            city = "City",
                            country = "Country",
@@ -142,20 +142,22 @@ api_to_db <- function(db_name,
   require(dplyr)
 
   ## Connect to db and table
-  con <- dbConnect(drv = SQLite(), dbname = db_name)
-  dbExecute(conn = con,
-            "CREATE TABLE IF NOT EXISTS orgs
-                    (ID INTEGER UNIQUE,
-                     City TEXT,
-                     Country TEXT, 
-                     Region TEXT,
-                     State TEXT,
-                     County TEXT,
-                     osm_name TEXT,
-                     lon REAL,
-                     lat REAL)")
-  ## And load it
-  db <- dbReadTable(con, "orgs")
+  ## con <- dbConnect(drv = SQLite(), dbname = db_name)
+  ## dbExecute(conn = con,
+  ##           "CREATE TABLE IF NOT EXISTS orgs
+  ##                   (ID INTEGER UNIQUE,
+  ##                    City TEXT,
+  ##                    Country TEXT, 
+  ##                    Region TEXT,
+  ##                    State TEXT,
+  ##                    County TEXT,
+  ##                    osm_name TEXT,
+  ##                    lon REAL,
+  ##                    lat REAL)")
+  ## ## And load it
+  ## db <- dbReadTable(con, "orgs")
+  db <- db_load(mdb)
+  db_name <- mdb$path
   ## Filtering the data
   new_coords <- data.frame()
   dat_local <- compare_db_data(db_name, dat)
@@ -204,11 +206,10 @@ api_to_db <- function(db_name,
     }
 
     ## Send only the new results to DB and close connection
-    dbWriteTable(con, "orgs", new_coords, append = TRUE)
-    dbDisconnect(con)
+    db_append(mdb, new_coords)
 
     ## repeat
-    api_to_db(db_name = db_name,
+    api_to_db(mdb = mdb,
                    dat = dat,
                    city = city,
                    country = country,
@@ -218,7 +219,7 @@ api_to_db <- function(db_name,
                    db_backup_after = db_backup_after,
                    silent = silent)
   } else { ## Exit info
-    db_final <- import_db_as_df(db_name)
+    db_final <- db_load(mdb)
     size <- nrow(db_final)
     not_found <- nrow(db_final[is.na(db_final$lat), ])
 

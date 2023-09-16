@@ -5,7 +5,7 @@
 \title{api to database}
 \usage{
 api_to_db(
-  db_name,
+  mdb,
   dat,
   city = "City",
   country = "Country",
@@ -17,9 +17,7 @@ api_to_db(
 )
 }
 \arguments{
-\item{db_name}{name of the SQLite database. If not exists, it will be created}
-
-\item{dat}{The tibble containing the data. It MUST contain a collumn called 'ID' with UNIQUE identification
+\item{dat}{The data frame containing the data. It MUST contain a collumn called 'ID' with UNIQUE identification
 numbers, and at least names of the cities, country and date of registration of the Org.}
 
 \item{city}{String with the name of the column with the city names}
@@ -35,6 +33,8 @@ numbers, and at least names of the cities, country and date of registration of t
 \item{db_backup_after}{Number of iteration after which the data is sent to the database.}
 
 \item{silent}{If TRUE, silences the messages from the function}
+
+\item{db_name}{name of the SQLite database. If not exists, it will be created}
 }
 \value{
 Creates a table (if not yet exists) called "orgs" in the given SQLite data base. The table contains

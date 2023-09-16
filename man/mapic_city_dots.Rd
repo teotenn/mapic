@@ -30,7 +30,9 @@ mapic_city_dots(x, ...)
 )
 }
 \arguments{
-\item{.df}{Object of class \code{data.frame} containing the data to be included in the map. Preferably as return from the function \code{combine_csv_sql}. See \code{column_names} for a list of required fields.}
+\item{.df}{Object of class \code{data.frame} containing the data to be included in the map.
+Preferably as return from the function \code{combine_csv_sql}. See \code{column_names} for a
+list of required fields.}
 
 \item{year}{The year to be plot, as \code{numeric}.}
 
