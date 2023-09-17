@@ -9,38 +9,38 @@
 #' in the database with name \code{db_file}
 #'
 #' @export
-compare_db_data  <- function(x, ...) UseMethod("compare_db_data")
+db_compare_data  <- function(x, ...) UseMethod("db_compare_data")
 
-#' @method compare_db_data default
-#' @describeIn compare_db_data Default
+#' @method db_compare_data default
+#' @describeIn db_compare_data Default
 #' @export
-compare_db_data.default <- function(x, ...) {
+db_compare_data.default <- function(x, ...) {
   stop(paste("Object of class",
              class(x),
              "not recognized.",
              sep = " "))
 }
 
-#' @method compare_db_data mdb_df
-#' @describeIn compare_db_data mdb_df
+#' @method db_compare_data mdb_df
+#' @describeIn db_compare_data mdb_df
 #' @export
-compare_db_data.mdb_df <- function(mdb, df) {
+db_compare_data.mdb_df <- function(mdb, df) {
   local_df <- db_load(mdb)
   filtered <- filter(df, !(as.character(ID) %in% as.character(local_df$ID)))
   return(filtered)
 }
 
-#' @method compare_db_data mdb_csv
-#' @describeIn compare_db_data mdb_csv
+#' @method db_compare_data mdb_csv
+#' @describeIn db_compare_data mdb_csv
 #' @export
-compare_db_data.mdb_csv <- function(x, ...) {
+db_compare_data.mdb_csv <- function(x, ...) {
 
 }
 
-#' @method compare_db_data mdb_SQLite
-#' @describeIn compare_db_data mdb_SQLite
+#' @method db_compare_data mdb_SQLite
+#' @describeIn db_compare_data mdb_SQLite
 #' @export
-compare_db_data.mdb_SQLite <- function(mdb, df) {
+db_compare_data.mdb_SQLite <- function(mdb, df) {
   local_df <- db_load(mdb)
   filtered <- filter(df, !(as.character(ID) %in% as.character(local_df$ID)))
   return(filtered)

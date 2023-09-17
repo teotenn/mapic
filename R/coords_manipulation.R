@@ -28,6 +28,7 @@ coords_from_city <- function(city = NULL,
                              choose_when_multiple = FALSE,
                              silent = FALSE) {
   require(RJSONIO)
+  require(httr)
 
   CountryCoded <- paste("&countrycodes=", country_code, sep = "")
   extras <- c(city = city, state = state, region = region, county = county)
@@ -130,14 +131,14 @@ coords_from_city <- function(city = NULL,
 #' If bugs are found regarding this behaviour conflicting with the database, please report it immediately.
 #' @export
 api_to_db <- function(mdb,
-                           dat,
-                           city = "City",
-                           country = "Country",
-                           region = NULL,
-                           state = NULL,
-                           county = NULL,
-                           db_backup_after = 10,
-                           silent = FALSE) {
+                      dat,
+                      city = "City",
+                      country = "Country",
+                      region = NULL,
+                      state = NULL,
+                      county = NULL,
+                      db_backup_after = 10,
+                      silent = FALSE) {
   ## require(RSQLite)
   require(dplyr)
 
@@ -145,7 +146,7 @@ api_to_db <- function(mdb,
   db <- db_load(mdb)
   ## Filtering the data
   new_coords <- data.frame()
-  dat_local <- compare_db_data(mdb, dat)
+  dat_local <- db_compare_data(mdb, dat)
   df_len <- nrow(dat_local)
 
   ## As long as DB and DF have different sizes repeat:
@@ -235,7 +236,7 @@ api_to_db <- function(mdb,
 #'
 #' @export
 #'
-add_coords_manually <- function(csv_file, db_name) {
+add_coords_manually <- function(csv_file, mdb) {
   require(dplyr)
   require(RSQLite)
 
@@ -251,7 +252,7 @@ add_coords_manually <- function(csv_file, db_name) {
     stop("Incorrect data format")
   }
 
-  db_df <- import_db_as_df(db_name)
+  db_df <- db_load(mdb)
   if (any(!names(db_df) %in% names(local_df))) {
     stop(cat("The dataset with the missing info is missing columns or the names are not correct.\nCorrect names of the fields/columns are:\n",
              names(db_df), "\n"))
@@ -263,9 +264,7 @@ add_coords_manually <- function(csv_file, db_name) {
   } else {
     local_df <- local_df %>% mutate_all(~replace(., is.na(.), ""))
     ## Send the values to DB and
-    con <- dbConnect(drv = SQLite(), dbname = db_name)
-    dbWriteTable(con, "orgs", local_df, append = TRUE)
-    dbDisconnect(con)
+    db_append(mdb, local_df)
   }
 }
 
@@ -296,14 +295,14 @@ add_coords_manually <- function(csv_file, db_name) {
 #' @export
 #'
 #'
-api_no_city <- function(db_name,
-                             dat,
-                             country,
-                             region = NULL,
-                             state = NULL,
-                             county = NULL,
-                             city = NULL,
-                             silent = FALSE) {
+api_no_city <- function(mdb,
+                        dat,
+                        country,
+                        region = NULL,
+                        state = NULL,
+                        county = NULL,
+                        city = NULL,
+                        silent = FALSE) {
   if (!missing(city)) {
     warning("As from v2.3.1 the parameter <city> is not used anymore. Please remove it to avoid this warning.")
   }
@@ -314,10 +313,10 @@ api_no_city <- function(db_name,
   }
   dat$City <- as.character(NA)
 
-  api_to_db(db_name = db_name,
-                 dat = dat,
-                 region = region,
-                 state = state,
-                 county = county,
-                 silent = silent)
+  api_to_db(mdb = mdb,
+            dat = dat,
+            region = region,
+            state = state,
+            county = county,
+            silent = silent)
 }
