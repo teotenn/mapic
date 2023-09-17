@@ -111,21 +111,22 @@ combine_csv_sql <- function(db_file, csv_file, city = "City") {
 #'
 #' @return The function returns a tibble containing the same data as the csv file, but with only missing values
 #' @export
-compare_db_data <- function(db_file, dat) {
-  require(dplyr)
-  require(RSQLite)
-  if (is.character(dat)) {
-    if (grepl(".csv", dat, fixed = TRUE)) {
-      local_df <- read.csv(dat)
-    } else {
-      stop("Incorrect file format for data")
-    }
-  } else if (is.data.frame(dat)) {
-    local_df <- dat
-  } else {
-    stop("Incorrect data format")
-  }
-  db <- import_db_as_df(db_file)
-  filtered <- filter(local_df, !(as.character(ID) %in% as.character(db$ID)))
-  return(filtered)
-}
+
+## compare_db_data <- function(db_file, dat) {
+##   require(dplyr)
+##   require(RSQLite)
+##   if (is.character(dat)) {
+##     if (grepl(".csv", dat, fixed = TRUE)) {
+##       local_df <- read.csv(dat)
+##     } else {
+##       stop("Incorrect file format for data")
+##     }
+##   } else if (is.data.frame(dat)) {
+##     local_df <- dat
+##   } else {
+##     stop("Incorrect data format")
+##   }
+##   db <- import_db_as_df(db_file)
+##   filtered <- filter(local_df, !(as.character(ID) %in% as.character(db$ID)))
+##   return(filtered)
+## }

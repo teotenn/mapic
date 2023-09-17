@@ -138,29 +138,14 @@ api_to_db <- function(mdb,
                            county = NULL,
                            db_backup_after = 10,
                            silent = FALSE) {
-  require(RSQLite)
+  ## require(RSQLite)
   require(dplyr)
 
-  ## Connect to db and table
-  ## con <- dbConnect(drv = SQLite(), dbname = db_name)
-  ## dbExecute(conn = con,
-  ##           "CREATE TABLE IF NOT EXISTS orgs
-  ##                   (ID INTEGER UNIQUE,
-  ##                    City TEXT,
-  ##                    Country TEXT, 
-  ##                    Region TEXT,
-  ##                    State TEXT,
-  ##                    County TEXT,
-  ##                    osm_name TEXT,
-  ##                    lon REAL,
-  ##                    lat REAL)")
-  ## ## And load it
-  ## db <- dbReadTable(con, "orgs")
+  ## load db
   db <- db_load(mdb)
-  db_name <- mdb$path
   ## Filtering the data
   new_coords <- data.frame()
-  dat_local <- compare_db_data(db_name, dat)
+  dat_local <- compare_db_data(mdb, dat)
   df_len <- nrow(dat_local)
 
   ## As long as DB and DF have different sizes repeat:

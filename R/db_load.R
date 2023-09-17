@@ -21,17 +21,31 @@ db_load.default <- function(x, ...) {
              sep = " "))
 }
 
-#' @method db_load data.frame
-#' @describeIn db_load data.frame
+#' @method db_load mdb_df
+#' @describeIn db_load mdb_df
 #' @export
-db_load.data.frame <- function(x, ...) {
+db_load.mdb_df <- function(mdb, ...) {
+  df_name <- mdb$location
 
+  if (!df_name %in% ls(envir = .GlobalEnv)) {
+    initial_df <- data.frame(ID = character(0),
+                             City = character(0),
+                             Country = character(0),
+                             Region = character(0),
+                             State = character(0),
+                             County = character(0),
+                             osm_name = character(0),
+                             lon = numeric(0),
+                             lat = numeric(0))
+    assign(df_name, initial_df, envir = .GlobalEnv)
+  }
+  return(get(df_name, envir = .GlobalEnv))
 }
 
 #' @method db_load mdb_csv
 #' @describeIn db_load mdb_csv
 #' @export
-db_load.mdb_csv <- function(x, ...) {
+db_load.mdb_csv <- function(mdb, ...) {
   
 }
 
@@ -40,7 +54,7 @@ db_load.mdb_csv <- function(x, ...) {
 #' @export
 db_load.mdb_SQLite <- function(mdb) {
   require(RSQLite)
-  path_to_db <- mdb$path
+  path_to_db <- mdb$location
   table_name <- mdb$table
 
   con <- dbConnect(drv = RSQLite::SQLite(), dbname = path_to_db)
@@ -61,3 +75,4 @@ db_load.mdb_SQLite <- function(mdb) {
   dbDisconnect(con)
   return(db)
 }
+
