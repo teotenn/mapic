@@ -3,21 +3,24 @@
 #'
 #' @description Appends the rows of a data frame into the database table
 #'
-#' @param db_file Path to the SQLite file containing the table 'orgs'
+#' @param mdb Mapic database configuration object (See
+#' \link{database_configuration} for a reference).
+#' @param df data frame with the rows to be appended.
 #'
-#' @return An object of class tibble (which inherits data.frame) containing the values stored
-#' in the database with name \code{db_file}
+#' @details The function appends all the rows in \code{df} to the database and
+#' table specified in \code{mdb}.
 #'
+#' @seealso \link{database_configuration}
 #' @export
-db_append  <- function(x, ...) UseMethod("db_append")
+db_append  <- function(mdb, ...) UseMethod("db_append")
 
 #' @method db_append default
 #' @describeIn db_append Default
 #' @export
-db_append.default <- function(x, ...) {
+db_append.default <- function(mdb, ...) {
   stop(paste("Object of class",
-             class(x),
-             "not recognized.",
+             class(mdb),
+             "not recognized as a mapic db configuration object.",
              sep = " "))
 }
 

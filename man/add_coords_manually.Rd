@@ -4,7 +4,7 @@
 \alias{add_coords_manually}
 \title{add coordinates manually}
 \usage{
-add_coords_manually(csv_file, db_name)
+add_coords_manually(csv_file, mdb)
 }
 \arguments{
 \item{csv_file}{file containing the missing values. The dataset providing the values must contain the exact

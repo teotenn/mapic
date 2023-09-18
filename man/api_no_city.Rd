@@ -5,7 +5,7 @@
 \title{api no city}
 \usage{
 api_no_city(
-  db_name,
+  mdb,
   dat,
   country,
   region = NULL,
@@ -16,8 +16,6 @@ api_no_city(
 )
 }
 \arguments{
-\item{db_name}{name of the SQLite database. If not exists, it will be created.}
-
 \item{dat}{The tibble containing the data. It MUST contain a collumn called 'ID' with UNIQUE identification numbers
 and at least names of the cities, country and date of registration of the Org.}
 
@@ -32,6 +30,8 @@ and at least names of the cities, country and date of registration of the Org.}
 \item{city}{As from version 2.3.1, this parameter is not necessary and it will be deprecated.}
 
 \item{silent}{If TRUE, silences the messages from the function}
+
+\item{db_name}{name of the SQLite database. If not exists, it will be created.}
 }
 \value{
 Creates a table (if not yet exists) called "orgs" in the given SQLite data base. The table contains the ID,

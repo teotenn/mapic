@@ -1,30 +1,39 @@
 #' @title Loads the database table
 #' @author Manuel Teodoro
 #'
-#' @description Loads the table database to R as a data frame
+#' @description Loads the database table to R as a data frame.
 #'
-#' @param db_file Path to the SQLite file containing the table 'orgs'
+#' @param mdb Mapic database configuration object (See
+#' \link{database_configuration} for a reference).
 #'
-#' @return An object of class tibble (which inherits data.frame) containing the values stored
-#' in the database with name \code{db_file}
+#' @return An object of class \code{data.frame} containing the values stored
+#' in the database specified in \code{mdb}.
 #'
+#' @details The main task of the function is to load the table specified in the
+#' \code{mdb} object to R as a \code{data.frame}. The function also has the tasks of
+#' creating the table when it does not exist yet. This is the equivalent to the
+#' command \code{CREATE TABLE IF NOT EXISTS} in SQL. For \code{csv} it creates
+#' the file and for \code{data.frame} it creates the data frame in the global
+#' environment, both with the structure required by mapic to store the coordinates.
+#'
+#' @seealso \link{database_configuration}
 #' @export
-db_load  <- function(x, ...) UseMethod("db_load")
+db_load  <- function(mdb, ...) UseMethod("db_load")
 
 #' @method db_load default
 #' @describeIn db_load Default
 #' @export
-db_load.default <- function(x, ...) {
+db_load.default <- function(mdb) {
   stop(paste("Object of class",
-             class(x),
-             "not recognized.",
+             class(mdb),
+             "not recognized as a mapic db configuration object.",
              sep = " "))
 }
 
 #' @method db_load mdb_df
 #' @describeIn db_load mdb_df
 #' @export
-db_load.mdb_df <- function(mdb, ...) {
+db_load.mdb_df <- function(mdb) {
   df_name <- mdb$location
 
   if (!df_name %in% ls(envir = .GlobalEnv)) {
@@ -45,7 +54,7 @@ db_load.mdb_df <- function(mdb, ...) {
 #' @method db_load mdb_csv
 #' @describeIn db_load mdb_csv
 #' @export
-db_load.mdb_csv <- function(mdb, ...) {
+db_load.mdb_csv <- function(mdb) {
   
 }
 

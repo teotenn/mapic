@@ -1,23 +1,26 @@
 #' @title Compares the database to the original data
 #' @author Manuel Teodoro
 #'
-#' @description Creates a data frame with the missing data
+#' @description Creates a data frame with the missing data.
 #'
-#' @param db_file Path to the SQLite file containing the table 'orgs'
+#' @param mdb Mapic database configuration object (See
+#' \link{database_configuration} for a reference).
+#' @param df data frame with the original data.
 #'
-#' @return An object of class tibble (which inherits data.frame) containing the values stored
-#' in the database with name \code{db_file}
+#' @return An object of class \code{data.frame} containing the missing values
+#' in the database (specified in \code{mdb}) as compared with the original \code{df}
 #'
+#' @seealso \link{database_configuration}
 #' @export
-db_compare_data  <- function(x, ...) UseMethod("db_compare_data")
+db_compare_data  <- function(mdb, ...) UseMethod("db_compare_data")
 
 #' @method db_compare_data default
 #' @describeIn db_compare_data Default
 #' @export
-db_compare_data.default <- function(x, ...) {
+db_compare_data.default <- function(mdb, ...) {
   stop(paste("Object of class",
-             class(x),
-             "not recognized.",
+             class(mdb),
+             "not recognized as a mapic db configuration object.",
              sep = " "))
 }
 

@@ -3,42 +3,54 @@
 \name{db_load}
 \alias{db_load}
 \alias{db_load.default}
-\alias{db_load.data.frame}
+\alias{db_load.mdb_df}
 \alias{db_load.mdb_csv}
 \alias{db_load.mdb_SQLite}
 \title{Loads the database table}
 \usage{
-db_load(x, ...)
+db_load(mdb, ...)
 
-\method{db_load}{default}(x, ...)
+\method{db_load}{default}(mdb)
 
-\method{db_load}{data.frame}(x, ...)
+\method{db_load}{mdb_df}(mdb)
 
-\method{db_load}{mdb_csv}(x, ...)
+\method{db_load}{mdb_csv}(mdb)
 
 \method{db_load}{mdb_SQLite}(mdb)
 }
 \arguments{
-\item{db_file}{Path to the SQLite file containing the table 'orgs'}
+\item{mdb}{Mapic database configuration object (See
+\link{database_configuration} for a reference).}
 }
 \value{
-An object of class tibble (which inherits data.frame) containing the values stored
-in the database with name \code{db_file}
+An object of class \code{data.frame} containing the values stored
+in the database specified in \code{mdb}.
 }
 \description{
-Loads the table database to R as a data frame
+Loads the database table to R as a data frame.
+}
+\details{
+The main task of the function is to load the table specified in the
+\code{mdb} object to R as a \code{data.frame}. The function also has the tasks of
+creating the table when it does not exist yet. This is the equivalent to the
+command \code{CREATE TABLE IF NOT EXISTS} in SQL. For \code{csv} it creates
+the file and for \code{data.frame} it creates the data frame in the global
+environment, both with the structure required by mapic to store the coordinates.
 }
 \section{Methods (by class)}{
 \itemize{
 \item \code{db_load(default)}: Default
 
-\item \code{db_load(data.frame)}: data.frame
+\item \code{db_load(mdb_df)}: mdb_df
 
 \item \code{db_load(mdb_csv)}: mdb_csv
 
 \item \code{db_load(mdb_SQLite)}: mdb_SQLite
 
 }}
+\seealso{
+\link{database_configuration}
+}
 \author{
 Manuel Teodoro
 }

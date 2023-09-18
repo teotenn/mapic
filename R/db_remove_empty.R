@@ -1,23 +1,25 @@
-#' @title Removes empty entries from tabase table
+#' @title Removes empty entries from database table
 #' @author Manuel Teodoro
 #'
 #' @description Removes from the database table the entries where the \code{lat} and \code{lot} are empty.
 #'
-#' @param db_file Path to the SQLite file containing the table 'orgs'
+#' @param mdb Mapic database configuration object (See
+#' \link{database_configuration} for a reference).
 #'
-#' @return An object of class tibble (which inherits data.frame) containing the values stored
-#' in the database with name \code{db_file}
+#' @details When the function link{api_to_db} does not find an entry in the query,
+#' it adds it to the database with the fields \code{lat} and \code{lon} empty. The
+#' present function removes those entries from the database completely.
 #'
 #' @export
-db_remove_empty  <- function(x, ...) UseMethod("db_remove_empty")
+db_remove_empty  <- function(mdb, ...) UseMethod("db_remove_empty")
 
 #' @method db_remove_empty default
 #' @describeIn db_remove_empty Default
 #' @export
-db_remove_empty.default <- function(x, ...) {
+db_remove_empty.default <- function(mdb) {
   stop(paste("Object of class",
-             class(x),
-             "not recognized.",
+             class(mdb),
+             "not recognized as a mapic db configuration object.",
              sep = " "))
 }
 
@@ -34,7 +36,7 @@ db_remove_empty.mdb_df <- function(mdb) {
 #' @method db_remove_empty mdb_csv
 #' @describeIn db_remove_empty mdb_csv
 #' @export
-db_remove_empty.mdb_csv <- function(x, ...) {
+db_remove_empty.mdb_csv <- function(mdb) {
 
 }
 
