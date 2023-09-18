@@ -1,14 +1,14 @@
 library(testthat)
 data(mexico)
 t_dat <- mexico
-mock_mdb <- structure(
-  list(
-    location = "test.sqlite",
-    table = "organizations"
-  ),
-  class = c("mdb_SQLite"))
 
 ### ---------- T E S T S ---------- ###
+test_that("database_configuration", {
+  mdb_obj <<- database_configuration("SQLite", "test.sqlite", "organizations")
+  expect_s3_class(mdb_obj, "mdb_SQLite")
+  expect_equal(mdb_obj$location, "test.sqlite")
+})
+
 test_that("coords_from_city: Found results", {
   ## Case:
   ## obtaining coords from open street maps for CITY ONLY
