@@ -1,15 +1,16 @@
 #' @title Coordinates from city
 #' @author Manuel Teodoro
 #'
-#' @description Get coordinates of a city per country
+#' @description Get coordinates of a city per country.
 #'
 #' @param city Name of the city
 #' @param country_code the 2-letter code of the country
-#' @param region Optional, region name. This option is NOT RECOMENDED, it's functioning is not wel docummented.
-#' @param state Optional, state name
-#' @param county Optional, county name
-#' @param choose_when_multiple Not implemented yet!
-#' @param silent If TRUE, silences the messages from the function
+#' @param region Optional, region name. This option is NOT RECOMENDED,
+#' it's functioning is not wel docummented.
+#' @param state Optional, state name.
+#' @param county Optional, county name.
+#' @param choose_when_multiple Not implemented yet!.
+#' @param silent If TRUE, silences the messages from the function.
 #'
 #' @return Returns a 1-row data frame, containing latitude, longitude and osm name.
 #'
@@ -94,11 +95,12 @@ coords_from_city <- function(city = NULL,
 #' @author Manuel Teodoro
 #'
 #' @description Based on a list of countries, retrieve coordinates from OSM api and
-#' send the results to a sql DB
+#' send the results to a database or database alternative.
 #'
-#' @param db_name name of the SQLite database. If not exists, it will be created
+#' @param mdb Mapic database configuration object (See
+#' \link{database_configuration} for a reference).
 #' @param dat The data frame containing the data. It MUST contain a collumn called 'ID' with UNIQUE identification
-#' numbers, and at least names of the cities, country and date of registration of the Org.
+#' numbers, and at least names of the cities and country.
 #' @param city String with the name of the column with the city names
 #' @param country String with the name of the column with the country codes (2-letter)
 #' @param state Optional. String with the name of the column with the state names
@@ -107,28 +109,19 @@ coords_from_city <- function(city = NULL,
 #' @param db_backup_after Number of iteration after which the data is sent to the database.
 #' @param silent If TRUE, silences the messages from the function
 #'
-#' @return Creates a table (if not yet exists) called "orgs" in the given SQLite data base. The table contains
-#' the ID, city name and country code obtained for the data inside the tibble \code{dat}, together with the
-#' latitude and longitude of the city, per organization.
-#'
 #' @details Given a list of cities and country(ies) in a data frame (as tibble),
 #' the function iterates over the values to find the coordinates, using
-#' the function \code{coords_from_city} and send the results to a SQLite DB
+#' the function \code{coords_from_city} and send the results to a database
 #'
-#' @details The data must be provided as a tibble, the unique identification numbers must be provided in a
-#' column called "ID". Other values that MUST be provided in the tibble are name of the cities and country in
-#' a 2-letter code.
+#' @details The data must be provided as a data frame, the unique identification
+#' numbers must be provided in a column called "ID". Other values that MUST be
+#' provided are name of the cities and country in a 2-letter code.
 #'
-#' The function uses \code{coords_from_city} for the web scrapping, therefore the values \code{state} and
-#' \code{county} are optional.
-#' The results of the query will be added to a table called "orgs" into the SQLite database ONLY when a single
-#' result is found. If more than one result is found, the first entry will be added, if none are found, the
-#' details will be printed on screen and the entry will not be added to the SQLite table.
+#' The function uses \code{coords_from_city} for retreiving the data from the API,
+#' therefore the values \code{state} and \code{county} are optional.
+#' The results of the query are added to the database or database alternative.
+#' When more than one result is found, only the first entry is added.
 #'
-#' @details NOTE: As of version 2.3.1, the function passes to the DB empty strings \code{""} from the empty values of
-#' state, region and county. This behaviour doesn't seem to conflict with the creation of the maps.
-#' If necessary, it is easy to convert all such values to \code{NA} in R.
-#' If bugs are found regarding this behaviour conflicting with the database, please report it immediately.
 #' @export
 api_to_db <- function(mdb,
                       dat,
@@ -218,43 +211,47 @@ api_to_db <- function(mdb,
 }
 
 
-
-#' @title add coordinates manually
+#' @title Add coordinates manually
 #' @author Manuel Teodoro
 #'
-#' @description Add missing values manually, from as csv file, tibble or data frame to SQLite table "orgs"
+#' @description Add missing values manually, from as csv file or data frame to
+#' the database or database alternative.
 #'
-#' @param csv_file file containing the missing values. The dataset providing the values must contain the exact
-#' same fields as the ones in the database table. Fields can be empty except for "ID", "lat" and "lon".
-#' @param db_name name of the SQLite database containing the table "orgs"
+#' @param complementary_data file containing the missing values. The dataset
+#' providing the values must contain the exact same fields as the ones in the
+#' database. Fields can be empty except for "ID", "lat" and "lon".
+#' @param mdb Mapic database configuration object (See
+#' \link{database_configuration} for a reference).
 #'
-#' @return It appends the provided values to the database table
+#' @return It appends the provided values to the database.
 #'
-#' @details Note that if one missing city appears several times, you can provide the lat and long via this
-#' function only once, making sure that all the fields for this city match, and then run again
-#' \code{api_to_sqlite} which will find it in the database and set it for all other values to be searched.
+#' @details Note that if one missing city appears several times, you can provide
+#' the lat and long via this function only once, making sure that all the fields
+#' for this city match, and then run again
+#' \code{link{api_to_sqlite}} which will find it in the database and set it for
+#' all entries with the same city.
 #'
 #' @export
 #'
-add_coords_manually <- function(csv_file, mdb) {
+add_coords_manually <- function(complementary_data, mdb) {
   require(dplyr)
   require(RSQLite)
 
-  if (is.character(csv_file)) {
-    if (grepl(".csv", csv_file, fixed = TRUE)) {
-      local_df <- read.csv(csv_file)
+  if (is.character(complementary_data)) {
+    if (grepl(".csv", complementary_data, fixed = TRUE)) {
+      local_df <- read.csv(complementary_data)
     } else {
-      stop("Incorrect file format for data")
+      stop("Incorrect file format for complementary_data.")
     }
-  } else if (is.data.frame(csv_file)) {
-    local_df <- csv_file
+  } else if (is.data.frame(complementary_data)) {
+    local_df <- complementary_data
   } else {
-    stop("Incorrect data format")
+    stop("Incorrect data format for complementary_data.")
   }
 
   db_df <- db_load(mdb)
   if (any(!names(db_df) %in% names(local_df))) {
-    stop(cat("The dataset with the missing info is missing columns or the names are not correct.\nCorrect names of the fields/columns are:\n",
+    stop(cat("The complementary data is missing columns or the names are not correct.\nCorrect names of the fields/columns are:\n",
              names(db_df), "\n"))
   } else if (any(local_df$ID %in% db_df$ID)) {
     stop(cat("The following ID fields are already present in the database:\n",
@@ -269,44 +266,38 @@ add_coords_manually <- function(csv_file, mdb) {
 }
 
 
-
 #' @title api no city
 #' @author Manuel Teodoro
 #'
-#' @description Performs the webs crapping ignoring city names
+#' @description Retrieves data from the API ignoring city names.
 #'
-#' @param db_name name of the SQLite database. If not exists, it will be created.
-#' @param dat The tibble containing the data. It MUST contain a collumn called 'ID' with UNIQUE identification numbers
-#' and at least names of the cities, country and date of registration of the Org.
-#' @param country String with the name of the column with the country codes (2-letter)
+#' @param mdb Mapic database configuration object (See
+#' \link{database_configuration} for a reference).
+#' @param dat The data frame containing the data. It MUST contain a collumn
+#' named 'ID' with UNIQUE identification numbers, the country
+#' and at least one of the following fields: state, county and/or region.
+#' @param country String with the name of the column specifying the country
+#' (2-letter code)
 #' @param state Optional. String with the name of the column with the state names
 #' @param county Optional. String with the name of the column with the county names
 #' @param region NOT RECOMENDED. String with the name of the column with the region names.
 #' @param silent If TRUE, silences the messages from the function
-#' @param city As from version 2.3.1, this parameter is not necessary and it will be deprecated.
 #'
-#' @return Creates a table (if not yet exists) called "orgs" in the given SQLite data base. The table contains the ID,
-#' country code and the extra field(s) provided, together with the latitude and longitude of the region/state/county,
-#' per organization. The column City also exists but is filled with empty values.
+#' @return The function fulfills the same task as \code{\link{api_to_db}}.
 #'
-#' @details The function provides an alternative system to search for region or state coordinates, for example,
-#' if the map has to be done per region instead of per city.
+#' @details The function provides an alternative system to search for region or
+#' state coordinates, for example, if the map has to be done per region instead of
+#' per city.
 #'
+#' @seealso \link{api_to_db}.
 #' @export
-#'
-#'
 api_no_city <- function(mdb,
                         dat,
                         country,
                         region = NULL,
                         state = NULL,
                         county = NULL,
-                        city = NULL,
                         silent = FALSE) {
-  if (!missing(city)) {
-    warning("As from v2.3.1 the parameter <city> is not used anymore. Please remove it to avoid this warning.")
-  }
-
   parameters <- c(region, state, county)
   if (length(parameters) == 0) {
     stop("Provide at least one of the following parameters: region, state, county")

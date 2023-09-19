@@ -6,11 +6,11 @@ Authors@R:
 Description: Create simple maps of infrastructure per city of any country using maps and ggplot2 libraries.
 Depends: R (>= 4.0.0), maps (>= 3.3.0), ggplot2
 Imports:
-	stringr (>= 1.5.0), dplyr, RJSONIO, RSQLite (>= 2.2.3), glue, purrr
+	httr, stringr (>= 1.5.0), dplyr, RJSONIO, purrr, tidyr
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Suggests: 
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0), RSQLite (>= 2.2.3)
 Config/testthat/edition: 3

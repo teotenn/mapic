@@ -19,21 +19,22 @@ coords_from_city(
 
 \item{country_code}{the 2-letter code of the country}
 
-\item{region}{Optional, region name. This option is NOT RECOMENDED, it's functioning is not wel docummented.}
+\item{region}{Optional, region name. This option is NOT RECOMENDED,
+it's functioning is not wel docummented.}
 
-\item{state}{Optional, state name}
+\item{state}{Optional, state name.}
 
-\item{county}{Optional, county name}
+\item{county}{Optional, county name.}
 
-\item{choose_when_multiple}{Not implemented yet!}
+\item{choose_when_multiple}{Not implemented yet!.}
 
-\item{silent}{If TRUE, silences the messages from the function}
+\item{silent}{If TRUE, silences the messages from the function.}
 }
 \value{
 Returns a 1-row data frame, containing latitude, longitude and osm name.
 }
 \description{
-Get coordinates of a city per country
+Get coordinates of a city per country.
 }
 \details{
 Get the coordinates of a City, given the Country 2-letter code.

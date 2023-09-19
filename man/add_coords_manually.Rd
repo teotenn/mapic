@@ -2,26 +2,31 @@
 % Please edit documentation in R/coords_manipulation.R
 \name{add_coords_manually}
 \alias{add_coords_manually}
-\title{add coordinates manually}
+\title{Add coordinates manually}
 \usage{
-add_coords_manually(csv_file, mdb)
+add_coords_manually(complementary_data, mdb)
 }
 \arguments{
-\item{csv_file}{file containing the missing values. The dataset providing the values must contain the exact
-same fields as the ones in the database table. Fields can be empty except for "ID", "lat" and "lon".}
+\item{complementary_data}{file containing the missing values. The dataset
+providing the values must contain the exact same fields as the ones in the
+database. Fields can be empty except for "ID", "lat" and "lon".}
 
-\item{db_name}{name of the SQLite database containing the table "orgs"}
+\item{mdb}{Mapic database configuration object (See
+\link{database_configuration} for a reference).}
 }
 \value{
-It appends the provided values to the database table
+It appends the provided values to the database.
 }
 \description{
-Add missing values manually, from as csv file, tibble or data frame to SQLite table "orgs"
+Add missing values manually, from as csv file or data frame to
+the database or database alternative.
 }
 \details{
-Note that if one missing city appears several times, you can provide the lat and long via this
-function only once, making sure that all the fields for this city match, and then run again
-\code{api_to_sqlite} which will find it in the database and set it for all other values to be searched.
+Note that if one missing city appears several times, you can provide
+the lat and long via this function only once, making sure that all the fields
+for this city match, and then run again
+\code{link{api_to_sqlite}} which will find it in the database and set it for
+all entries with the same city.
 }
 \author{
 Manuel Teodoro
