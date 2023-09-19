@@ -1,3 +1,30 @@
+2023-09-19  Manuel Teodoro  <teoten@proton.me>
+
+	* R/coords_manipulation.R (api_to_db): Function refactored to use new db methods
+
+	* R/db_remove_empty.R (db_remove_empty): New method to replace remove_na_from_db
+	(db_remove_empty.default): Default behavior set to error for unrecognized classes
+	(db_remove_empty.mdb_df): Method used for data frames
+	(db_remove_empty.mdb_SQLite): Method used for SQlite
+
+	* R/db_join_original_data.R (db_join_original_data): New improved function to
+	replace combine_csv_sql
+
+	* R/db_compare_data.R (db_compare_data): New method to replace compare_db_data
+	(db_compare_data.default): Default behavior set to error for unrecognized classes
+	(db_compare_data.mdb_df): Method used for data frames
+	(db_compare_data.mdb_SQLite): Method used for SQLite
+
+	* R/db_append.R (db_append): New method created to append rows to the DB
+	(db_append.default): Default behavior set to error for unrecognized classes
+	(db_append.mdb_df): Method used for data frames
+	(db_append.mdb_SQLite): Method used for SQLite
+
+	* R/db_load.R (db_load): New method created to replace import_db_as_df
+	(db_load.default): Default behavior set to error for unrecognized classes
+	(db_load.mdb_df): Method used for data frames
+	(db_load.mdb_SQLite): Method used for SQLite
+
 2023-09-16  Manuel Teodoro  <teotenn@proton.me>
 
 	* DESCRIPTION (Version): 2.5.0
