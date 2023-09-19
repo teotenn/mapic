@@ -1,3 +1,8 @@
+2023-09-19  Manuel Teodoro  <teotenn@proton.me>
+
+	* R/database_configuration.R (database_configuration): New function to create
+	object of class "mdb_" (mapic database configuration)
+
 2023-09-19  Manuel Teodoro  <teoten@proton.me>
 
 	* R/coords_manipulation.R (api_to_db): Function refactored to use new db methods
