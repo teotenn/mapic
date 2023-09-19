@@ -4,9 +4,9 @@ t_dat <- mexico
 
 ### ---------- T E S T S ---------- ###
 test_that("database_configuration", {
-  mdb_obj <<- database_configuration("SQLite", "test.sqlite", "organizations")
-  expect_s3_class(mdb_obj, "mdb_SQLite")
-  expect_equal(mdb_obj$location, "test.sqlite")
+  mock_mdb <<- database_configuration("SQLite", "test.sqlite", "organizations")
+  expect_s3_class(mock_mdb, "mdb_SQLite")
+  expect_equal(mock_mdb$location, "test.sqlite")
 })
 
 test_that("coords_from_city: Found results", {

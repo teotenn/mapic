@@ -63,24 +63,24 @@ coords_from_city <- function(city = NULL,
       stop(response_status$message)
     }
   } else if (is.list(response)) {
-    
+
     if (length(response) == 0) {
       if (!silent) message(paste("No results found for", extrasCoded))
       coords <- data.frame("lon" = NA, "lat" = NA, "osm_name" = as.character(NA))
-      
+
     } else if (length(response) == 1) {
       if (!silent) message(paste("Found", response[[1]]$display_name))
       coords <- data.frame(
-        lon = response[[1]]$lon,
-        lat = response[[1]]$lat,
+        lon = as.numeric(response[[1]]$lon),
+        lat = as.numeric(response[[1]]$lat),
         osm_name = response[[1]]$display_name
       )
-      
+
     } else {
       if (!silent) message(paste("Several entries found for", city, country_code))
       coords <- data.frame(
-        lon = response[[1]]$lon,
-        lat = response[[1]]$lat,
+        lon = as.numeric(response[[1]]$lon),
+        lat = as.numeric(response[[1]]$lat),
         osm_name = response[[1]]$display_name
       )
     }
