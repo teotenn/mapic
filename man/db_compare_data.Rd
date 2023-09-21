@@ -2,21 +2,9 @@
 % Please edit documentation in R/db_compare_data.R
 \name{db_compare_data}
 \alias{db_compare_data}
-\alias{db_compare_data.default}
-\alias{db_compare_data.mdb_df}
-\alias{db_compare_data.mdb_csv}
-\alias{db_compare_data.mdb_SQLite}
 \title{Compares the database to the original data}
 \usage{
-db_compare_data(mdb, ...)
-
-\method{db_compare_data}{default}(mdb, ...)
-
-\method{db_compare_data}{mdb_df}(mdb, df)
-
-\method{db_compare_data}{mdb_csv}(x, ...)
-
-\method{db_compare_data}{mdb_SQLite}(mdb, df)
+db_compare_data(mdb, df)
 }
 \arguments{
 \item{mdb}{Mapic database configuration object (See
@@ -31,17 +19,6 @@ in the database (specified in \code{mdb}) as compared with the original \code{df
 \description{
 Creates a data frame with the missing data.
 }
-\section{Methods (by class)}{
-\itemize{
-\item \code{db_compare_data(default)}: Default
-
-\item \code{db_compare_data(mdb_df)}: mdb_df
-
-\item \code{db_compare_data(mdb_csv)}: mdb_csv
-
-\item \code{db_compare_data(mdb_SQLite)}: mdb_SQLite
-
-}}
 \seealso{
 \link{database_configuration}
 }

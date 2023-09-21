@@ -43,9 +43,9 @@ db_load.mdb_df <- function(mdb) {
                              Region = character(0),
                              State = character(0),
                              County = character(0),
-                             osm_name = character(0),
                              lon = numeric(0),
-                             lat = numeric(0))
+                             lat = numeric(0),
+                             osm_name = character(0))
     assign(df_name, initial_df, envir = .GlobalEnv)
   }
   return(get(df_name, envir = .GlobalEnv))
@@ -55,7 +55,24 @@ db_load.mdb_df <- function(mdb) {
 #' @describeIn db_load mdb_csv
 #' @export
 db_load.mdb_csv <- function(mdb) {
-  
+  path_csv <- mdb$location
+  initial_df <- data.frame(ID = character(0),
+                           City = character(0),
+                           Country = character(0),
+                           Region = character(0),
+                           State = character(0),
+                           County = character(0),
+                           lon = numeric(0),
+                           lat = numeric(0),
+                           osm_name = character(0))
+
+  if (!file.exists(path_csv)) {
+    write.csv(initial_df, path_csv, row.names = FALSE)
+    local_df <- initial_df
+  } else {
+    local_df <- read.csv(path_csv)
+  }
+  return(local_df)
 }
 
 #' @method db_load mdb_SQLite
@@ -69,19 +86,18 @@ db_load.mdb_SQLite <- function(mdb) {
   con <- dbConnect(drv = RSQLite::SQLite(), dbname = path_to_db)
   query_create_table <- paste0(
     "CREATE TABLE IF NOT EXISTS ", table_name,
-                    "(ID INTEGER UNIQUE,
-                     City TEXT,
-                     Country TEXT, 
-                     Region TEXT,
-                     State TEXT,
-                     County TEXT,
-                     osm_name TEXT,
-                     lon REAL,
-                     lat REAL)"
+    "(ID INTEGER UNIQUE,
+       City TEXT,
+       Country TEXT,
+       Region TEXT,
+       State TEXT,
+       County TEXT,
+       lon REAL,
+       lat REAL,
+       osm_name TEXT)"
   )
   dbExecute(conn = con, query_create_table)
   db <- dbReadTable(con, table_name)
   dbDisconnect(con)
   return(db)
 }
-

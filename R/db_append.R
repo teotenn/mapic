@@ -37,8 +37,9 @@ db_append.mdb_df <- function(mdb, df) {
 #' @method db_append mdb_csv
 #' @describeIn db_append mdb_csv
 #' @export
-db_append.mdb_csv <- function(x, ...) {
-  
+db_append.mdb_csv <- function(mdb, df) {
+  path_csv <- mdb$location
+  write.table(df, path_csv, append = TRUE, sep = ",", row.names = FALSE, col.names = FALSE, quote = TRUE)
 }
 
 #' @method db_append mdb_SQLite

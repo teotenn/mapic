@@ -7,7 +7,10 @@
 - Create objects data.frame and SQLite, etc., each with the required details. Then, apply the method based on the class of object selected.
 * v2.5.1 - Database alternatives
 ** TODO Add support for PostgreSQL
+** TODO Improve =api_to_db= to keep only unique values
 ** TODO Prepare a proper README
+*** TODO Explain how to make a map without neighbouring
+*** TODO Explain how to make a static map (create year col, val = 1)
 * v2.5.2 - Graphic improvements
 ** TODO Test missing functionalities (graphical)
 ** TODO More positions for internal labels

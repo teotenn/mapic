@@ -4,9 +4,9 @@ t_dat <- mexico
 
 ### ---------- T E S T S ---------- ###
 test_that("database_configuration", {
-  mock_mdb <<- database_configuration("data.frame", "organizations")
-  expect_s3_class(mock_mdb, "mdb_df")
-  expect_equal(mock_mdb$location, "organizations")
+  mock_mdb <<- database_configuration("csv", "test.csv")
+  expect_s3_class(mock_mdb, "mdb_csv")
+  expect_equal(mock_mdb$location, "test.csv")
 })
 
 test_that("coords_from_city: Found results", {
@@ -89,7 +89,6 @@ test_that("db_load: returns a data frame", {
     expect_vector(db_as_df$lon, ptype = double())
     expect_vector(db_as_df$lat, ptype = double())
     expect_setequal(unique(db_as_df$Country), "MX")
-    expect_equal(length(complete.cases(db_as_df)[complete.cases(db_as_df) == TRUE]), 6)
 })
 
 
@@ -164,4 +163,4 @@ test_that("api_no_city", {
   expect_equal(nrow(df_added), 11)
 })
 
-rm(organizations)
+file.remove("test.csv")

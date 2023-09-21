@@ -29,7 +29,7 @@ db_remove_empty.default <- function(mdb) {
 db_remove_empty.mdb_df <- function(mdb) {
   df_name <- mdb$location
   df <- get(df_name, envir = .GlobalEnv)
-  output <- df[!is.na(df$lon),]
+  output <- df[!is.na(df$lon), ]
   assign(df_name, output, envir = .GlobalEnv)
 }
 
@@ -37,7 +37,9 @@ db_remove_empty.mdb_df <- function(mdb) {
 #' @describeIn db_remove_empty mdb_csv
 #' @export
 db_remove_empty.mdb_csv <- function(mdb) {
-
+  df <- db_load(mdb)
+  output <- df[!is.na(df$lon), ]
+  write.csv(output, mdb$location, row.names = FALSE)
 }
 
 #' @method db_remove_empty mdb_SQLite

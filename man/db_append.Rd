@@ -14,7 +14,7 @@ db_append(mdb, ...)
 
 \method{db_append}{mdb_df}(mdb, df)
 
-\method{db_append}{mdb_csv}(x, ...)
+\method{db_append}{mdb_csv}(mdb, df)
 
 \method{db_append}{mdb_SQLite}(mdb, df)
 }

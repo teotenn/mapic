@@ -1,3 +1,17 @@
+2023-09-21  Manuel Teodoro  <teotenn@proton.me>
+
+	* tests/testthat/test_coords_worwflow_SQLite.R: New UT file for mdb_SQLite methods
+
+	* tests/testthat/test_coords_workflow_df.R: New UT file for mdb_df methods
+
+	* tests/testthat/test-coords_workflow_csv.R: New UT file for mdb_csv methods
+
+	* R/db_remove_empty.R (db_remove_empty.mdb_csv): method for DB as CSV file
+
+	* R/db_append.R (db_append.mdb_csv): method for DB as CSV file
+
+	* R/db_load.R (db_load.mdb_csv): method for DB as CSV file
+
 2023-09-19  Manuel Teodoro  <teotenn@proton.me>
 
 	* R/database_configuration.R (database_configuration): New function to create
@@ -16,10 +30,8 @@
 	* R/db_join_original_data.R (db_join_original_data): New improved function to
 	replace combine_csv_sql
 
-	* R/db_compare_data.R (db_compare_data): New method to replace compare_db_data
-	(db_compare_data.default): Default behavior set to error for unrecognized classes
-	(db_compare_data.mdb_df): Method used for data frames
-	(db_compare_data.mdb_SQLite): Method used for SQLite
+	* R/db_compare_data.R (db_compare_data): New function to replace compare_db_data
+	It now uses the new db_load.
 
 	* R/db_append.R (db_append): New method created to append rows to the DB
 	(db_append.default): Default behavior set to error for unrecognized classes
