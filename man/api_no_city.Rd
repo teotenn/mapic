@@ -5,23 +5,25 @@
 \title{api no city}
 \usage{
 api_no_city(
-  db_name,
+  mdb,
   dat,
   country,
   region = NULL,
   state = NULL,
   county = NULL,
-  city = NULL,
   silent = FALSE
 )
 }
 \arguments{
-\item{db_name}{name of the SQLite database. If not exists, it will be created.}
+\item{mdb}{Mapic database configuration object (See
+\link{database_configuration} for a reference).}
 
-\item{dat}{The tibble containing the data. It MUST contain a collumn called 'ID' with UNIQUE identification numbers
-and at least names of the cities, country and date of registration of the Org.}
+\item{dat}{The data frame containing the data. It MUST contain a collumn
+named 'ID' with UNIQUE identification numbers, the country
+and at least one of the following fields: state, county and/or region.}
 
-\item{country}{String with the name of the column with the country codes (2-letter)}
+\item{country}{String with the name of the column specifying the country
+(2-letter code)}
 
 \item{region}{NOT RECOMENDED. String with the name of the column with the region names.}
 
@@ -29,21 +31,21 @@ and at least names of the cities, country and date of registration of the Org.}
 
 \item{county}{Optional. String with the name of the column with the county names}
 
-\item{city}{As from version 2.3.1, this parameter is not necessary and it will be deprecated.}
-
 \item{silent}{If TRUE, silences the messages from the function}
 }
 \value{
-Creates a table (if not yet exists) called "orgs" in the given SQLite data base. The table contains the ID,
-country code and the extra field(s) provided, together with the latitude and longitude of the region/state/county,
-per organization. The column City also exists but is filled with empty values.
+The function fulfills the same task as \code{\link{api_to_db}}.
 }
 \description{
-Performs the webs crapping ignoring city names
+Retrieves data from the API ignoring city names.
 }
 \details{
-The function provides an alternative system to search for region or state coordinates, for example,
-if the map has to be done per region instead of per city.
+The function provides an alternative system to search for region or
+state coordinates, for example, if the map has to be done per region instead of
+per city.
+}
+\seealso{
+\link{api_to_db}.
 }
 \author{
 Manuel Teodoro

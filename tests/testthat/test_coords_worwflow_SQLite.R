@@ -3,6 +3,12 @@ data(mexico)
 t_dat <- mexico
 
 ### ---------- T E S T S ---------- ###
+test_that("database_configuration", {
+  mock_mdb <<- database_configuration("SQLite", "test.sqlite", "organizations")
+  expect_s3_class(mock_mdb, "mdb_SQLite")
+  expect_equal(mock_mdb$location, "test.sqlite")
+})
+
 test_that("coords_from_city: Found results", {
   ## Case:
   ## obtaining coords from open street maps for CITY ONLY
@@ -23,18 +29,18 @@ test_that("coords_from_city: Found results", {
                                   silent = TRUE)
   ## TESTS
   expect_s3_class(found, "data.frame")
-  expect_equal(ncol(found), 3)
+  expect_true(complete.cases(found))
   expect_s3_class(found_state, "data.frame")
-  expect_equal(ncol(found_state), 3)
+  expect_true(complete.cases(found_state))
   expect_s3_class(found_region, "data.frame")
-  expect_equal(ncol(found_region), 3)
+  expect_true(complete.cases(found_region))
 })
 
 
 test_that("coords_from_city: Not found results", {
   ## Case:
-  ## No results found
-  not_found <- coords_from_city(city = t_dat$City[1],
+  ## Not found coords due to wrong city
+  not_found <- coords_from_city(city = "Mex. City",
                                 country_code = t_dat$Country[1],
                                 state = t_dat$Region[1],
                                 silent = TRUE)
@@ -42,60 +48,68 @@ test_that("coords_from_city: Not found results", {
   ## Not found coords due to wrong state or region
   not_found_state <- coords_from_city(city = t_dat$City[1],
                                       country_code = t_dat$Country[1],
-                                      state = t_dat$Region[1],
+                                      state = "Tamaulipas",
                                       silent = TRUE)
   ## TESTS
   expect_s3_class(not_found, "data.frame")
-  expect_equal(ncol(not_found), 3)
+  expect_false(complete.cases(not_found))
   expect_s3_class(not_found_state, "data.frame")
-  expect_equal(ncol(not_found_state), 3)
+  expect_false(complete.cases(not_found_state))
 })
 
 
 ## TEST FUNCTION: <api_to_sqlite> -------------------------------|
 
 ## Find a suitable test, for now test results below
-api_to_db(db_name = "test.sqlite",
-               dat = t_dat,
-               city = "City",
-               country = "Country",
-               state = "Region",
-               db_backup_after = 5,
-               silent = TRUE)
+mock_data <- dplyr::mutate(
+  t_dat,
+  City = ifelse(City == "Ciudad de Mexico", "CD Mex", City))
+
+api_to_db(mock_mdb,
+          dat = mock_data,
+          city = "City",
+          country = "Country",
+          state = "Region",
+          db_backup_after = 5,
+          silent = TRUE)
 ## RESULTS:
-## 1) Not found Ciudad de Mexico
+## 1) Not found Cd de Mexico
 ## 2) Found everything else
 ## 3) Tijuana already in DB
 ## ------------------------------------------------------------------|
 
-test_that("import_db_as_df: returns a data frame", {
-    db_as_df <- import_db_as_df("test.sqlite")
+test_that("db_load: returns a data frame", {
+    db_as_df <- db_load(mock_mdb)
     ## TESTS
     expect_s3_class(db_as_df, "data.frame")
+    expect_equal(nrow(db_as_df), 10)
     expect_equal(nrow(filter(db_as_df, is.na(lat))), 4)
     expect_equal(ncol(db_as_df), 9)
     expect_vector(db_as_df$City, ptype = character())
     expect_setequal(unique(db_as_df$Country), "MX")
+    expect_equal(length(complete.cases(db_as_df)[complete.cases(db_as_df) == TRUE]), 6)
 })
 
 
-test_that("remove_na_from_db", {
-    remove_na_from_db("test.sqlite")
-    db_as_df <- import_db_as_df("test.sqlite")
+test_that("db_remove_empty", {
+    db_remove_empty(mock_mdb)
+    db_as_df <- db_load(mock_mdb)
     ## TESTS
     expect_equal(nrow(db_as_df), 6)
     expect_equal(nrow(filter(db_as_df, is.na(lat))), 0)
 })
 
 
-test_that("compare_db_data: error", {
-    expect_error(compare_db_data("test.sqlite", c(1, 2, 3)),
-                 "Incorrect data format")
+test_that("db_compare_data: error", {
+    expect_error(db_compare_data(mock_mdb, c(1, 2, 3)),
+                 "no applicable method")
+    expect_error(db_compare_data(1, data.frame()),
+                 "Object of class numeric not recognized")
 })
 
 
-test_that("compare_db_data: returns a data frame", {
-    missing <- compare_db_data("test.sqlite", t_dat)
+test_that("db_compare_data: returns a data frame", {
+    missing <- db_compare_data(mock_mdb, mock_data)
     ## TESTS
     expect_s3_class(missing, "data.frame")
     expect_equal(nrow(missing), 4)
@@ -105,9 +119,9 @@ test_that("compare_db_data: returns a data frame", {
 })
 
 
-test_that("combine_csv_sql: from data.frame", {
-    combined <- combine_csv_sql(db_file = "test.sqlite",
-                                csv_file = t_dat)
+test_that("db_join_original_data: from data.frame", {
+    combined <- db_join_original_data(mdb = mock_mdb,
+                                      original_data = mock_data)
     ## TESTS
     expect_s3_class(combined, "data.frame")
     expect_equal(nrow(combined), 6)
@@ -119,14 +133,14 @@ test_that("combine_csv_sql: from data.frame", {
 
 
 test_that("add_coords_manually", {
-    to_add <- data.frame(ID = 1, City = "Ciudad de Mexico",
+    to_add <- data.frame(ID = 1, City = "CD Mex",
                          Country = "MX", Region = "",
                          State = "Mexico", County = "",
                          osm_name = "", lon = 12, lat = 13)
-    add_coords_manually(to_add, "test.sqlite")
-    df_added <- import_db_as_df("test.sqlite")
-    api_to_db("test.sqlite", t_dat, state = "Region", silent = TRUE)
-    df_complete <- import_db_as_df("test.sqlite")
+    add_coords_manually(to_add, mock_mdb)
+    df_added <- db_load(mock_mdb)
+    api_to_db(mock_mdb, mock_data, state = "Region", silent = TRUE)
+    df_complete <- db_load(mock_mdb)
     expect_equal(nrow(df_added), 7)
     expect_equal(nrow(df_complete), 10)
 })
@@ -142,8 +156,8 @@ test_that("api_no_city", {
                           Region = "Tlaxcala",
                           City = NA,
                           Source = "none")
-  api_no_city("test.sqlite", new_state, "Country", state = "Region", silent = T)
-  df_added <- import_db_as_df("test.sqlite")
+  api_no_city(mock_mdb, new_state, "Country", state = "Region", silent = T)
+  df_added <- db_load(mock_mdb)
   expect_equal(nrow(df_added), 11)
 })
 

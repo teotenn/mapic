@@ -5,7 +5,7 @@
 \title{api to database}
 \usage{
 api_to_db(
-  db_name,
+  mdb,
   dat,
   city = "City",
   country = "Country",
@@ -17,10 +17,11 @@ api_to_db(
 )
 }
 \arguments{
-\item{db_name}{name of the SQLite database. If not exists, it will be created}
+\item{mdb}{Mapic database configuration object (See
+\link{database_configuration} for a reference).}
 
-\item{dat}{The tibble containing the data. It MUST contain a collumn called 'ID' with UNIQUE identification
-numbers, and at least names of the cities, country and date of registration of the Org.}
+\item{dat}{The data frame containing the data. It MUST contain a collumn called 'ID' with UNIQUE identification
+numbers, and at least names of the cities and country.}
 
 \item{city}{String with the name of the column with the city names}
 
@@ -36,34 +37,23 @@ numbers, and at least names of the cities, country and date of registration of t
 
 \item{silent}{If TRUE, silences the messages from the function}
 }
-\value{
-Creates a table (if not yet exists) called "orgs" in the given SQLite data base. The table contains
-the ID, city name and country code obtained for the data inside the tibble \code{dat}, together with the
-latitude and longitude of the city, per organization.
-}
 \description{
 Based on a list of countries, retrieve coordinates from OSM api and
-send the results to a sql DB
+send the results to a database or database alternative.
 }
 \details{
 Given a list of cities and country(ies) in a data frame (as tibble),
 the function iterates over the values to find the coordinates, using
-the function \code{coords_from_city} and send the results to a SQLite DB
+the function \code{coords_from_city} and send the results to a database
 
-The data must be provided as a tibble, the unique identification numbers must be provided in a
-column called "ID". Other values that MUST be provided in the tibble are name of the cities and country in
-a 2-letter code.
+The data must be provided as a data frame, the unique identification
+numbers must be provided in a column called "ID". Other values that MUST be
+provided are name of the cities and country in a 2-letter code.
 
-The function uses \code{coords_from_city} for the web scrapping, therefore the values \code{state} and
-\code{county} are optional.
-The results of the query will be added to a table called "orgs" into the SQLite database ONLY when a single
-result is found. If more than one result is found, the first entry will be added, if none are found, the
-details will be printed on screen and the entry will not be added to the SQLite table.
-
-NOTE: As of version 2.3.1, the function passes to the DB empty strings \code{""} from the empty values of
-state, region and county. This behaviour doesn't seem to conflict with the creation of the maps.
-If necessary, it is easy to convert all such values to \code{NA} in R.
-If bugs are found regarding this behaviour conflicting with the database, please report it immediately.
+The function uses \code{coords_from_city} for retreiving the data from the API,
+therefore the values \code{state} and \code{county} are optional.
+The results of the query are added to the database or database alternative.
+When more than one result is found, only the first entry is added.
 }
 \author{
 Manuel Teodoro
