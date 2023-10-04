@@ -12,6 +12,8 @@ api_to_db(
   region = NULL,
   state = NULL,
   county = NULL,
+  start_year = NULL,
+  end_year = NULL,
   db_backup_after = 10,
   silent = FALSE
 )
@@ -32,6 +34,10 @@ numbers, and at least names of the cities and country.}
 \item{state}{Optional. String with the name of the column with the state names}
 
 \item{county}{Optional. String with the name of the column with the county names}
+
+\item{start_year}{String with the name of the column with the year of start.}
+
+\item{end_year}{String with the name of the column with the end.}
 
 \item{db_backup_after}{Number of iteration after which the data is sent to the database.}
 

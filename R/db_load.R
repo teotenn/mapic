@@ -38,6 +38,8 @@ db_load.mdb_df <- function(mdb) {
 
   if (!df_name %in% ls(envir = .GlobalEnv)) {
     initial_df <- data.frame(ID = character(0),
+                             Year_start = numeric(0),
+                             Year_end = numeric(0),
                              City = character(0),
                              Country = character(0),
                              Region = character(0),
@@ -57,6 +59,8 @@ db_load.mdb_df <- function(mdb) {
 db_load.mdb_csv <- function(mdb) {
   path_csv <- mdb$location
   initial_df <- data.frame(ID = character(0),
+                           Year_start = numeric(0),
+                           Year_end = numeric(0),
                            City = character(0),
                            Country = character(0),
                            Region = character(0),
@@ -87,6 +91,8 @@ db_load.mdb_SQLite <- function(mdb) {
   query_create_table <- paste0(
     "CREATE TABLE IF NOT EXISTS ", table_name,
     "(ID INTEGER UNIQUE,
+       Year_start INTEGER,
+       Year_end INTEGER,
        City TEXT,
        Country TEXT,
        Region TEXT,

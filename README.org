@@ -9,8 +9,61 @@ This is a personal R package to facilitate the creation of Maps of Infrastructur
 
 The first stable version, 2.4.2, is able to create complete maps following the strategy of its parent project (a private version of the code).
 
-Version 2.5.0 extends support for other types of databases by implementing S3 objects and methods. Now aside of **SQLite**, **csv** files and **data frames** can be used as a serverless option for storing data. The new objects facilitate the extension of basic functions for implementing other databases. It is planned to include at least **Postgres** and **MariaDB** for future releases. 
+Version 2.5.0 extends support for other types of databases by implementing S3 objects and methods. Now aside of *SQLite*, *csv* files and *data frames* can be used as a serverless option for storing data. The new objects facilitate the extension of basic functions for implementing other databases. It is planned to include at least *Postgres* and *MariaDB* for future releases. 
 
 The documentation for its usage is still to be improved. For now, details of the development and the concept can be found in the blog [[https://blog.teoten.com]] in the series [[https://blog.teoten.com/series/maps-app/][maps-app]]. 
 
 The project is under the GNU GENERAL PUBLIC LICENSE Version 3 (GPL-3). Your are free to copy it and reproduce it.
+
+* Installation
+
+The easiest way to install is by using the function ~devtools::install_github~. First install =devtools= if you don't have it yet.
+
+#+begin_src R :eval no
+install.packages("devtools")
+devtools::install_github("teotenn/mapic")
+#+end_src
+
+Alternatively you can clone the repository and install from source. You also need =devtools=.
+
+#+begin_src R :eval no
+devtools::install("/path_to_mapic/mapic", quick = TRUE, build = FALSE, keep_source = TRUE)
+#+end_src
+
+* A basic workflow
+
+Using data about Covid-19 cases in Colombia obtained from Kaggle. The dataset is named [[https://www.kaggle.com/datasets/camesruiz/colombia-covid19-complete-dataset/][Casos1.csv]].
+
+#+begin_src R :session :results output :exports both
+casos <- read.csv("~/Downloads/Casos1.csv")
+head(casos[,1:4])
+#+end_src
+
+#+RESULTS:
+:   ID.de.caso Fecha.de.diagnóstico Ciudad.de.ubicación Departamento.o.Distrito
+: 1          1           06/03/2020              Bogotá             Bogotá D.C.
+: 2          2           09/03/2020                Buga         Valle del Cauca
+: 3          3           09/03/2020            Medellín               Antioquia
+: 4          4           11/03/2020            Medellín               Antioquia
+: 5          5           11/03/2020            Medellín               Antioquia
+: 6          6           11/03/2020              Itagüí               Antioquia
+
+#+begin_src R :session :results output :exports both
+names(casos)
+#+end_src
+
+#+RESULTS:
+: [1] "ID.de.caso"              "Fecha.de.diagnóstico"    "Ciudad.de.ubicación"    
+: [4] "Departamento.o.Distrito" "Atención.."              "Edad"                   
+: [7] "Sexo"                    "Tipo."                   "País.de.procedencia"
+
+First we need to specify what will be used as database. Here I chose to use SQLite
+#+begin_src R :session :results output :exports both
+library(mapic)
+
+api_to_db()
+#+end_src
+
+#+RESULTS:
+: Loading required package: maps
+: Loading required package: ggplot2

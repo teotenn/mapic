@@ -11,6 +11,8 @@ api_no_city(
   region = NULL,
   state = NULL,
   county = NULL,
+  start_year = NULL,
+  end_year = NULL,
   silent = FALSE
 )
 }
@@ -30,6 +32,10 @@ and at least one of the following fields: state, county and/or region.}
 \item{state}{Optional. String with the name of the column with the state names}
 
 \item{county}{Optional. String with the name of the column with the county names}
+
+\item{start_year}{String with the name of the column with the year of start.}
+
+\item{end_year}{String with the name of the column with the end.}
 
 \item{silent}{If TRUE, silences the messages from the function}
 }

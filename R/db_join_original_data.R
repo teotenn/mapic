@@ -23,7 +23,7 @@ db_join_original_data <- function(mdb, original_data, city = "City") {
   stopifnot(is.data.frame(original_data))
   local_df <- original_data
 
-  cols_to_exclude <- names(local_df)[names(local_df) %in% c("Country", "Region", "State", "County")]
+  cols_to_exclude <- names(local_df)[names(local_df) %in% c("Country", "Region", "State", "County", "Year_start", "Year_end")]
   if (length(cols_to_exclude) != 0) {
     local_df <- select(local_df, -all_of(cols_to_exclude))
   }

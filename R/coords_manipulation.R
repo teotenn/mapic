@@ -130,6 +130,8 @@ api_to_db <- function(mdb,
                       region = NULL,
                       state = NULL,
                       county = NULL,
+                      start_year = NULL,
+                      end_year = NULL,
                       db_backup_after = 10,
                       silent = FALSE) {
   ## require(RSQLite)
@@ -174,6 +176,8 @@ api_to_db <- function(mdb,
                                    silent = silent)
         ## DF exact replica of DB
         coords <- cbind(ID = dat_local[["ID"]][i],
+                        Year_start = ifelse(is.null(start_year), NA, dat_local[[start_year]][i]),
+                        Year_end = ifelse(is.null(end_year), NA, dat_local[[end_year]][i]),
                         City = rcity,
                         Country = rcountry,
                         Region = rg,
@@ -189,14 +193,16 @@ api_to_db <- function(mdb,
 
     ## repeat
     api_to_db(mdb = mdb,
-                   dat = dat,
-                   city = city,
-                   country = country,
-                   region = region,
-                   state = state,
-                   county = county,
-                   db_backup_after = db_backup_after,
-                   silent = silent)
+              dat = dat,
+              city = city,
+              country = country,
+              region = region,
+              state = state,
+              county = county,
+              start_year = start_year,
+              end_year = end_year,
+              db_backup_after = db_backup_after,
+              silent = silent)
   } else { ## Exit info
     db_final <- db_load(mdb)
     size <- nrow(db_final)
@@ -259,7 +265,8 @@ add_coords_manually <- function(complementary_data, mdb) {
   } else if (any(is.na(local_df$lon) | is.na(local_df$lat) | is.na(local_df$ID))) {
     stop("Data missing for either ID, lat or long")
   } else {
-    local_df <- local_df %>% mutate_all(~replace(., is.na(.), ""))
+    local_df <- local_df %>%
+      mutate_at(c("City", "Country", "Region", "State", "County", "osm_name"), ~replace(., is.na(.), ""))
     ## Send the values to DB and
     db_append(mdb, local_df)
   }
@@ -297,6 +304,8 @@ api_no_city <- function(mdb,
                         region = NULL,
                         state = NULL,
                         county = NULL,
+                        start_year = NULL,
+                        end_year = NULL,
                         silent = FALSE) {
   parameters <- c(region, state, county)
   if (length(parameters) == 0) {
@@ -309,5 +318,7 @@ api_no_city <- function(mdb,
             region = region,
             state = state,
             county = county,
+            start_year = start_year,
+            end_year = end_year,
             silent = silent)
 }
