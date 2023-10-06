@@ -1,5 +1,4 @@
 #' @title join the database to the original data
-#' @author Manuel Teodoro
 #'
 #' @description Joins the data from the database and the original data.
 #'

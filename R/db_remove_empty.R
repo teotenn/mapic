@@ -1,5 +1,4 @@
 #' @title Removes empty entries from database table
-#' @author Manuel Teodoro
 #'
 #' @description Removes from the database table the entries where the \code{lat} and \code{lot} are empty.
 #'
@@ -29,7 +28,7 @@ db_remove_empty.default <- function(mdb) {
 db_remove_empty.mdb_df <- function(mdb) {
   df_name <- mdb$location
   df <- get(df_name, envir = .GlobalEnv)
-  output <- df[!is.na(df$lon), ]
+  output <- dplyr::filter(df, !is.na(lat), !is.na(lon))
   assign(df_name, output, envir = .GlobalEnv)
 }
 
@@ -38,7 +37,7 @@ db_remove_empty.mdb_df <- function(mdb) {
 #' @export
 db_remove_empty.mdb_csv <- function(mdb) {
   df <- db_load(mdb)
-  output <- df[!is.na(df$lon), ]
+  output <- dplyr::filter(df, !is.na(lat), !is.na(lon))
   write.csv(output, mdb$location, row.names = FALSE)
 }
 
@@ -52,6 +51,6 @@ db_remove_empty.mdb_SQLite <- function(mdb) {
 
   con <- dbConnect(drv = RSQLite::SQLite(), dbname = path_to_db)
   dbExecute(conn = con,
-            paste0("DELETE FROM ", table_name,  " WHERE lon IS NULL OR trim(lon) = '';"))
+            paste0("DELETE FROM ", table_name,  " WHERE lon IS NULL OR lat IS NULL"))
   dbDisconnect(con)
 }

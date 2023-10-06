@@ -22,8 +22,8 @@ mapic_city_dots(x, ...)
   .mapic_holder,
   .df,
   year,
-  column_names = list(lat = "lat", lon = "lon", cities = "city", start_year = "year",
-    end_year = NULL),
+  column_names = list(lat = "lat", lon = "lon", cities = "City", start_year =
+    "Year_start", end_year = "Year_end"),
   legend_external = TRUE,
   legend_position = "bottom",
   dot_size = 1
@@ -74,6 +74,3 @@ It generates the dots to be added to the base map, showing the ammount of elemen
 \item \code{mapic_city_dots(mapicHolder)}: Default
 
 }}
-\author{
-Manuel Teodoro
-}

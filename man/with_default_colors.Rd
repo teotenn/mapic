@@ -21,6 +21,3 @@ my_colors <- with_default_colors(list(dots_orgs = "#000000")
 \seealso{
 \code{\link{define_map_colors}} for details about the colors.
 }
-\author{
-Manuel Teodoro
-}

@@ -1,5 +1,5 @@
 #' @title Mapic City Dots
-#' @author Manuel Teodoro
+#'
 #' @description Generates the plot of dots per city with its size based on amount of organizations.
 #'
 #' @param .mapic_holder Object of class \code{mapicHolder} as returned from the function \code{base_map} (optional).
@@ -134,9 +134,9 @@ mapic_city_dots.mapicHolder <- function(.mapic_holder,
                                         column_names = list(
                                           lat = "lat",
                                           lon = "lon",
-                                          cities = "city",
-                                          start_year = "year",
-                                          end_year = NULL),
+                                          cities = "City",
+                                          start_year = "Year_start",
+                                          end_year = "Year_end"),
                                         legend_external = TRUE,
                                         legend_position = "bottom",
                                         dot_size = 1) {

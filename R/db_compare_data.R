@@ -1,5 +1,4 @@
 #' @title Compares the database to the original data
-#' @author Manuel Teodoro
 #'
 #' @description Creates a data frame with the missing data.
 #'

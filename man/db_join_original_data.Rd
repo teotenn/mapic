@@ -27,6 +27,3 @@ contained in the database table. The joint is performed by "ID" and "City"
 fields. The fields "Region", "State" and
 "County" are taken from the database.
 }
-\author{
-Manuel Teodoro
-}

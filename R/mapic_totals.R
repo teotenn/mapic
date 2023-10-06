@@ -1,5 +1,5 @@
 #' @title Mapic totals generic
-#' @author Manuel Teodoro
+#'
 #' @description Generates the label of the total elements included in the map,
 #' either as internal or external label, depending which function is being called.
 #'

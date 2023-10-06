@@ -1,5 +1,4 @@
 #' @title database configuration
-#' @author Manuel Teodoro
 #' @description Creates the corresponding mapic db configuration object containing the database configuration details.
 #'
 #' @param db_type String describing the type of database to use. Options are

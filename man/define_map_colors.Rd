@@ -35,6 +35,3 @@ my_map_colors <- define_map_colors(dots_orgs = "#574166",
                                    text_legend = "#283151",
                                    text_copyright = "#f3f3f3")
 }
-\author{
-Manuel Teodoro
-}

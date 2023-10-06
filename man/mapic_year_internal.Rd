@@ -65,6 +65,3 @@ The external version generates a sepparated plot that has to be called sepparate
 \item \code{mapic_year_internal(mapicHolder)}: mapicHolder
 
 }}
-\author{
-Manuel Teodoro
-}

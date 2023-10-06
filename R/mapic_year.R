@@ -1,5 +1,4 @@
 #' @title Mapic year generic
-#' @author Manuel Teodoro
 #' @description Generates the label of the year to be mapped, either as internal or external,
 #' depending which function is being called.
 #'

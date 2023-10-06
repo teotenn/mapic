@@ -1,5 +1,4 @@
 #' @title Appends rows to the database table
-#' @author Manuel Teodoro
 #'
 #' @description Appends the rows of a data frame into the database table
 #'

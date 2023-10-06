@@ -1,5 +1,4 @@
 #' @title Loads the database table
-#' @author Manuel Teodoro
 #'
 #' @description Loads the database table to R as a data frame.
 #'

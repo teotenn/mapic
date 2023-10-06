@@ -51,6 +51,3 @@ environment, both with the structure required by mapic to store the coordinates.
 \seealso{
 \link{database_configuration}
 }
-\author{
-Manuel Teodoro
-}

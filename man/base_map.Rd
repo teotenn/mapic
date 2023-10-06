@@ -54,6 +54,3 @@ base_map("Mexico",
   scale_x_continuous(n.breaks = 20) +
   ggtitle("A map of Mexico")
 }
-\author{
-Manuel Teodoro
-}
