@@ -11,8 +11,8 @@ mapic_city_dots(x, ...)
 \method{mapic_city_dots}{default}(
   .df,
   year,
-  column_names = list(lat = "lat", lon = "lon", cities = "city", start_year = "year",
-    end_year = NULL),
+  column_names = list(lat = "lat", lon = "lon", cities = "City", start_year =
+    "Year_start", end_year = NULL),
   legend_position = "bottom",
   dot_size = 1,
   map_colors = default_map_colors
@@ -30,9 +30,9 @@ mapic_city_dots(x, ...)
 )
 }
 \arguments{
-\item{.df}{Object of class \code{data.frame} containing the data to be included in the map.
-Preferably as return from the function \code{combine_csv_sql}. See \code{column_names} for a
-list of required fields.}
+\item{.df}{Object of class \code{data.frame} containing the data to be mapped
+(including coordinates). Preferably as prepared by \code{api_to_db}.
+See \code{column_names} below for a list of required fields.}
 
 \item{year}{The year to be plot, as \code{numeric}.}
 
@@ -58,7 +58,7 @@ Not necessary if an object of class \code{mapicHolder} is passed.}
 extracted from the map and passed as an element of the object, as \code{object$legend}.}
 }
 \value{
-If the map is creating using an object of class \code{mapicHolder}, it returns the same object with added
+If the map is created using an object of class \code{mapicHolder}, it returns the same object with added
 information and map elements. Otherwise, it returns a \code{ggplot} object.
 }
 \description{
