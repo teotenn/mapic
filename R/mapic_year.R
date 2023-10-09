@@ -11,6 +11,7 @@
 #' @param y_limits A vector of size 2 containing the vertical limits of the map.
 #' Not necessary for external or if an object of class \code{mapicHolder} is passed.
 #' @param year_label A string to be used for the label "Year".
+#' @param font_family Font to be used.
 #' @param map_colors An object of class \code{map_colors} containing the details of the colors for the maps.
 #' Not necessary if an object of class \code{mapicHolder} is passed.
 #'
@@ -32,6 +33,7 @@ mapic_year_internal.default <- function(year,
                                         x_limits,
                                         y_limits,
                                         year_label = "Year",
+                                        font_family = "Arial",
                                         map_colors = default_map_colors) {
   require(ggplot2)
 
@@ -66,6 +68,7 @@ mapic_year_internal.default <- function(year,
           y = num_position_y,
           label = year),
       size = num_size,
+      family = font_family,
       fontface = "bold",
       color = map_colors$background_legend),
     geom_text(
@@ -73,6 +76,7 @@ mapic_year_internal.default <- function(year,
           y = text_position_y,
           label = year_label),
       size = text_size,
+      family = font_family,
       fontface = "bold",
       alpha = 9 / 10,
       color = map_colors$background_legend)
@@ -84,11 +88,13 @@ mapic_year_internal.default <- function(year,
 #' @describeIn mapic_year_internal mapicHolder
 #' @export
 mapic_year_internal.mapicHolder <- function(.mapic_holder,
-                                            year_label = "Year") {
+                                            year_label = "Year",
+                                            font_family = "Arial") {
   mapic_year <- mapic_year_internal(year = .mapic_holder$year,
                                     x_limits = .mapic_holder$x_limits,
                                     y_limits = .mapic_holder$y_limits,
                                     year_label = year_label,
+                                    font_family = font_family,
                                     map_colors = .mapic_holder$colors)
 
   .mapic_holder[["mapic_year"]] <- mapic_year
@@ -106,6 +112,7 @@ mapic_year_external <- function(x, ...) UseMethod("mapic_year_external")
 #' @export
 mapic_year_external.default <- function(year,
                                         year_label = "Year",
+                                        font_family = "Arial",
                                         map_colors = default_map_colors) {
   require(ggplot2)
 
@@ -131,7 +138,7 @@ mapic_year_external.default <- function(year,
           y = num_position_y,
           label = year),
       size = num_size,
-      family = "Montserrat",
+      family = font_family,
       fontface = "bold",
       color = map_colors$background_legend) +
     geom_text(
@@ -139,7 +146,7 @@ mapic_year_external.default <- function(year,
           y = text_position_y,
           label = year_label),
       size = text_size,
-      family = "Montserrat",
+      family = font_family,
       fontface = "bold",
       alpha = 9 / 10,
       color = map_colors$background_legend) +
@@ -152,9 +159,11 @@ mapic_year_external.default <- function(year,
 #' @rdname mapic_year_internal
 #' @export
 mapic_year_external.mapicHolder <- function(.mapic_holder,
-                                            year_label = "Year") {
+                                            year_label = "Year",
+                                            font_family = "Arial") {
   mapic_year <- mapic_year_external(year = .mapic_holder$year,
                                     year_label = year_label,
+                                    font_family = font_family,
                                     map_colors = .mapic_holder$colors)
 
   .mapic_holder[["mapic_year"]] <- mapic_year + .mapic_holder[["theme_labels"]]

@@ -33,7 +33,7 @@ mapic_city_names.default <- function(.df,
                                      lat = "lat",
                                      lon = "lon",
                                      cities = "City",
-                                     font_family = "Montserrat",
+                                     font_family = "Arial",
                                      text_size = 4,
                                      map_colors = default_map_colors) {
   list_cities <- purrr::map_chr(list_cities, str_to_title)
@@ -62,7 +62,7 @@ mapic_city_names.default <- function(.df,
 #' @export
 mapic_city_names.mapicHolder <- function(.mapic_holder,
                                          list_cities,
-                                         font_family = "Montserrat",
+                                         font_family = "Arial",
                                          text_size = 4) {
   data <- .mapic_holder$data$base
 

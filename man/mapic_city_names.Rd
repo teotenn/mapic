@@ -14,7 +14,7 @@ mapic_city_names(x, ...)
   lat = "lat",
   lon = "lon",
   cities = "City",
-  font_family = "Montserrat",
+  font_family = "Arial",
   text_size = 4,
   map_colors = default_map_colors
 )
@@ -22,7 +22,7 @@ mapic_city_names(x, ...)
 \method{mapic_city_names}{mapicHolder}(
   .mapic_holder,
   list_cities,
-  font_family = "Montserrat",
+  font_family = "Arial",
   text_size = 4
 )
 }

@@ -6,13 +6,13 @@
 
 * About
 
-**Mapic** is an opinionated R package with the single purpose of creating geographic maps showing uni variate numerical data as dots. Time can be considered a second variable that can be visualized by creating several maps, resulting in dynamic maps as video or gif files.
+*Mapic* is an opinionated R package with the single purpose of creating geographic maps showing uni variate numerical data as dots. Time can be considered a second variable that can be visualized by creating several maps, resulting in dynamic maps as video or gif files.
 
-Its power lies in the possibility of mapping any region in the world that can be found on [[https://www.openstreetmap.org/][open street map]]. This can be achieved with other packages, however each has its own limitations. The most powerful R packages for the creation of maps are also very big, and often require dependencies, making them less portable. Although they can achieve the same as **mapic**, their purpose is different. Other more simple packages exist but they contain data for particular countries or regions.
+Its power lies in the possibility of mapping any region in the world that can be found on [[https://www.openstreetmap.org/][open street map]]. This can be achieved with other packages, however each has its own limitations. The most powerful R packages for the creation of maps are also very big, and often require dependencies, making them less portable. Although they can achieve the same as *mapic*, their purpose is different. Other more simple packages exist but they contain data for particular countries or regions.
 
-The target of **mapic** is to make the process of creation of the maps simple, while keeping the quality standardized. During the creation of a map, there are many variables to consider and in many different areas (geographical, stylistic, data-related, etc.). **Mapic** reduces the complexity and gives the user(s) the possibility of keeping the same standards. This is highly valuable when we need to create a big amount of maps, when collaborating with many people or for the creation of apps (i.e., Shiny), among others.
+The target of *mapic* is to make the process of creation of the maps simple, while keeping the quality standardized. During the creation of a map, there are many variables to consider and in many different areas (geographical, stylistic, data-related, etc.). *Mapic* reduces the complexity and gives the user(s) the possibility of keeping the same standards. This is highly valuable when we need to create a big amount of maps, when collaborating with many people or for the creation of apps (i.e., Shiny), among others.
 
-**Mapic** relies on 2 main packages to achieve its purpose: [[https://cran.r-project.org/web/packages/maps/index.html][maps]] by Richard A. Becker and Allan R. Wilks, and the well known [[https://cran.r-project.org/web/packages/ggplot2/index.html][ggplot2]] by Hadley Wickham and collaborators.
+*Mapic* relies on 2 main packages to achieve its purpose: [[https://cran.r-project.org/web/packages/maps/index.html][maps]] by Richard A. Becker and Allan R. Wilks, and the well known [[https://cran.r-project.org/web/packages/ggplot2/index.html][ggplot2]] by Hadley Wickham and collaborators.
 
 The documentation for its usage is still to be improved. In the meantime, details of the development and the concept can be found in the blog [[https://blog.teoten.com]] in the series [[https://blog.teoten.com/series/maps-app/][maps-app]].
 
@@ -37,7 +37,7 @@ Alternatively you can download the compressed files from the tags.
 
 * A basic workflow
 
-A basic workflow goes from the raw data to plot, still without coordinates, to the creation of the maps. The main aim of **mapic** is to make the process easy and simple, as you will see in the following lines. The basic workflow also shows the main usage of the package and its functions. 
+A basic workflow goes from the raw data to plot, still without coordinates, to the creation of the maps. The main aim of *mapic* is to make the process easy and simple, as you will see in the following lines. The basic workflow also shows the main usage of the package and its functions. 
 
 ** Retrieving the coordinates
 
@@ -47,7 +47,7 @@ We start showing an example, an imaginary dataset of Mexican cities. You can cal
 options(warn = -1)
 #+end_src
 
-Suppose that we have a company that opened 10 offices in the country between 2001 and 2010, one each year. It went bankrupt in 2021 and all the offices had to close. We want to get a map of the country showing dots on each city where there was an office for a selected year. That is the main purpose of **mapic**.
+Suppose that we have a company that opened 10 offices in the country between 2001 and 2010, one each year. It went bankrupt in 2021 and all the offices had to close. We want to get a map of the country showing dots on each city where there was an office for a selected year. That is the main purpose of *mapic*.
 
 Here is how the data looks like:
 
@@ -72,7 +72,7 @@ mexico[,c(-3, -9)]
 10 10 org10              2010     2021      MX      Estado de Mexico          Texcoco
 #+end_example
 
-First we need to specify what will be used as database. Here I chose to use =SQLite=. ~database_configuration~ creates an S3 object that can be used whenever we need to refer to the database in **mapic**.
+First we need to specify what will be used as database. Here I chose to use =SQLite=. ~database_configuration~ creates an S3 object that can be used whenever we need to refer to the database in *mapic*.
 
 #+begin_src R :session
 mx_db <- database_configuration("SQLite", "~/Downloads/mx.sqlite", "orgs")
@@ -124,7 +124,7 @@ Search finished.
  1 ENTRIES NOT FOUND
 #+end_example
 
-~db_load~ help us to load the data back to R using our **mapic** object defined before.
+~db_load~ help us to load the data back to R using our *mapic* object defined before.
 
 #+begin_src R :session :results output :exports both
 mx <- db_load(mx_db)
@@ -304,7 +304,7 @@ coords_from_city("Houston", "US", state = "Texas")
 :        lon      lat                                     osm_name
 : 1 -95.3677 29.75894 Houston, Harris County, Texas, United States
 
-If a particular place is not found, I recommend going directly to the [[https://nominatim.openstreetmap.org/ui/search.html][nominatim]] web page and search there, if you cannot find it, **mapic** won't either. You can alternatively add the coords "by hand" using the function ~add_coords_manually~ as exemplified above.
+If a particular place is not found, I recommend going directly to the [[https://nominatim.openstreetmap.org/ui/search.html][nominatim]] web page and search there, if you cannot find it, *mapic* won't either. You can alternatively add the coords "by hand" using the function ~add_coords_manually~ as exemplified above.
 
 The function ~api_to_db~ uses ~coords_from_city~ recursively over a data frame and stores the results directly in a database or equivalent (as specified in the argument ~mdb~). Its homologous, ~api_no_city~ fulfills the same function but for a county or state.
 
@@ -317,7 +317,7 @@ The options supported currently are:
 - csv file
 
 * Mapping different elements
-We already show in the example above how to define the colors to be used in the map. Since **mapic** focuses on the standardization of maps, this is an important step that helps **mapic** to choose the same colors for all the maps.
+We already show in the example above how to define the colors to be used in the map. Since *mapic* focuses on the standardization of maps, this is an important step that helps *mapic* to choose the same colors for all the maps.
 
 The base function ~base_map~ creates a map of any country found in the package =maps=. It can be as simple as writing the name of the country as defined in the package. The function below renders a world wide map, highlighting Brazil in a different color. By default it shows the coordinates so that the user can have a point of reference and choose the limits. 
 
@@ -362,7 +362,7 @@ class(map_mapic)
 : [1] "mapicHolder"
 
 ** Using mapic objects
-Using ~mapicHolder~ is the recommended way of **mapic** because it reduces the information that each function needs to take, sharing info among them using the object as messenger. Thus, object holds the information used to create the map, including data and other values and you can access it individually.
+Using ~mapicHolder~ is the recommended way of *mapic* because it reduces the information that each function needs to take, sharing info among them using the object as messenger. Thus, object holds the information used to create the map, including data and other values and you can access it individually.
 
 As seen in the example of the workflow
 
@@ -418,7 +418,7 @@ mx_map$mapic +
 [[file:img/figure-5.png]]
 
 ** Using ggplot
-The method above using **mapic**'s default objects allows us to modify elements within the object to achieve a different map. However, this is not recommended. If that is desired, the recommended method is to use default =ggplot= objects as shown above (using ~return_mapic_obj = FALSE~ in ~base_map~ function).
+The method above using *mapic*'s default objects allows us to modify elements within the object to achieve a different map. However, this is not recommended. If that is desired, the recommended method is to use default =ggplot= objects as shown above (using ~return_mapic_obj = FALSE~ in ~base_map~ function).
 
 #+begin_src R :session :file img/figure-6.png :results value graphics file :results output :exports both
 base_map(
@@ -475,10 +475,10 @@ Lower granularity maps are not planned.
 ** Coordinates retrieval
 Currently the coordinates can be searched only by City, State and County. We intend to extend this to postal code as well.
 
-Additionally, when more than one result is found, **mapic** takes the first entry found. We expect to extend this to allow the user to select which entry to choose. This also means that the more specific the data, the more precise **mapic** can be.
+Additionally, when more than one result is found, *mapic* takes the first entry found. We expect to extend this to allow the user to select which entry to choose. This also means that the more specific the data, the more precise *mapic* can be.
 
 ** Other
-**Mapic** many other limitation as a generic map generator, but this is not its purpose. Please read the About section at the beginning of this document to find out what **mapic** is.
+*mapic* many other limitation as a generic map generator, but this is not its purpose. Please read the About section at the beginning of this document to find out what *mapic* is.
 
 * Changelog
 The package is still under development in a partially stable version. It does not implement an official changelog yet but you can always visit the file [[file:./org.org][org]] to see future plans and old changes summarized.

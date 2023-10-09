@@ -16,20 +16,30 @@ mapic_totals_internal(x, ...)
   x_limits,
   y_limits,
   totals_label = "Totals",
+  font_family = "Arial",
   map_colors = default_map_colors
 )
 
-\method{mapic_totals_internal}{mapicHolder}(.mapic_holder, totals_label = "Totals")
+\method{mapic_totals_internal}{mapicHolder}(
+  .mapic_holder,
+  totals_label = "Totals",
+  font_family = "Arial"
+)
 
 mapic_totals_external(x, ...)
 
 \method{mapic_totals_external}{default}(
   totals,
   totals_label = "Totals",
+  font_family = "Arial",
   map_colors = default_map_colors
 )
 
-\method{mapic_totals_external}{mapicHolder}(.mapic_holder, totals_label = "Totals")
+\method{mapic_totals_external}{mapicHolder}(
+  .mapic_holder,
+  totals_label = "Totals",
+  font_family = "Arial"
+)
 }
 \arguments{
 \item{totals}{The value to be included, as \code{numeric}.
@@ -42,6 +52,8 @@ Not necessary for external or if an object of class \code{mapicHolder} is passed
 Not necessary for external or if an object of class \code{mapicHolder} is passed.}
 
 \item{totals_label}{A string to be used for the label "Totals".}
+
+\item{font_family}{Font to be used.}
 
 \item{map_colors}{An object of class \code{map_colors} containing the details of the colors for the maps.
 Not necessary if an object of class \code{mapicHolder} is passed.}
