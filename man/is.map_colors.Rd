@@ -15,6 +15,3 @@ is.map_colors(x)
 \description{
 Test if the object is of class \code{map_colors}
 }
-\author{
-Manuel Teodoro
-}

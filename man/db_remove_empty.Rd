@@ -41,6 +41,3 @@ present function removes those entries from the database completely.
 \item \code{db_remove_empty(mdb_SQLite)}: mdb_SQLite
 
 }}
-\author{
-Manuel Teodoro
-}

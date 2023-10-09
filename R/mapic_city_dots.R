@@ -1,11 +1,11 @@
 #' @title Mapic City Dots
-#' @author Manuel Teodoro
+#'
 #' @description Generates the plot of dots per city with its size based on amount of organizations.
 #'
 #' @param .mapic_holder Object of class \code{mapicHolder} as returned from the function \code{base_map} (optional).
-#' @param .df Object of class \code{data.frame} containing the data to be included in the map.
-#' Preferably as return from the function \code{combine_csv_sql}. See \code{column_names} for a
-#' list of required fields.
+#' @param .df Object of class \code{data.frame} containing the data to be mapped
+#' (including coordinates). Preferably as prepared by \code{api_to_db}.
+#' See \code{column_names} below for a list of required fields.
 #' @param year The year to be plot, as \code{numeric}.
 #' @param column_names A \code{list} with the names of the columns containing the values to be used for the map.
 #' \enumerate{
@@ -22,7 +22,7 @@
 #' @param map_colors An object of class \code{map_colors} containing the details of the colors for the maps.
 #' Not necessary if an object of class \code{mapicHolder} is passed.
 #'
-#' @return If the map is creating using an object of class \code{mapicHolder}, it returns the same object with added
+#' @return If the map is created using an object of class \code{mapicHolder}, it returns the same object with added
 #' information and map elements. Otherwise, it returns a \code{ggplot} object.
 #'
 #' @details It generates the dots to be added to the base map, showing the ammount of elements per city in a given year.
@@ -38,8 +38,8 @@ mapic_city_dots.default <- function(.df,
                                     column_names = list(
                                       lat = "lat",
                                       lon = "lon",
-                                      cities = "city",
-                                      start_year = "year",
+                                      cities = "City",
+                                      start_year = "Year_start",
                                       end_year = NULL),
                                     legend_position = "bottom",
                                     dot_size = 1,
@@ -134,9 +134,9 @@ mapic_city_dots.mapicHolder <- function(.mapic_holder,
                                         column_names = list(
                                           lat = "lat",
                                           lon = "lon",
-                                          cities = "city",
-                                          start_year = "year",
-                                          end_year = NULL),
+                                          cities = "City",
+                                          start_year = "Year_start",
+                                          end_year = "Year_end"),
                                         legend_external = TRUE,
                                         legend_position = "bottom",
                                         dot_size = 1) {

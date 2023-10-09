@@ -16,16 +16,22 @@ mapic_year_internal(x, ...)
   x_limits,
   y_limits,
   year_label = "Year",
+  font_family = "Arial",
   map_colors = default_map_colors
 )
 
-\method{mapic_year_internal}{mapicHolder}(.mapic_holder, year_label = "Year")
+\method{mapic_year_internal}{mapicHolder}(.mapic_holder, year_label = "Year", font_family = "Arial")
 
 mapic_year_external(x, ...)
 
-\method{mapic_year_external}{default}(year, year_label = "Year", map_colors = default_map_colors)
+\method{mapic_year_external}{default}(
+  year,
+  year_label = "Year",
+  font_family = "Arial",
+  map_colors = default_map_colors
+)
 
-\method{mapic_year_external}{mapicHolder}(.mapic_holder, year_label = "Year")
+\method{mapic_year_external}{mapicHolder}(.mapic_holder, year_label = "Year", font_family = "Arial")
 }
 \arguments{
 \item{year}{The year to be plot, as \code{numeric}.
@@ -38,6 +44,8 @@ Not necessary for external or if an object of class \code{mapicHolder} is passed
 Not necessary for external or if an object of class \code{mapicHolder} is passed.}
 
 \item{year_label}{A string to be used for the label "Year".}
+
+\item{font_family}{Font to be used.}
 
 \item{map_colors}{An object of class \code{map_colors} containing the details of the colors for the maps.
 Not necessary if an object of class \code{mapicHolder} is passed.}
@@ -65,6 +73,3 @@ The external version generates a sepparated plot that has to be called sepparate
 \item \code{mapic_year_internal(mapicHolder)}: mapicHolder
 
 }}
-\author{
-Manuel Teodoro
-}

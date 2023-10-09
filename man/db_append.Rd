@@ -45,6 +45,3 @@ table specified in \code{mdb}.
 \seealso{
 \link{database_configuration}
 }
-\author{
-Manuel Teodoro
-}

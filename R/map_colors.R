@@ -1,5 +1,5 @@
 #' @title Define map colors
-#' @author Manuel Teodoro
+#'
 #' @description Creates an object of class \code{map_colors} that contains colors used for the maps.
 #'
 #' @param dots_orgs,target_country,empty_countries,border_countries,oceans,text_cities,text_legend,text_copyright
@@ -53,7 +53,7 @@ define_map_colors <- function(dots_orgs,
 }
 
 #' @title Test if the object is of class \code{map_colors}
-#' @author Manuel Teodoro
+#'
 #' @param x An object
 #' @return 'TRUE' if the object inhertis from the \code{map_colors} class
 #' @export
@@ -81,7 +81,7 @@ default_map_colors <- define_map_colors(dots_orgs = "#493252",
                                         text_copyright = "#f3f3f3")
 
 #' @title With default map colors
-#' @author Manuel Teodoro
+#'
 #' @description Modifies the default colors
 #' 
 #' @param list_colors A list containing the parameters of the colors to be changed as passed in the function \code{\link{define_map_colors}}.

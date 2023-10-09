@@ -22,6 +22,3 @@ Creates a data frame with the missing data.
 \seealso{
 \link{database_configuration}
 }
-\author{
-Manuel Teodoro
-}

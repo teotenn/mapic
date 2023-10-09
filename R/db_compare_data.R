@@ -1,5 +1,4 @@
 #' @title Compares the database to the original data
-#' @author Manuel Teodoro
 #'
 #' @description Creates a data frame with the missing data.
 #'
@@ -13,7 +12,7 @@
 #' @seealso \link{database_configuration}
 #' @export
 db_compare_data  <- function(mdb, df) {
-  local_df <- db_load(mdb)
-  filtered <- filter(df, !(as.character(ID) %in% as.character(local_df$ID)))
+  mdb_df <- db_load(mdb)
+  filtered <- filter(df, !(as.character(ID) %in% as.character(mdb_df$ID)))
   return(filtered)
 }

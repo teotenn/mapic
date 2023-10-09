@@ -1,5 +1,5 @@
 #' @title Mapic totals generic
-#' @author Manuel Teodoro
+#'
 #' @description Generates the label of the total elements included in the map,
 #' either as internal or external label, depending which function is being called.
 #'
@@ -12,6 +12,7 @@
 #' @param y_limits A vector of size 2 containing the vertical limits of the map.
 #' Not necessary for external or if an object of class \code{mapicHolder} is passed.
 #' @param totals_label A string to be used for the label "Totals".
+#' @param font_family Font to be used.
 #' @param map_colors An object of class \code{map_colors} containing the details of the colors for the maps.
 #' Not necessary if an object of class \code{mapicHolder} is passed.
 #'
@@ -33,6 +34,7 @@ mapic_totals_internal.default <- function(totals,
                                           x_limits,
                                           y_limits,
                                           totals_label = "Totals",
+                                          font_family = "Arial",
                                           map_colors = default_map_colors) {
   require(ggplot2)
 
@@ -65,6 +67,7 @@ mapic_totals_internal.default <- function(totals,
             aes(x = num_position_x, y = num_position_y,
                 label = totals),
             size = num_size,
+            family = font_family,
             fontface = "bold",
             alpha = 9 / 10,
             color = map_colors$text_legend),
@@ -72,6 +75,7 @@ mapic_totals_internal.default <- function(totals,
             aes(x = text_position_x, y = text_position_y,
                 label = totals_label),
             size = text_size,
+            family = font_family,
             fontface = "bold",
             alpha = 9 / 10,
             color = map_colors$text_legend)
@@ -83,12 +87,14 @@ mapic_totals_internal.default <- function(totals,
 #' @describeIn mapic_totals_internal mapicHolder
 #' @export
 mapic_totals_internal.mapicHolder <- function(.mapic_holder,
-                                              totals_label = "Totals") {
+                                              totals_label = "Totals",
+                                              font_family = "Arial") {
   data_totals <- sum(.mapic_holder$data$map$n)
   mapic_totals <- mapic_totals_internal(totals = data_totals,
                                         x_limits = .mapic_holder$x_limits,
                                         y_limits = .mapic_holder$y_limits,
                                         totals_label = totals_label,
+                                        font_family = font_family,
                                         map_colors = .mapic_holder$colors)
 
   .mapic_holder[["mapic_totals"]] <- mapic_totals
@@ -107,6 +113,7 @@ mapic_totals_external <- function(x, ...) UseMethod("mapic_totals_external")
 #' @export
 mapic_totals_external.default <- function(totals,
                                           totals_label = "Totals",
+                                          font_family = "Arial",
                                           map_colors = default_map_colors) {
   require(ggplot2)
 
@@ -133,7 +140,7 @@ mapic_totals_external.default <- function(totals,
         y = num_position_y,
         label = totals),
       size = num_size,
-      family = "Montserrat",
+      family = font_family,
       fontface = "bold",
       alpha = 9 / 10,
       color = map_colors$text_legend) +
@@ -143,7 +150,7 @@ mapic_totals_external.default <- function(totals,
         y = text_position_y,
         label = "Organizations"),
       size = text_size,
-      family = "Montserrat",
+      family = font_family,
       fontface = "bold",
       alpha = 9 / 10,
       color = map_colors$text_legend) +
@@ -156,10 +163,12 @@ mapic_totals_external.default <- function(totals,
 #' @rdname mapic_totals_internal
 #' @export
 mapic_totals_external.mapicHolder <- function(.mapic_holder,
-                                              totals_label = "Totals") {
+                                              totals_label = "Totals",
+                                              font_family = "Arial") {
   data_totals <- sum(.mapic_holder$data$map$n)
   mapic_totals <- mapic_totals_external(totals = data_totals,
                                         totals_label = totals_label,
+                                        font_family = font_family,
                                         map_colors = .mapic_holder$colors)
 
   .mapic_holder[["mapic_totals"]] <- mapic_totals + .mapic_holder[["theme_labels"]]

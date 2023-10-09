@@ -3,14 +3,495 @@
 #+EMAIL: teotenn@proton.me
 #+LANGUAGE: en
 #+STYLE: <style type="text/css">#outline-container-introduction{ clear:both; }</style>
-#+BABEL: :exports both
 
-This is a personal R package to facilitate the creation of Maps of Infrastructure per City (MAPIC).
+* Maps of Infrastructure per City (MAPIC)
+
+** About
+
+*Mapic* is an opinionated R package with the single purpose of creating geographic maps showing uni variate numerical data as dots. Time can be considered a second variable that can be visualized by creating several maps, resulting in dynamic maps as video or gif files.
+
+Its power lies in the possibility of mapping any region in the world that can be found on [[https://www.openstreetmap.org/][open street map]]. This can be achieved with other packages however, each has its own limitations. The most powerful R packages for the creation of maps are also very big, and often require numerous dependencies, making them less portable. Although they can achieve the same as *mapic*, their purpose is different. Other more simple packages exist but they contain data for particular countries or regions only. *Mapic* is positioned in a middle point between these two kinds of packages.
+
+The target of *mapic* is to make the process of creation of the maps simple, while keeping the quality standardized. During the creation of a map, there are many variables to consider and in many different areas (geographical, stylistic, data-related, etc.). *Mapic* reduces the complexity and gives the user the possibility of keeping the same standards among teams or when creating several maps.
+
+*Mapic* relies on 2 main packages to achieve its purpose: [[https://cran.r-project.org/web/packages/maps/index.html][maps]] by Richard A. Becker and Allan R. Wilks, and the well known [[https://cran.r-project.org/web/packages/ggplot2/index.html][ggplot2]] by Hadley Wickham and collaborators.
+
+The documentation for its usage is still to be improved. In the meantime, details of the development and the concept can be found in the blog [[https://blog.teoten.com]] in the series [[https://blog.teoten.com/series/maps-app/][maps-app]].
+
+The project is under the GNU GENERAL PUBLIC LICENSE Version 3 (GPL-3). Your are free to copy it and reproduce it with no guarantee.
+
+* Installation
+It is recommended to have the following packages pre-installed: R (>= 4.0.0), maps (>= 3.3.0), ggplot2, httr, stringr (>= 1.5.0), dplyr, RJSONIO, purrr, tidyr. Depending on the database type to be used, the following packages could be also necessary: RSQLite (>= 2.2.3).
+
+The easiest way to install is by using the function ~devtools::install_github~. First install =devtools= if you don't have it yet.
+
+#+begin_src R :eval no
+install.packages("devtools")
+devtools::install_github("teotenn/mapic")
+#+end_src
+
+Alternatively you can clone the repository and install from source. You also need =devtools= for that.
+
+#+begin_src R :eval no
+devtools::install("/path_to_mapic/mapic", quick = TRUE, build = FALSE, keep_source = TRUE)
+#+end_src
+
+You can also download the compressed files from the tags and/or releases.
+
+* A basic workflow
+
+A basic workflow goes from the raw data to plot, still without coordinates, to the creation of the maps. The main aim of *mapic* is to make the process easy and simple, as you will see in the following lines. The basic workflow also shows the main usage of the package and its functions. 
+
+** Retrieving the coordinates
+
+We start showing an example, an imaginary dataset of Mexican cities. You can call it from the library data as ~mexico~.
+
+#+begin_src R :session :exports none :results silent
+options(warn = -1)
+#+end_src
+
+Suppose that we have a company that opened 10 offices in the country between 2001 and 2010, one each year. It went bankrupt in 2021 and all the offices had to close. We want to get a map of the country showing dots on each city where there was an office for a selected year. That is the main purpose of *mapic*.
+
+Here is how the data looks like:
+
+#+begin_src R :session :results output :exports both
+library(mapic)
+data(mexico)
+mexico[,c(-3, -9)]
+#+end_src
+
+#+RESULTS:
+#+begin_example
+   ID  Name Registration_year End_year Country                Region             City
+1   1  org1              2001     2021      MX                Mexico Ciudad de Mexico
+2   2  org2              2002     2021      MX Baja California Norte          Tijuana
+3   3  org3              2003     2021      MX                Mexico Ciudad de Mexico
+4   4  org4              2004     2021      MX               Jalisco      Guadalajara
+5   5  org5              2005     2021      MX             Queretaro        Queretaro
+6   6  org6              2006     2021      MX Baja California Norte          Tijuana
+7   7  org7              2007     2021      MX                Mexico Ciudad de Mexico
+8   8  org8              2008     2021      MX               Morelos       Cuernavaca
+9   9  org9              2009     2021      MX                Mexico Ciudad de Mexico
+10 10 org10              2010     2021      MX      Estado de Mexico          Texcoco
+#+end_example
+
+First we need to specify what will be used as database. Here I chose to use =SQLite=. ~database_configuration~ creates an S3 object that can be used whenever we need to refer to the database in *mapic*.
+
+#+begin_src R :session
+mx_db <- database_configuration("SQLite", "~/Downloads/mx.sqlite", "orgs")
+class(mx_db)
+#+end_src
+
+#+RESULTS:
+: mdb_SQLite
+
+The first element that we need to make even such simple maps are the coordinates of each city. **Mapic's** ~api_to_db~ searches for the coordinates of each city in our data frame and send it directly to the database that we specified before, together with the rest of the data necessary to make maps.
+
+The function and results look similar to the following:
+
+#+begin_src R :session :results output :exports both
+api_to_db(mx_db,
+          dat = mexico,
+          city = "City",
+          country = "Country",
+          state = "Region",
+          start_year = "Registration_year",
+          end_year = "End_year",
+          db_backup_after = 5)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+[1] "Searching entry 1"
+Several entries found for Ciudad de Mexico MX
+[1] "Searching entry 2"
+Found Tijuana, Municipio de Tijuana, Baja California, 22320, México
+[1] "Searching entry 3"
+Several entries found for Ciudad de Mexico MX
+[1] "Searching entry 4"
+Found Guadalajara, Jalisco, México
+[1] "Searching entry 5"
+Found Santiago de Querétaro, Municipio de Querétaro, Querétaro, México
+[1] "Searching entry 6"
+[1] "Found from memory"
+[1] "Searching entry 7"
+[1] "Found from memory"
+[1] "Searching entry 8"
+Found Cuernavaca, Morelos, 62000, México
+[1] "Searching entry 9"
+[1] "Found from memory"
+[1] "Searching entry 10"
+No results found for &city=Texcoco&state=Estado%20de%20Mexico
+Search finished.
+ 10 entries searched.
+ 1 ENTRIES NOT FOUND
+#+end_example
+
+~db_load~ help us to load the data back to R using our *mapic* object defined before.
+
+#+begin_src R :session :results output :exports both
+mx <- db_load(mx_db)
+mx[,c("ID", "City", "State", "lon", "lat")]
+#+end_src
+
+#+RESULTS:
+#+begin_example
+  ID             City                 State        lon      lat
+1  1 Ciudad de Mexico                Mexico  -99.13316 19.43271
+2  2          Tijuana Baja California Norte -117.01953 32.53174
+3  3 Ciudad de Mexico                Mexico  -99.13316 19.43271
+4  4      Guadalajara               Jalisco -103.33840 20.67204
+5  5        Queretaro             Queretaro -100.39706 20.59547
+6  6          Tijuana Baja California Norte -117.01953 32.53174
+7  7 Ciudad de Mexico                Mexico  -99.13316 19.43271
+8  8       Cuernavaca               Morelos  -99.23423 18.92183
+9  9 Ciudad de Mexico                Mexico  -99.13316 19.43271
+#+end_example
+
+One of the entries was not found. We can add it "manually" using ~add_coords_manually~. The function need a =data.frame= or =csv= file that contains exactly the same fields as our database. See the example below.
+
+#+begin_src R :session :results output :exports both
+rown <- 10
+to_add <- data.frame(ID = mexico$ID[rown],
+                     Year_start = mexico$Registration_year[rown],
+                     Year_end = mexico$End_year[rown],
+                     City = mexico$City[rown],
+                     Country = mexico$Country[rown],
+                     Region = "",
+                     State = mexico$Region[rown],
+                     County = "",
+                     osm_name = "",
+                     lon = 98.88, lat = 19.51)
+add_coords_manually(to_add, mx_db)
+#+end_src
+
+#+RESULTS:
+
+** Making the maps
+
+We have now the coordinates of all the cities that we need safely saved in a database. We can resume our work whenever we want.
+
+#+begin_src R :session :results output :exports both
+mx <- db_load(mx_db)
+mx[,c("ID", "City", "State", "lon", "lat")]
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Loading required package: RSQLite
+   ID             City                 State        lon      lat
+1   1 Ciudad de Mexico                Mexico  -99.13316 19.43271
+2   2          Tijuana Baja California Norte -117.01953 32.53174
+3   3 Ciudad de Mexico                Mexico  -99.13316 19.43271
+4   4      Guadalajara               Jalisco -103.33840 20.67204
+5   5        Queretaro             Queretaro -100.39706 20.59547
+6   6          Tijuana Baja California Norte -117.01953 32.53174
+7   7 Ciudad de Mexico                Mexico  -99.13316 19.43271
+8   8       Cuernavaca               Morelos  -99.23423 18.92183
+9   9 Ciudad de Mexico                Mexico  -99.13316 19.43271
+10 10          Texcoco      Estado de Mexico   98.88000 19.51000
+#+end_example
+
+To start creating the maps we first we define the colors that we want to use with the function ~define_map_colors~. The values of the colors have to be in hex notation. Here is the list of colors to define.
+
+#+begin_src R :eval no
+my_colors <- define_map_colors(dots_orgs = "#493252",
+                               target_country = "#8caeb4",
+                               empty_countries = "#f3f3f3",
+                               border_countries = "#9c9c9c",
+                               oceans = "#4e91d2",
+                               text_cities = "#a0a0a0",
+                               text_legend = "#493252",
+                               background_legend = "#ffffff",
+                               text_copyright = "#f3f3f3")
+#+end_src
+
+We can as well use the default colors:
+
+#+begin_src R :session :results output :exports both
+default_map_colors
+#+end_src
+
+#+RESULTS:
+#+begin_example
+[1] "The chosen colors"
+dots_orgs : #493252
+target_country : #8caeb4
+empty_countries : #f3f3f3
+border_countries : #9c9c9c
+oceans : #4e91d2
+text_cities : #a0a0a0
+text_legend : #493252
+background_legend : #ffffff
+text_copyright : #f3f3f3
+#+end_example
+
+Or modify some of the defaults
+
+#+begin_src R :session :results output :exports both
+(my_cols <- with_default_colors(list(dots_orgs = "#D30000",
+                                     text_legend = "#ffffff",
+                                     text_cities = "#000000",
+                                     background_legend = "#000000")))
+#+end_src
+
+#+RESULTS:
+#+begin_example
+[1] "The chosen colors"
+dots_orgs : #D30000
+target_country : #8caeb4
+empty_countries : #f3f3f3
+border_countries : #9c9c9c
+oceans : #4e91d2
+text_cities : #000000
+text_legend : #ffffff
+background_legend : #000000
+text_copyright : #f3f3f3
+#+end_example
+
+Now we can create the maps by calling all the functions that build it up, one after the other using the pipe.
+
+#+begin_src R :session :file img/figure-1.png :results value graphics file :results output :exports both
+## Define limits to plot
+x_lim <- c(-118, -86)
+y_lim <- c(14, 34)
+selected_year <- 2020
+
+## Plot
+base_map("Mexico",
+         x_lim,
+         y_lim,
+         map_colors = my_cols) |>
+  mapic_city_dots(mx,
+                  year = selected_year) |>
+  mapic_city_names(c("Ciudad de Mexico", "Guadalajara", "Tijuana")) |>
+  mapic_year_internal(year_label = "Año") |>
+  mapic_totals_internal(totals_label = "Totales") 
+#+end_src
+
+#+RESULTS:
+[[file:img/figure-1.png]]
+
+We can create the map for a different year by changing only one value in the whole pipe.
+
+#+begin_src R :session :file img/figure-2.png :results value graphics file :results output :exports both
+selected_year <- 2002
+
+## Plot
+base_map("Mexico",
+         x_lim,
+         y_lim,
+         map_colors = my_cols) |>
+  mapic_city_dots(mx,
+                  year = selected_year) |>
+  mapic_city_names(c("Ciudad de Mexico", "Guadalajara", "Tijuana")) |>
+  mapic_year_internal(year_label = "Año") |>
+  mapic_totals_internal(totals_label = "Totales") 
+#+end_src
+
+#+RESULTS:
+[[file:img/figure-2.png]]
+
+Now we see only two small dots, one for Mexico city and the second one for Tijuana.
+
+* Retrieving the coordinates
+
+The coordinates are searched through the API of [[https://www.openstreetmap.org/][open street map]] (OSM) [[https://nominatim.openstreetmap.org/ui/search.html][nominatim]] using the function ~coords_from_city~.
+
+#+begin_src R :session :results output :exports both
+coords_from_city("Houston", "US", state = "Texas")
+#+end_src
+
+#+RESULTS:
+: Several entries found for Houston US
+:        lon      lat                                     osm_name
+: 1 -95.3677 29.75894 Houston, Harris County, Texas, United States
+
+If a particular place is not found, I recommend going directly to the [[https://nominatim.openstreetmap.org/ui/search.html][nominatim]] web page and search there, if you cannot find it, *mapic* won't either. You can alternatively add the coords "by hand" using the function ~add_coords_manually~ as exemplified above.
+
+The function ~api_to_db~ uses ~coords_from_city~ recursively over a data frame and stores the results directly in a database or equivalent (as specified in the argument ~mdb~). Its homologous, ~api_no_city~ fulfills the same function but for a county or state.
+
+*NOTE:* Currently mapic search of coordinates supports only English characters. Other characters containing non-english symbols such as á, ö, è, ñ, etc., will trigger an error.
+
+** The database (~mdb~)
+The object "mdb" is an S3 object that specifies the type of database to be used and its details. It can be easily created with the function ~database_configuration~, see its documentation for more information.
+
+The options supported currently are:
+- SQLite
+- R's internal data frame
+- csv file
+
+* Mapping different elements
+We already show in the example above how to define the colors to be used in the map. Since *mapic* focuses on the standardization of maps, this is an important step that helps *mapic* to choose the same colors for all the maps.
+
+The base function ~base_map~ creates a map of any country found in the package =maps=. It can be as simple as writing the name of the country as defined in the package. The function below renders a world wide map, highlighting Brazil in a different color. By default it shows the coordinates so that the user can have a point of reference and choose the limits. 
+
+#+begin_src R :session :file img/figure-3.png :results value graphics file :results output :exports both
+base_map("Brazil")
+#+end_src
+
+#+RESULTS:
+[[file:img/figure-3.png]]
+
+There are basically 2 ways of creating the maps either using =ggplot= objects or using mapic's S3 objects of class =mapicHolder=. Both start with the creation of the ~base_map~.
+
+#+begin_src R :session :results output :exports both
+## Define limits to plot
+x_lim <- c(-118, -86)
+y_lim <- c(14, 34)
+selected_year <- 2020
+
+map_ggplot <- base_map(
+  country = "Mexico",
+  x_limits = x_lim,
+  y_limits = y_lim,
+  show_coords = TRUE,
+  return_mapic_obj = FALSE)
+class(map_ggplot)
+#+end_src
+
+#+RESULTS:
+: [1] "gg"     "ggplot"
+
+#+begin_src R :session :results output :exports both
+map_mapic <- base_map(
+  country = "Mexico",
+  x_limits = x_lim,
+  y_limits = y_lim,
+  show_coords = TRUE,
+  return_mapic_obj = TRUE)
+class(map_mapic)
+#+end_src
+
+#+RESULTS:
+: [1] "mapicHolder"
+
+** Using mapic objects
+Using ~mapicHolder~ is the recommended way of *mapic* because it reduces the information that each function needs to take, sharing info among them using the object as messenger. Thus, object holds the information used to create the map, including data and other values and you can access it individually.
+
+As seen in the example of the workflow
+
+#+begin_src R :session :results output :exports both
+mx_map <- base_map("Mexico",
+                   x_lim,
+                   y_lim,
+                   map_colors = my_cols) |>
+  mapic_city_dots(mx,
+                  year = selected_year) |>
+  mapic_city_names(c("Ciudad de Mexico", "Guadalajara", "Tijuana")) |>
+  mapic_year_internal(year_label = "Año") |>
+  mapic_totals_internal(totals_label = "Totales")
+
+names(mx_map)
+#+end_src
+
+#+RESULTS:
+:  [1] "mapic"             "base_map"          "x_limits"          "y_limits"         
+:  [5] "colors"            "legend"            "theme_labels"      "mapic_dots"       
+:  [9] "year"              "data"              "mapic_city_labels" "mapic_year"       
+: [13] "mapic_totals"      "totals"
+
+Here is a short description:
+- The element ~mapic~ contains the plot that you see when calling the function. It collectes all the elements that are piped.
+- Each =ggplot= element is kept separately and it is named after the function: ~base_map~ contains the base map, ~mapic_dots~ contains the dots, etc.
+- The limits selected for x and y axes are contained in ~x_limits~ and ~y_limits~ respectively.
+- The object that we created to define the colors is in ~colors~.
+- ~theme_labels~ is the object of class ~theme~ from =ggplot2= used for the labels of the years and totals.
+- ~year~ and ~totals~ are the values printed in the labels.
+- ~legend~ is a legend that can be added outside of the map.
+- ~data~ contains 2 elements: ~base~ is the original data passed to the function and ~map~ which is the modified data with the required wrangling.
+
+Putting together all the elements of the map in a =ggplot2= style would achieve the same results as calling the object ~mapic~ on its own. Thus, we can choose particular elements to show on the map using this strategy.
+
+#+begin_src R :session :file img/figure-4.png :results value graphics file :results output :exports both
+mx_map$base_map +
+  mx_map$mapic_city_labels +
+  mx_map$mapic_totals
+#+end_src
+
+#+RESULTS:
+[[file:img/figure-4.png]]
+
+We can also add =ggplot= elements to the main map by accessing the object ~$mapic~
+
+#+begin_src R :session *R:mapic* :file img/figure-5.png :results value graphics file :results output :exports both
+mx_map$mapic +
+  ggtitle("A map of Mexico")
+#+end_src
+
+#+RESULTS:
+[[file:img/figure-5.png]]
+
+** Using ggplot
+The method above using *mapic*'s default objects allows us to modify elements within the object to achieve a different map. However, this is not recommended. If that is desired, the recommended method is to use default =ggplot= objects as shown above (using ~return_mapic_obj = FALSE~ in ~base_map~ function).
+
+#+begin_src R :session :file img/figure-6.png :results value graphics file :results output :exports both
+base_map(
+  country = "Mexico",
+  x_limits = x_lim,
+  y_limits = y_lim,
+  show_coords = TRUE,
+  return_mapic_obj = FALSE) +
+  mapic_city_dots(mx,
+                  year = 2020,
+                  column_names = list(
+                    lat = "lat",
+                    lon = "lon",
+                    cities = "City",
+                    start_year = "Year_start",
+                    end_year = "Year_end")) +
+  mapic_city_names(.df = mx,
+                   list_cities = c("Ciudad de Mexico", "Guadalajara", "Tijuana")) +
+  mapic_year_internal(year = 2020,
+                      x_limits = x_lim,
+                      y_limits = y_lim,
+                      year_label = "Año") +
+  mapic_totals_internal(totals = 10,
+                        x_limits = x_lim,
+                        y_limits = y_lim,
+                        totals_label = "Totales")
+#+end_src
+
+#+RESULTS:
+[[file:img/figure-6.png]]
+
+As you can see, the results are the same (here I used default mapic's colors) but the information needed for each function is more. This could lead to mistakes, for example regarding the totals that are mentioned in the label vs the actual totals shown in the map. On the other hand, this option gives us flexibility and allows to use each component independently if necessary.
+
+* Limitations
+Currently mapic has the following limitations with plans to be improved:
+
+** Data format
+Currently we support data only in the long format. This means that each row is one entry and *mapic* will count the amount of rows automatically, in order to know the totals. We intend to extend this to summarized data that includes a particular field or column for counts/totals.
+
+** Labels positions
+Currently the labels for totals and year placed internally in the map can be positioned only in the lower left corner of the map. We intend to extend this.
+
+** Private info
+Private information to be included within the map is not yet support but it has priority to be added. This includes the possibility of adding a logo, watermark and/or copyright text. However, this can also be easily achieved through simple =ggplot2= functions.
+
+** Plots per year
+Currently the only timeline that is supported is year, and the year has to be passed as a integer numeric value. We plan to extend this to more date times.
+
+** Plot of regions
+Currently the maps can be render only by country. We plan to extend this to create maps of regions that include several countries (i.e., continents).
+
+Lower granularity maps are not planned.
+
+** Coordinates retrieval
+Currently the coordinates can be searched only by City, State and County. We intend to extend this to postal code as well.
+
+Also, *mapic* can only recognize English characters for now. This is a limitation from the API and we will find ways to extend it. Thus, characters containing non-english symbols such as á, ö, è, ñ, etc., will trigger an error.
+
+Additionally, when more than one result is found, *mapic* takes the first entry found. We expect to extend this to allow the user to select which entry to choose. This also means that the more specific the data, the more precise *mapic* can be.
+
+** Other
+*mapic* many other limitation as a generic map generator, but this is not its purpose. Please read the About section at the beginning of this document to find out what *mapic* is.
+
+* Changelog
+The package is still under development in a partially stable version. It does not implement an official changelog yet but you can always visit the file [[file:./org.org][org]] to see future plans and old changes summarized.
+
+Here is a summary of main releases.
+
+Version 2.5.0 extends support for other types of databases by implementing S3 objects and methods. Now aside of *SQLite*, *csv* files and *data frames* can be used as a serverless option for storing data. The new objects facilitate the extension of basic functions for implementing other databases. It is planned to include at least *Postgres* and *MariaDB* for future releases. 
 
 The first stable version, 2.4.2, is able to create complete maps following the strategy of its parent project (a private version of the code).
-
-Version 2.5.0 extends support for other types of databases by implementing S3 objects and methods. Now aside of **SQLite**, **csv** files and **data frames** can be used as a serverless option for storing data. The new objects facilitate the extension of basic functions for implementing other databases. It is planned to include at least **Postgres** and **MariaDB** for future releases. 
-
-The documentation for its usage is still to be improved. For now, details of the development and the concept can be found in the blog [[https://blog.teoten.com]] in the series [[https://blog.teoten.com/series/maps-app/][maps-app]]. 
-
-The project is under the GNU GENERAL PUBLIC LICENSE Version 3 (GPL-3). Your are free to copy it and reproduce it.

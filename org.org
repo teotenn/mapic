@@ -1,30 +1,50 @@
 #+TODO: TODO(t) PROGRESS(p) | DONE(d) CANCELLED(x)
 * Plans and TO-DO file
-* v2.5.0 - Database alternatives
-** DONE Make a changelog
-** DONE Dev possibility to use other database alternatives aside of SQLite.
+** DONE v2.5.1 Missing functionalities
+*** DONE add years to the DB
+*** DONE Remove empty from DB from main function
+*** DONE Adapt UT to it
+*** DONE Add city names
+*** DONE prepare a README
+*** Other
+- Functions inside =coords_manipulation.R= moved to their own script each.
+- Possibility for labels to choose text font type
+
+** TODO v2.5.2 - Graphic improvements
+*** TODO Test missing functionalities (graphical)
+*** TODO Overall, improve UT
+*** TODO More positions for internal labels, copyrights and logo
+*** TODO Improve the  README
+**** TODO Explain how to make a map without neighbouring countries
+**** TODO Explain how to make a static map (create year col, val = 1)
+*** Other
+- Add support for postal code; remove region.
+
+** v2.5.3 - Database alternatives
+*** TODO Allow using summarized tables of data
+*** TODO Add support for PostgreSQL
+*** TODO Change year for dates in general
+
+** v2.5.3 - API response
+*** TODO Add changelog
+*** TODO Allow to interactively select when more than 1 option found.
+
+** v2.6
+*** TODO Provide possibility for regional maps (several countries, continent) and worldwide.
+*** TODO Provide flexibility to modify more elements of the ggplot resulted maps (i.e., font face)
+
+* ideas and future plans
+** Possibility of control over the ammount of orgs per size of the dots, since very few look desserted while several thousands are overloading it.
+** Consider adding watermark
+
+* LOG
+** DONE v2.5.0 - Database alternatives
+*** DONE Dev possibility to use other database alternatives aside of SQLite.
 - Allow more flexibility in the use of the database (i.e., table name, right now is set to "orgs")
 - Create objects data.frame and SQLite, etc., each with the required details. Then, apply the method based on the class of object selected.
-* v2.5.1 - Database alternatives
-** TODO Add support for PostgreSQL
-** TODO Improve =api_to_db= to keep only unique values
-** TODO Prepare a proper README
-*** TODO Explain how to make a map without neighbouring
-*** TODO Explain how to make a static map (create year col, val = 1)
-* v2.5.2 - Graphic improvements
-** TODO Test missing functionalities (graphical)
-** TODO More positions for internal labels
-* v2.5.3 - API response
-** TODO Allow to interactively select when more than 1 option found.
-* v2.6
-** TODO Provide possibility for regional maps (several countries, continent) and worldwide.
-** TODO Provide flexibility to modify more elements of the ggplot resulted maps (i.e., font face)
-* Ideas and future plans
-** Possibility of control over the ammount of orgs per size of the dots, since very few look desserted while several thousands are overloading it.
-** Consider adding whatermark
-* LOG
-* DONE v2.4.2 Basic map
-** DONE OOP for colors
-** DONE Create the basic map with cities on top of the prev map using ggplot style
-** DONE Test missing functionalities (non-graphical)
-** DONE Complete maps creation (years, totals, etc.)
+
+** DONE v2.4.2 Basic map
+*** DONE OOP for colors
+*** DONE Create the basic map with cities on top of the prev map using ggplot style
+*** DONE Test missing functionalities (non-graphical)
+*** DONE Complete maps creation (years, totals, etc.)

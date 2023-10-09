@@ -1,5 +1,4 @@
 #' @title Base map
-#' @author Manuel Teodoro
 #' @description Creates the base map of the country
 #'
 #' @param country A string. Name of the country, as defined in the package \code{maps}.
