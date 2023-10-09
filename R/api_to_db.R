@@ -84,8 +84,8 @@ api_to_db <- function(mdb,
                                    silent = silent)
         ## DF exact replica of DB
         coords <- cbind(ID = dat_local[["ID"]][i],
-                        Year_start = ifelse(is.null(start_year), NA, dat_local[[start_year]][i]),
-                        Year_end = ifelse(is.null(end_year), NA, dat_local[[end_year]][i]),
+                        Year_start = ifelse(is.null(start_year), NA, as.numeric(dat_local[[start_year]][i])),
+                        Year_end = ifelse(is.null(end_year), NA, as.numeric(dat_local[[end_year]][i])),
                         City = rcity,
                         Country = rcountry,
                         Region = rg,
