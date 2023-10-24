@@ -5,7 +5,7 @@
 \alias{db_append.default}
 \alias{db_append.mdb_df}
 \alias{db_append.mdb_csv}
-\alias{db_append.mdb_SQLite}
+\alias{db_append.mdb_sql}
 \title{Appends rows to the database table}
 \usage{
 db_append(mdb, ...)
@@ -16,7 +16,7 @@ db_append(mdb, ...)
 
 \method{db_append}{mdb_csv}(mdb, df)
 
-\method{db_append}{mdb_SQLite}(mdb, df)
+\method{db_append}{mdb_sql}(mdb, df)
 }
 \arguments{
 \item{mdb}{Mapic database configuration object (See
@@ -39,7 +39,7 @@ table specified in \code{mdb}.
 
 \item \code{db_append(mdb_csv)}: mdb_csv
 
-\item \code{db_append(mdb_SQLite)}: mdb_SQLite
+\item \code{db_append(mdb_sql)}: mdb_sql
 
 }}
 \seealso{

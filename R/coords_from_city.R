@@ -44,12 +44,11 @@ coords_from_city <- function(city = NULL,
 
   ## get data
   link <- paste(
-    "https://nominatim.openstreetmap.org/search?city="
-  , extrasCoded
-  , CountryCoded
-  , "&format=json"
-  , sep = ""
-  )
+    "https://nominatim.openstreetmap.org/search?city=",
+    extrasCoded,
+    CountryCoded,
+    "&format=json",
+    sep = "")
 
   response <- try({fromJSON(link)},
                   silent = TRUE)

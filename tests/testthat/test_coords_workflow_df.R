@@ -4,9 +4,9 @@ t_dat <- mexico
 
 ### ---------- T E S T S ---------- ###
 test_that("database_configuration", {
-  mock_mdb <<- database_configuration("data.frame", "organizations")
+  mock_mdb <<- database_configuration("memory", "organizations")
   expect_s3_class(mock_mdb, "mdb_df")
-  expect_equal(mock_mdb$location, "organizations")
+  expect_equal(mock_mdb$table_name, "organizations")
 })
 
 test_that("coords_from_city: Found results", {

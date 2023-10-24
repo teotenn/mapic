@@ -5,7 +5,7 @@
 \alias{db_load.default}
 \alias{db_load.mdb_df}
 \alias{db_load.mdb_csv}
-\alias{db_load.mdb_SQLite}
+\alias{db_load.mdb_sql}
 \title{Loads the database table}
 \usage{
 db_load(mdb, ...)
@@ -16,7 +16,7 @@ db_load(mdb, ...)
 
 \method{db_load}{mdb_csv}(mdb)
 
-\method{db_load}{mdb_SQLite}(mdb)
+\method{db_load}{mdb_sql}(mdb)
 }
 \arguments{
 \item{mdb}{Mapic database configuration object (See
@@ -32,10 +32,8 @@ Loads the database table to R as a data frame.
 \details{
 The main task of the function is to load the table specified in the
 \code{mdb} object to R as a \code{data.frame}. The function also has the tasks of
-creating the table when it does not exist yet. This is the equivalent to the
-command \code{CREATE TABLE IF NOT EXISTS} in SQL. For \code{csv} it creates
-the file and for \code{data.frame} it creates the data frame in the global
-environment, both with the structure required by mapic to store the coordinates.
+creating the data frame or the file when it does not exist yet.
+For SQL, the table should exists before calling this function.
 }
 \section{Methods (by class)}{
 \itemize{
@@ -45,7 +43,7 @@ environment, both with the structure required by mapic to store the coordinates.
 
 \item \code{db_load(mdb_csv)}: mdb_csv
 
-\item \code{db_load(mdb_SQLite)}: mdb_SQLite
+\item \code{db_load(mdb_sql)}: mdb_sql
 
 }}
 \seealso{

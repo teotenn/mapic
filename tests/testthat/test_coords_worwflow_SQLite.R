@@ -18,15 +18,15 @@ query_create_table <- paste0(
        osm_name TEXT)"
   )
 DBI::dbExecute(conn = SQLite_con, query_create_table)
-##DBI::dbDisconnect(SQLite_con)
+## DBI::dbDisconnect(SQLite_con)
 
 
 ### ---------- T E S T S ---------- ###
 test_that("database_configuration", {
   ##db_con <- function() DBI::dbConnect(drv = RSQLite::SQLite(), dbname = "test.SQLite")
-  mock_mdb <<- database_configuration("sqlite", SQLite_con, "organizations")
-  expect_s3_class(mock_mdb, "mdb_SQLite")
-  ##expect_equal(mock_mdb$location, "test.sqlite")
+  mock_mdb <<- database_configuration(SQLite_con, "organizations")
+  expect_s3_class(mock_mdb, "mdb_sql")
+  expect_equal(mock_mdb$table_name, "organizations")
 })
 
 test_that("coords_from_city: Found results", {
@@ -112,7 +112,7 @@ test_that("db_load: returns a data frame", {
     expect_equal(ncol(db_as_df), 11)
     expect_vector(db_as_df$City, ptype = character())
     expect_vector(db_as_df$lat, ptype = double())
-    expect_vector(db_as_df$Year_start, ptype = integer())
+    expect_equal(class(db_as_df$Year_start), "integer")
     expect_setequal(unique(db_as_df$Country), "MX")
     ## expect_equal(length(complete.cases(db_as_df)[complete.cases(db_as_df) == TRUE]), 6)
 })
@@ -195,5 +195,5 @@ test_that("api_no_city", {
   ## expect_equal(nrow(df_added), 10)
 })
 
-
+DBI::dbDisconnect(SQLite_con)
 file.remove("test.SQLite")

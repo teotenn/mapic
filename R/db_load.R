@@ -10,10 +10,8 @@
 #'
 #' @details The main task of the function is to load the table specified in the
 #' \code{mdb} object to R as a \code{data.frame}. The function also has the tasks of
-#' creating the table when it does not exist yet. This is the equivalent to the
-#' command \code{CREATE TABLE IF NOT EXISTS} in SQL. For \code{csv} it creates
-#' the file and for \code{data.frame} it creates the data frame in the global
-#' environment, both with the structure required by mapic to store the coordinates.
+#' creating the data frame or the file when it does not exist yet.
+#' For SQL, the table should exists before calling this function.
 #'
 #' @seealso \link{database_configuration}
 #' @export
@@ -33,7 +31,7 @@ db_load.default <- function(mdb) {
 #' @describeIn db_load mdb_df
 #' @export
 db_load.mdb_df <- function(mdb) {
-  df_name <- mdb$location
+  df_name <- mdb$table_name
 
   if (!df_name %in% ls(envir = .GlobalEnv)) {
     initial_df <- data.frame(ID = character(0),
@@ -56,7 +54,7 @@ db_load.mdb_df <- function(mdb) {
 #' @describeIn db_load mdb_csv
 #' @export
 db_load.mdb_csv <- function(mdb) {
-  path_csv <- mdb$location
+  path_csv <- mdb$table_name
   initial_df <- data.frame(ID = character(0),
                            Year_start = numeric(0),
                            Year_end = numeric(0),
@@ -78,12 +76,12 @@ db_load.mdb_csv <- function(mdb) {
   return(local_df)
 }
 
-#' @method db_load mdb_SQLite
-#' @describeIn db_load mdb_SQLite
+#' @method db_load mdb_sql
+#' @describeIn db_load mdb_sql
 #' @export
-db_load.mdb_SQLite <- function(mdb) {
-  table_name <- mdb$table
-  con <- mdb$location
+db_load.mdb_sql <- function(mdb) {
+  table_name <- mdb$table_name
+  con <- mdb$connection
   db <- DBI::dbReadTable(con, table_name)
   return(db)
 }
