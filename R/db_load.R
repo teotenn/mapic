@@ -82,27 +82,8 @@ db_load.mdb_csv <- function(mdb) {
 #' @describeIn db_load mdb_SQLite
 #' @export
 db_load.mdb_SQLite <- function(mdb) {
-  require(RSQLite)
-  path_to_db <- mdb$location
   table_name <- mdb$table
-
-  con <- dbConnect(drv = RSQLite::SQLite(), dbname = path_to_db)
-  query_create_table <- paste0(
-    "CREATE TABLE IF NOT EXISTS ", table_name,
-    "(ID INTEGER UNIQUE,
-       Year_start INTEGER,
-       Year_end INTEGER,
-       City TEXT,
-       Country TEXT,
-       Region TEXT,
-       State TEXT,
-       County TEXT,
-       lon REAL,
-       lat REAL,
-       osm_name TEXT)"
-  )
-  dbExecute(conn = con, query_create_table)
-  db <- dbReadTable(con, table_name)
-  dbDisconnect(con)
+  con <- mdb$location
+  db <- DBI::dbReadTable(con, table_name)
   return(db)
 }

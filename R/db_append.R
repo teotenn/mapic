@@ -45,11 +45,10 @@ db_append.mdb_csv <- function(mdb, df) {
 #' @describeIn db_append mdb_SQLite
 #' @export
 db_append.mdb_SQLite <- function(mdb, df) {
-  require(RSQLite)
   path_to_db <- mdb$location
   table_name <- mdb$table
 
-  con <- dbConnect(drv = RSQLite::SQLite(), dbname = path_to_db)
-  dbWriteTable(con, table_name, df, append = TRUE)
-  dbDisconnect(con)
+  con <- mdb$location
+  DBI::dbWriteTable(con, table_name, df, append = TRUE)
+  ## dbDisconnect(con)
 }

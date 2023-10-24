@@ -49,8 +49,8 @@ db_remove_empty.mdb_SQLite <- function(mdb) {
   path_to_db <- mdb$location
   table_name <- mdb$table
 
-  con <- dbConnect(drv = RSQLite::SQLite(), dbname = path_to_db)
+  con <- mdb$location
   dbExecute(conn = con,
             paste0("DELETE FROM ", table_name,  " WHERE lon IS NULL OR lat IS NULL"))
-  dbDisconnect(con)
+  ## dbDisconnect(con)
 }
