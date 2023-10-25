@@ -14,14 +14,14 @@ Its power lies in the possibility of mapping any region in the world that can be
 
 The target of *mapic* is to make the process of creation of the maps simple, while keeping the quality standardized. During the creation of a map, there are many variables to consider and in many different areas (geographical, stylistic, data-related, etc.). *Mapic* reduces the complexity and gives the user the possibility of keeping the same standards among teams or when creating several maps.
 
-*Mapic* relies on 2 main packages to achieve its purpose: [[https://cran.r-project.org/web/packages/maps/index.html][maps]] by Richard A. Becker and Allan R. Wilks, and the well known [[https://cran.r-project.org/web/packages/ggplot2/index.html][ggplot2]] by Hadley Wickham and collaborators.
+*Mapic* relies on 2 main packages to achieve its purpose: [[https://cran.r-project.org/web/packages/maps/index.html][maps]] by Richard A. Becker and Allan R. Wilks, and the well known [[https://cran.r-project.org/web/packages/ggplot2/index.html][ggplot2]] by Hadley Wickham and collaborators. Additionally it requires the [[https://dbi.r-dbi.org/][DBI]] package for connections to a database.
 
 The documentation for its usage is still to be improved. In the meantime, details of the development and the concept can be found in the blog [[https://blog.teoten.com]] in the series [[https://blog.teoten.com/series/maps-app/][maps-app]].
 
 The project is under the GNU GENERAL PUBLIC LICENSE Version 3 (GPL-3). Your are free to copy it and reproduce it with no guarantee.
 
 * Installation
-It is recommended to have the following packages pre-installed: R (>= 4.0.0), maps (>= 3.3.0), ggplot2, httr, stringr (>= 1.5.0), dplyr, RJSONIO, purrr, tidyr. Depending on the database type to be used, the following packages could be also necessary: RSQLite (>= 2.2.3).
+It is recommended to have the following packages pre-installed: R (>= 4.0.0), maps (>= 3.3.0), ggplot2, httr, stringr (>= 1.5.0), dplyr, RJSONIO, purrr, tidyr. Depending on the database type to be used it also requires the corresponding R package. For example, if using SQLite (as is the case of the unit test) it needs RSQLite.
 
 The easiest way to install is by using the function ~devtools::install_github~. First install =devtools= if you don't have it yet.
 
@@ -62,30 +62,66 @@ mexico[,c(-3, -9)]
 
 #+RESULTS:
 #+begin_example
-   ID  Name Registration_year End_year Country                Region             City
-1   1  org1              2001     2021      MX                Mexico Ciudad de Mexico
-2   2  org2              2002     2021      MX Baja California Norte          Tijuana
-3   3  org3              2003     2021      MX                Mexico Ciudad de Mexico
-4   4  org4              2004     2021      MX               Jalisco      Guadalajara
-5   5  org5              2005     2021      MX             Queretaro        Queretaro
-6   6  org6              2006     2021      MX Baja California Norte          Tijuana
-7   7  org7              2007     2021      MX                Mexico Ciudad de Mexico
-8   8  org8              2008     2021      MX               Morelos       Cuernavaca
-9   9  org9              2009     2021      MX                Mexico Ciudad de Mexico
-10 10 org10              2010     2021      MX      Estado de Mexico          Texcoco
+Loading required package: maps
+Loading required package: ggplot2
+   ID  Name Registration_year End_year Country                Region
+1   1  org1              2001     2021      MX                Mexico
+2   2  org2              2002     2021      MX Baja California Norte
+3   3  org3              2003     2021      MX                Mexico
+4   4  org4              2004     2021      MX               Jalisco
+5   5  org5              2005     2021      MX             Queretaro
+6   6  org6              2006     2021      MX Baja California Norte
+7   7  org7              2007     2021      MX                Mexico
+8   8  org8              2008     2021      MX               Morelos
+9   9  org9              2009     2021      MX                Mexico
+10 10 org10              2010     2021      MX      Estado de Mexico
+               City
+1  Ciudad de Mexico
+2           Tijuana
+3  Ciudad de Mexico
+4       Guadalajara
+5         Queretaro
+6           Tijuana
+7  Ciudad de Mexico
+8        Cuernavaca
+9  Ciudad de Mexico
+10          Texcoco
 #+end_example
 
-First we need to specify what will be used as database. Here I chose to use =SQLite=. ~database_configuration~ creates an S3 object that can be used whenever we need to refer to the database in *mapic*.
+First we need to specify a method to storage the data. In can be in ~memory~, as a ~file~ or an ~sql~ type of database, for which case we need a connection to a database and the table where to store the data. For this example I use SQLite.
 
 #+begin_src R :session
-mx_db <- database_configuration("SQLite", "~/Downloads/mx.sqlite", "orgs")
+SQLite_con <- DBI::dbConnect(drv = RSQLite::SQLite(), dbname = "test.SQLite")
+query_create_table <- paste0(
+    "CREATE TABLE IF NOT EXISTS organizations",
+    "(ID INTEGER UNIQUE,
+       Year_start INTEGER,
+       Year_end INTEGER,
+       City TEXT,
+       Country TEXT,
+       Region TEXT,
+       State TEXT,
+       County TEXT,
+       lon REAL,
+       lat REAL,
+       osm_name TEXT)"
+  )
+DBI::dbExecute(conn = SQLite_con, query_create_table)
+#+end_src
+
+The example above shows the structure necessary for any type of SQL table.
+
+Now we use ~database_configuration~ creates an S3 object that can be used whenever we need to refer to the database in *mapic*, it receives the connection created above and the name of the table.
+
+#+begin_src R :session
+mx_db <- database_configuration(SQLite_con, "organizations")
 class(mx_db)
 #+end_src
 
 #+RESULTS:
-: mdb_SQLite
+: mdb_sql
 
-The first element that we need to make even such simple maps are the coordinates of each city. **Mapic's** ~api_to_db~ searches for the coordinates of each city in our data frame and send it directly to the database that we specified before, together with the rest of the data necessary to make maps.
+The first element that we need in order to make even simple maps are the coordinates of each city. **Mapic's** ~api_to_db~ searches for the coordinates of each city in our data frame and send it directly to the database that we specified before, together with the rest of the data necessary to make maps.
 
 The function and results look similar to the following:
 
@@ -103,6 +139,8 @@ api_to_db(mx_db,
 #+RESULTS:
 #+begin_example
 [1] "Searching entry 1"
+Loading required package: RJSONIO
+Loading required package: httr
 Several entries found for Ciudad de Mexico MX
 [1] "Searching entry 2"
 Found Tijuana, Municipio de Tijuana, Baja California, 22320, México
@@ -121,13 +159,15 @@ Found Cuernavaca, Morelos, 62000, México
 [1] "Searching entry 9"
 [1] "Found from memory"
 [1] "Searching entry 10"
-No results found for &city=Texcoco&state=Estado%20de%20Mexico
+Found Parque Ecológico Lago de Texcoco, Atenco, Estado de México, México
 Search finished.
  10 entries searched.
- 1 ENTRIES NOT FOUND
+ 0 ENTRIES NOT FOUND
 #+end_example
 
-~db_load~ help us to load the data back to R using our *mapic* object defined before.
+For any function that connects to the database the connection must remain open. If the connection is closed then it should be opened again and the object created with ~database_configuration~ must be called again.
+
+With the open connection, ~db_load~ help us to load the data back to R using our *mapic* object defined before.
 
 #+begin_src R :session :results output :exports both
 mx <- db_load(mx_db)
@@ -136,21 +176,22 @@ mx[,c("ID", "City", "State", "lon", "lat")]
 
 #+RESULTS:
 #+begin_example
-  ID             City                 State        lon      lat
-1  1 Ciudad de Mexico                Mexico  -99.13316 19.43271
-2  2          Tijuana Baja California Norte -117.01953 32.53174
-3  3 Ciudad de Mexico                Mexico  -99.13316 19.43271
-4  4      Guadalajara               Jalisco -103.33840 20.67204
-5  5        Queretaro             Queretaro -100.39706 20.59547
-6  6          Tijuana Baja California Norte -117.01953 32.53174
-7  7 Ciudad de Mexico                Mexico  -99.13316 19.43271
-8  8       Cuernavaca               Morelos  -99.23423 18.92183
-9  9 Ciudad de Mexico                Mexico  -99.13316 19.43271
+   ID             City                 State        lon      lat
+1   1 Ciudad de Mexico                Mexico  -99.13316 19.43271
+2   2          Tijuana Baja California Norte -117.01953 32.53174
+3   3 Ciudad de Mexico                Mexico  -99.13316 19.43271
+4   4      Guadalajara               Jalisco -103.33840 20.67204
+5   5        Queretaro             Queretaro -100.39706 20.59547
+6   6          Tijuana Baja California Norte -117.01953 32.53174
+7   7 Ciudad de Mexico                Mexico  -99.13316 19.43271
+8   8       Cuernavaca               Morelos  -99.23423 18.92183
+9   9 Ciudad de Mexico                Mexico  -99.13316 19.43271
+10 10          Texcoco      Estado de Mexico  -98.99682 19.52091
 #+end_example
 
-One of the entries was not found. We can add it "manually" using ~add_coords_manually~. The function need a =data.frame= or =csv= file that contains exactly the same fields as our database. See the example below.
+When some of the entries are not found we can add them "manually" using ~add_coords_manually~. The function need a =data.frame= or =csv= file that contains exactly the same fields as our database. See the example below to add the entry with ID 10 (assuming that it was not found).
 
-#+begin_src R :session :results output :exports both
+#+begin_src R :eval no
 rown <- 10
 to_add <- data.frame(ID = mexico$ID[rown],
                      Year_start = mexico$Registration_year[rown],
@@ -165,20 +206,25 @@ to_add <- data.frame(ID = mexico$ID[rown],
 add_coords_manually(to_add, mx_db)
 #+end_src
 
-#+RESULTS:
+When we are done working with the data we can close the connection.
+#+begin_src R :session :results none :exports both
+DBI::dbDisconnect(SQLite_con)
+#+end_src
 
 ** Making the maps
 
-We have now the coordinates of all the cities that we need safely saved in a database. We can resume our work whenever we want.
+We have now the coordinates of all the cities that we need safely saved in a database. We can resume our work whenever we want. Remember to connect to the database before loading the data, or you could load the data with your preferred package.
 
 #+begin_src R :session :results output :exports both
+SQLite_con <- DBI::dbConnect(drv = RSQLite::SQLite(), dbname = "test.SQLite")
+mx_db <- database_configuration(SQLite_con, "organizations")
+
 mx <- db_load(mx_db)
 mx[,c("ID", "City", "State", "lon", "lat")]
 #+end_src
 
 #+RESULTS:
 #+begin_example
-Loading required package: RSQLite
    ID             City                 State        lon      lat
 1   1 Ciudad de Mexico                Mexico  -99.13316 19.43271
 2   2          Tijuana Baja California Norte -117.01953 32.53174
@@ -189,7 +235,7 @@ Loading required package: RSQLite
 7   7 Ciudad de Mexico                Mexico  -99.13316 19.43271
 8   8       Cuernavaca               Morelos  -99.23423 18.92183
 9   9 Ciudad de Mexico                Mexico  -99.13316 19.43271
-10 10          Texcoco      Estado de Mexico   98.88000 19.51000
+10 10          Texcoco      Estado de Mexico  -98.99682 19.52091
 #+end_example
 
 To start creating the maps we first we define the colors that we want to use with the function ~define_map_colors~. The values of the colors have to be in hex notation. Here is the list of colors to define.
@@ -307,7 +353,7 @@ coords_from_city("Houston", "US", state = "Texas")
 :        lon      lat                                     osm_name
 : 1 -95.3677 29.75894 Houston, Harris County, Texas, United States
 
-If a particular place is not found, I recommend going directly to the [[https://nominatim.openstreetmap.org/ui/search.html][nominatim]] web page and search there, if you cannot find it, *mapic* won't either. You can alternatively add the coords "by hand" using the function ~add_coords_manually~ as exemplified above.
+If a particular location is not found, I recommend going directly to the [[https://nominatim.openstreetmap.org/ui/search.html][nominatim]] web page and search there, if you cannot find it, *mapic* won't either. You can alternatively add the coords "by hand" using the function ~add_coords_manually~ as exemplified above.
 
 The function ~api_to_db~ uses ~coords_from_city~ recursively over a data frame and stores the results directly in a database or equivalent (as specified in the argument ~mdb~). Its homologous, ~api_no_city~ fulfills the same function but for a county or state.
 
@@ -317,12 +363,12 @@ The function ~api_to_db~ uses ~coords_from_city~ recursively over a data frame a
 The object "mdb" is an S3 object that specifies the type of database to be used and its details. It can be easily created with the function ~database_configuration~, see its documentation for more information.
 
 The options supported currently are:
-- SQLite
-- R's internal data frame
-- csv file
+- An sql connection (see [[https://dbi.r-dbi.org/][DBI]]) will generate an object of class ~"mdb_sql"~.
+- The string ~"memory"~ uses R's internal data frame, will generate an object of class ~"mdn_df"~.
+- The string ~"file"~ uses a csv file and generates an object of class ~"mdb_csv"~.
 
 * Mapping different elements
-We already show in the example above how to define the colors to be used in the map. Since *mapic* focuses on the standardization of maps, this is an important step that helps *mapic* to choose the same colors for all the maps.
+In the example above we already show how to define the colors to be used in the map. Since *mapic* focuses on the standardization of maps, this is an important step that helps *mapic* to choose the same colors for all the maps.
 
 The base function ~base_map~ creates a map of any country found in the package =maps=. It can be as simple as writing the name of the country as defined in the package. The function below renders a world wide map, highlighting Brazil in a different color. By default it shows the coordinates so that the user can have a point of reference and choose the limits. 
 
@@ -492,6 +538,6 @@ The package is still under development in a partially stable version. It does no
 
 Here is a summary of main releases.
 
-Version 2.5.0 extends support for other types of databases by implementing S3 objects and methods. Now aside of *SQLite*, *csv* files and *data frames* can be used as a serverless option for storing data. The new objects facilitate the extension of basic functions for implementing other databases. It is planned to include at least *Postgres* and *MariaDB* for future releases. 
+Version 2.5.0 extends support for other types of databases by implementing S3 objects and methods. It replaces the use of SQLite for generic *SQL* type of database using the connections, and it extends the storage to *csv* files and *data frames* as serverless option. The new objects facilitate the extension of basic functions for implementing other databases.
 
 The first stable version, 2.4.2, is able to create complete maps following the strategy of its parent project (a private version of the code).

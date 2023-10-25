@@ -41,7 +41,7 @@ db_remove_empty.mdb_csv <- function(mdb) {
 db_remove_empty.mdb_sql <- function(mdb) {
   table_name <- mdb$table_name
   con <- mdb$connection
-  dbExecute(conn = con,
+  DBI::dbExecute(conn = con,
             paste0("DELETE FROM ", table_name,  " WHERE lon IS NULL OR lat IS NULL"))
   ## dbDisconnect(con)
 }
