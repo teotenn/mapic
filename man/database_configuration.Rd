@@ -10,9 +10,9 @@ database_configuration(db_type, table, database)
 \item{db_type}{String describing the type of database to use. Options are
 "data.frame", "csv" and "SQLite".}
 
-\item{table}{A string with the location of the database. For data frame, the name of the object; for csv and SQLite the path to the file; for others the server.}
+\item{table}{A string with the name of thetable. For data frame, the name of the object; for csv the path to the file; for SQL the table name.}
 
-\item{database}{A string with the name of the table. Not necessary for csv and data frame.}
+\item{database}{A string with the name of the database. Not necessary for csv and data frame.}
 }
 \value{
 Returns an S3 object of different class (mapic db configuration object),
@@ -26,8 +26,7 @@ The function returns and object of the corresponding class, depending of the dat
 \itemize{
 \item "data.frame" returns object of class "mdb_df". Here,
 all the data obtained from the API
-connection is stored internally in R only, which means that by clossing
-the session the information will disappear. When the object \code{mdb_df} is
+connection is stored internally in R memory. When the object \code{mdb_df} is
 passed to \code{\link{db_load}}, it creates a data frame in the global environment
 with the name specified in \code{table}. Therefore, it is important that an
 object with the same name does not exist yet, or it will create a conflict.
