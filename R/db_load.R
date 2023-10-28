@@ -33,7 +33,7 @@ db_load.default <- function(mdb) {
 #' @describeIn db_load mdb_df
 #' @export
 db_load.mdb_df <- function(mdb) {
-  df_name <- mdb$location
+  df_name <- mdb$table
 
   if (!df_name %in% ls(envir = .GlobalEnv)) {
     initial_df <- data.frame(ID = character(0),
@@ -56,7 +56,7 @@ db_load.mdb_df <- function(mdb) {
 #' @describeIn db_load mdb_csv
 #' @export
 db_load.mdb_csv <- function(mdb) {
-  path_csv <- mdb$location
+  path_csv <- mdb$table
   initial_df <- data.frame(ID = character(0),
                            Year_start = numeric(0),
                            Year_end = numeric(0),
@@ -83,12 +83,12 @@ db_load.mdb_csv <- function(mdb) {
 #' @export
 db_load.mdb_SQLite <- function(mdb) {
   require(RSQLite)
-  path_to_db <- mdb$location
-  table_name <- mdb$table
+  path_to_db <- mdb$database
+  table <- mdb$table
 
   con <- dbConnect(drv = RSQLite::SQLite(), dbname = path_to_db)
   query_create_table <- paste0(
-    "CREATE TABLE IF NOT EXISTS ", table_name,
+    "CREATE TABLE IF NOT EXISTS ", table,
     "(ID INTEGER UNIQUE,
        Year_start INTEGER,
        Year_end INTEGER,
@@ -102,7 +102,7 @@ db_load.mdb_SQLite <- function(mdb) {
        osm_name TEXT)"
   )
   dbExecute(conn = con, query_create_table)
-  db <- dbReadTable(con, table_name)
+  db <- dbReadTable(con, table)
   dbDisconnect(con)
   return(db)
 }

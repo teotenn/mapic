@@ -1,16 +1,11 @@
 #+TODO: TODO(t) PROGRESS(p) | DONE(d) CANCELLED(x)
 * Plans and TO-DO file
-** DONE v2.5.1 Missing functionalities
-*** DONE add years to the DB
-*** DONE Remove empty from DB from main function
-*** DONE Adapt UT to it
-*** DONE Add city names
-*** DONE prepare a README
-*** Other
-- Functions inside =coords_manipulation.R= moved to their own script each.
-- Possibility for labels to choose text font type
+** v2.5.2 - Database alternatives
+*** TODO Allow using summarized tables of data
+*** TODO Add support for PostgreSQL
+*** TODO Change year for dates in general
 
-** TODO v2.5.2 - Graphic improvements
+** TODO v2.5.3 - Graphic improvements
 *** TODO Test missing functionalities (graphical)
 *** TODO Overall, improve UT
 *** TODO More positions for internal labels, copyrights and logo
@@ -19,11 +14,6 @@
 **** TODO Explain how to make a static map (create year col, val = 1)
 *** Other
 - Add support for postal code; remove region.
-
-** v2.5.3 - Database alternatives
-*** TODO Allow using summarized tables of data
-*** TODO Add support for PostgreSQL
-*** TODO Change year for dates in general
 
 ** v2.5.3 - API response
 *** TODO Add changelog
@@ -38,6 +28,16 @@
 ** Consider adding watermark
 
 * LOG
+** DONE v2.5.1 Missing functionalities
+*** DONE add years to the DB
+*** DONE Remove empty from DB from main function
+*** DONE Adapt UT to it
+*** DONE Add city names
+*** DONE prepare a README
+*** Other
+- Functions inside =coords_manipulation.R= moved to their own script each.
+- Possibility for labels to choose text font type
+
 ** DONE v2.5.0 - Database alternatives
 *** DONE Dev possibility to use other database alternatives aside of SQLite.
 - Allow more flexibility in the use of the database (i.e., table name, right now is set to "orgs")

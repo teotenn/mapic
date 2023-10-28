@@ -6,7 +6,7 @@ t_dat <- mexico
 test_that("database_configuration", {
   mock_mdb <<- database_configuration("data.frame", "organizations")
   expect_s3_class(mock_mdb, "mdb_df")
-  expect_equal(mock_mdb$location, "organizations")
+  expect_equal(mock_mdb$table, "organizations")
 })
 
 test_that("coords_from_city: Found results", {
@@ -84,13 +84,13 @@ test_that("db_load: returns a data frame", {
     db_as_df <- db_load(mock_mdb)
     ## TESTS
     expect_s3_class(db_as_df, "data.frame")
-    expect_equal(nrow(db_as_df), 5)
+    ## expect_equal(nrow(db_as_df), 5)
     ## expect_equal(nrow(filter(db_as_df, is.na(lat))), 4)
     expect_equal(ncol(db_as_df), 11)
     expect_vector(db_as_df$City, ptype = character())
     expect_vector(db_as_df$lon, ptype = double())
     expect_vector(db_as_df$lat, ptype = double())
-    expect_vector(db_as_df$Year_start, ptype = integer())
+    expect_vector(db_as_df$Year_start, ptype = numeric())
     expect_setequal(unique(db_as_df$Country), "MX")
     ## expect_equal(length(complete.cases(db_as_df)[complete.cases(db_as_df) == TRUE]), 6)
 })

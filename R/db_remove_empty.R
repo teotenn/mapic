@@ -26,7 +26,7 @@ db_remove_empty.default <- function(mdb) {
 #' @describeIn db_remove_empty mdb_df
 #' @export
 db_remove_empty.mdb_df <- function(mdb) {
-  df_name <- mdb$location
+  df_name <- mdb$table
   df <- get(df_name, envir = .GlobalEnv)
   output <- dplyr::filter(df, !is.na(lat), !is.na(lon))
   assign(df_name, output, envir = .GlobalEnv)
@@ -38,7 +38,7 @@ db_remove_empty.mdb_df <- function(mdb) {
 db_remove_empty.mdb_csv <- function(mdb) {
   df <- db_load(mdb)
   output <- dplyr::filter(df, !is.na(lat), !is.na(lon))
-  write.csv(output, mdb$location, row.names = FALSE)
+  write.csv(output, mdb$table, row.names = FALSE)
 }
 
 #' @method db_remove_empty mdb_SQLite
@@ -46,11 +46,11 @@ db_remove_empty.mdb_csv <- function(mdb) {
 #' @export
 db_remove_empty.mdb_SQLite <- function(mdb) {
   require(RSQLite)
-  path_to_db <- mdb$location
-  table_name <- mdb$table
+  path_to_db <- mdb$database
+  table <- mdb$table
 
   con <- dbConnect(drv = RSQLite::SQLite(), dbname = path_to_db)
   dbExecute(conn = con,
-            paste0("DELETE FROM ", table_name,  " WHERE lon IS NULL OR lat IS NULL"))
+            paste0("DELETE FROM ", table,  " WHERE lon IS NULL OR lat IS NULL"))
   dbDisconnect(con)
 }

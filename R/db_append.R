@@ -27,7 +27,7 @@ db_append.default <- function(mdb, ...) {
 #' @describeIn db_append mdb_df
 #' @export
 db_append.mdb_df <- function(mdb, df) {
-  df_name <- mdb$location
+  df_name <- mdb$table
   local_df <- get(df_name, envir = .GlobalEnv)
   local_df <- rbind(local_df, df)
   assign(df_name, local_df, envir = .GlobalEnv)
@@ -37,7 +37,7 @@ db_append.mdb_df <- function(mdb, df) {
 #' @describeIn db_append mdb_csv
 #' @export
 db_append.mdb_csv <- function(mdb, df) {
-  path_csv <- mdb$location
+  path_csv <- mdb$table
   write.table(df, path_csv, append = TRUE, sep = ",", row.names = FALSE, col.names = FALSE, quote = TRUE)
 }
 
@@ -46,10 +46,10 @@ db_append.mdb_csv <- function(mdb, df) {
 #' @export
 db_append.mdb_SQLite <- function(mdb, df) {
   require(RSQLite)
-  path_to_db <- mdb$location
-  table_name <- mdb$table
+  path_to_db <- mdb$database
+  table <- mdb$table
 
   con <- dbConnect(drv = RSQLite::SQLite(), dbname = path_to_db)
-  dbWriteTable(con, table_name, df, append = TRUE)
+  dbWriteTable(con, table, df, append = TRUE)
   dbDisconnect(con)
 }
