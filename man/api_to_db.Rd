@@ -7,8 +7,8 @@
 api_to_db(
   mdb,
   dat,
-  city = "City",
-  country = "Country",
+  city = "city",
+  country = "country",
   region = NULL,
   state = NULL,
   county = NULL,
@@ -22,7 +22,7 @@ api_to_db(
 \item{mdb}{Mapic database configuration object (See
 \link{database_configuration} for a reference).}
 
-\item{dat}{The data frame containing the data. It MUST contain a collumn called 'ID' with UNIQUE identification
+\item{dat}{The data frame containing the data. It MUST contain a collumn called 'id' with UNIQUE identification
 numbers, and at least names of the cities and country.}
 
 \item{city}{String with the name of the column with the city names}
@@ -53,7 +53,7 @@ the function iterates over the values to find the coordinates, using
 the function \code{coords_from_city} and send the results to a database
 
 The data must be provided as a data frame, the unique identification
-numbers must be provided in a column called "ID". Other values that MUST be
+numbers must be provided in a column called "id". Other values that MUST be
 provided are name of the cities and country in a 2-letter code.
 
 The function uses \code{coords_from_city} for retreiving the data from the API,

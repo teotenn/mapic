@@ -92,9 +92,9 @@ The function and results look similar to the following:
 #+begin_src R :session :results output :exports both
 api_to_db(mx_db,
           dat = mexico,
-          city = "City",
-          country = "Country",
-          state = "Region",
+          city = "city",
+          country = "country",
+          state = "region",
           start_year = "Registration_year",
           end_year = "End_year",
           db_backup_after = 5)
@@ -131,7 +131,7 @@ Search finished.
 
 #+begin_src R :session :results output :exports both
 mx <- db_load(mx_db)
-mx[,c("ID", "City", "State", "lon", "lat")]
+mx[,c("id", "city", "state", "lon", "lat")]
 #+end_src
 
 #+RESULTS:
@@ -152,14 +152,14 @@ One of the entries was not found. We can add it "manually" using ~add_coords_man
 
 #+begin_src R :session :results output :exports both
 rown <- 10
-to_add <- data.frame(ID = mexico$ID[rown],
-                     Year_start = mexico$Registration_year[rown],
-                     Year_end = mexico$End_year[rown],
-                     City = mexico$City[rown],
-                     Country = mexico$Country[rown],
-                     Region = "",
-                     State = mexico$Region[rown],
-                     County = "",
+to_add <- data.frame(id = mexico$id[rown],
+                     year_start = mexico$Registration_year[rown],
+                     year_end = mexico$End_year[rown],
+                     city = mexico$city[rown],
+                     country = mexico$country[rown],
+                     region = "",
+                     state = mexico$region[rown],
+                     county = "",
                      osm_name = "",
                      lon = 98.88, lat = 19.51)
 add_coords_manually(to_add, mx_db)
@@ -173,7 +173,7 @@ We have now the coordinates of all the cities that we need safely saved in a dat
 
 #+begin_src R :session :results output :exports both
 mx <- db_load(mx_db)
-mx[,c("ID", "City", "State", "lon", "lat")]
+mx[,c("id", "city", "state", "lon", "lat")]
 #+end_src
 
 #+RESULTS:
@@ -437,9 +437,9 @@ base_map(
                   column_names = list(
                     lat = "lat",
                     lon = "lon",
-                    cities = "City",
-                    start_year = "Year_start",
-                    end_year = "Year_end")) +
+                    cities = "city",
+                    start_year = "year_start",
+                    end_year = "year_end")) +
   mapic_city_names(.df = mx,
                    list_cities = c("Ciudad de Mexico", "Guadalajara", "Tijuana")) +
   mapic_year_internal(year = 2020,

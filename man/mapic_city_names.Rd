@@ -4,7 +4,7 @@
 \alias{mapic_city_names}
 \alias{mapic_city_names.default}
 \alias{mapic_city_names.mapicHolder}
-\title{Mapic City Names}
+\title{Mapic city Names}
 \usage{
 mapic_city_names(x, ...)
 
@@ -13,7 +13,7 @@ mapic_city_names(x, ...)
   list_cities,
   lat = "lat",
   lon = "lon",
-  cities = "City",
+  cities = "city",
   font_family = "Arial",
   text_size = 4,
   map_colors = default_map_colors

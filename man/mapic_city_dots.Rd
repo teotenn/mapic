@@ -11,8 +11,8 @@ mapic_city_dots(x, ...)
 \method{mapic_city_dots}{default}(
   .df,
   year,
-  column_names = list(lat = "lat", lon = "lon", cities = "City", start_year =
-    "Year_start", end_year = NULL),
+  column_names = list(lat = "lat", lon = "lon", cities = "city", start_year =
+    "year_start", end_year = NULL),
   legend_position = "bottom",
   dot_size = 1,
   map_colors = default_map_colors
@@ -22,8 +22,8 @@ mapic_city_dots(x, ...)
   .mapic_holder,
   .df,
   year,
-  column_names = list(lat = "lat", lon = "lon", cities = "City", start_year =
-    "Year_start", end_year = "Year_end"),
+  column_names = list(lat = "lat", lon = "lon", cities = "city", start_year =
+    "year_start", end_year = "year_end"),
   legend_external = TRUE,
   legend_position = "bottom",
   dot_size = 1

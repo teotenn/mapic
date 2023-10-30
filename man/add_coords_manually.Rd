@@ -9,7 +9,7 @@ add_coords_manually(complementary_data, mdb)
 \arguments{
 \item{complementary_data}{file containing the missing values. The dataset
 providing the values must contain the exact same fields as the ones in the
-database. Fields can be empty except for "ID", "lat" and "lon".}
+database. Fields can be empty except for "id", "lat" and "lon".}
 
 \item{mdb}{Mapic database configuration object (See
 \link{database_configuration} for a reference).}

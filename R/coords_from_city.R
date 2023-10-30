@@ -13,7 +13,7 @@
 #'
 #' @return Returns a 1-row data frame, containing latitude, longitude and osm name.
 #'
-#' @details Get the coordinates of a City, given the Country 2-letter code.
+#' @details Get the coordinates of a city, given the Country 2-letter code.
 #' The search can be supported by region, state and/or county (optional).
 #' The function uses open street maps nominatim api.
 #'
@@ -30,7 +30,7 @@ coords_from_city <- function(city = NULL,
   require(RJSONIO)
   require(httr)
 
-  CountryCoded <- paste("&countrycodes=", country_code, sep = "")
+  countryCoded <- paste("&countrycodes=", country_code, sep = "")
   extras <- c(city = city, state = state, region = region, county = county)
   extrasCoded <- ""
   if (!is.null(extras)) {
@@ -46,7 +46,7 @@ coords_from_city <- function(city = NULL,
   link <- paste(
     "https://nominatim.openstreetmap.org/search?city="
   , extrasCoded
-  , CountryCoded
+  , countryCoded
   , "&format=json"
   , sep = ""
   )

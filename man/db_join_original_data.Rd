@@ -4,7 +4,7 @@
 \alias{db_join_original_data}
 \title{join the database to the original data}
 \usage{
-db_join_original_data(mdb, original_data, city = "City")
+db_join_original_data(mdb, original_data, city = "city")
 }
 \arguments{
 \item{mdb}{Mapic database configuration object (See
@@ -13,7 +13,7 @@ db_join_original_data(mdb, original_data, city = "City")
 \item{city}{String with the name of the column with the city names.}
 
 \item{df}{data frame with the original data. It MUST contain a
-column with Unique Identification Numbers called "ID".}
+column with Unique Identification Numbers called "id".}
 }
 \value{
 The function returns a \code{data.frame} containing the joined data.
@@ -23,7 +23,7 @@ Joins the data from the database and the original data.
 }
 \details{
 Creates an inner join between the original data and the data
-contained in the database table. The joint is performed by "ID" and "City"
-fields. The fields "Region", "State" and
-"County" are taken from the database.
+contained in the database table. The joint is performed by "id" and "city"
+fields. The fields "region", "state" and
+"county" are taken from the database.
 }

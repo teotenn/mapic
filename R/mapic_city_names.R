@@ -1,4 +1,4 @@
-#' @title Mapic City Names
+#' @title Mapic city Names
 #' @description Generates labels to show city names.
 #' 
 #' @param .df Object of class \code{data.frame} containing the data to be mapped
@@ -32,7 +32,7 @@ mapic_city_names.default <- function(.df,
                                      list_cities,
                                      lat = "lat",
                                      lon = "lon",
-                                     cities = "City",
+                                     cities = "city",
                                      font_family = "Arial",
                                      text_size = 4,
                                      map_colors = default_map_colors) {
@@ -70,7 +70,7 @@ mapic_city_names.mapicHolder <- function(.mapic_holder,
                                   list_cities = list_cities,
                                   lat = "lat",
                                   lon = "lon",
-                                  cities = "City",
+                                  cities = "city",
                                   font_family = font_family,
                                   text_size = text_size,
                                   map_colors = .mapic_holder$colors)

@@ -7,7 +7,7 @@
 api_no_city(
   mdb,
   dat,
-  country = "Country",
+  country = "country",
   region = NULL,
   state = NULL,
   county = NULL,
@@ -23,7 +23,7 @@ api_no_city(
   \describe{
     \item{\code{mdb}}{Mapic database configuration object (See
 \link{database_configuration} for a reference).}
-    \item{\code{dat}}{The data frame containing the data. It MUST contain a collumn called 'ID' with UNIQUE identification
+    \item{\code{dat}}{The data frame containing the data. It MUST contain a collumn called 'id' with UNIQUE identification
 numbers, and at least names of the cities and country.}
     \item{\code{country}}{String with the name of the column with the country codes (2-letter)}
     \item{\code{state}}{Optional. String with the name of the column with the state names}

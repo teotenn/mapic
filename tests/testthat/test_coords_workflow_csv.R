@@ -1,6 +1,7 @@
 library(testthat)
 data(mexico)
 t_dat <- mexico
+names(t_dat) <- c("id", "Name", "Type", "Registration_year", "end_year", "country", "region", "city", "Source")
 
 ### ---------- T E S T S ---------- ###
 test_that("database_configuration", {
@@ -12,20 +13,20 @@ test_that("database_configuration", {
 test_that("coords_from_city: Found results", {
   ## Case:
   ## obtaining coords from open street maps for CITY ONLY
-  found <- coords_from_city(city = t_dat$City[1],
-                            country_code = t_dat$Country[1],
+  found <- coords_from_city(city = t_dat$city[1],
+                            country_code = t_dat$country[1],
                             silent = TRUE)
   ## Case:
   ## obtaining coords from open street maps Using region
-  found_region <- coords_from_city(city = t_dat$City[2],
-                                   country_code = t_dat$Country[2],
-                                   region = t_dat$Region[2],
+  found_region <- coords_from_city(city = t_dat$city[2],
+                                   country_code = t_dat$country[2],
+                                   region = t_dat$region[2],
                                    silent = TRUE)
   ## Case:
   ## obtaining coords from open street maps Using state
-  found_state <- coords_from_city(city = t_dat$City[2],
-                                  country_code = t_dat$Country[2],
-                                  state = t_dat$Region[2],
+  found_state <- coords_from_city(city = t_dat$city[2],
+                                  country_code = t_dat$country[2],
+                                  state = t_dat$region[2],
                                   silent = TRUE)
   ## TESTS
   expect_s3_class(found, "data.frame")
@@ -40,14 +41,14 @@ test_that("coords_from_city: Found results", {
 test_that("coords_from_city: Not found results", {
   ## Case:
   ## Not found coords due to wrong city
-  not_found <- coords_from_city(city = "Mex. City",
-                                country_code = t_dat$Country[1],
-                                state = t_dat$Region[1],
+  not_found <- coords_from_city(city = "Mex. city",
+                                country_code = t_dat$country[1],
+                                state = t_dat$region[1],
                                 silent = TRUE)
   ## Case:
   ## Not found coords due to wrong state or region
-  not_found_state <- coords_from_city(city = t_dat$City[1],
-                                      country_code = t_dat$Country[1],
+  not_found_state <- coords_from_city(city = t_dat$city[1],
+                                      country_code = t_dat$country[1],
                                       state = "Tamaulipas",
                                       silent = TRUE)
   ## TESTS
@@ -63,13 +64,13 @@ test_that("coords_from_city: Not found results", {
 ## Find a suitable test, for now test results below
 mock_data <- dplyr::mutate(
   t_dat,
-  City = ifelse(City == "Ciudad de Mexico", "CD Mex", City))
+  city = ifelse(city == "Ciudad de Mexico", "CD Mex", city))
 
 api_to_db(mock_mdb,
           dat = mock_data,
-          city = "City",
-          country = "Country",
-          state = "Region",
+          city = "city",
+          country = "country",
+          state = "region",
           start_year = "Registration_year",
           end_year = "End_year",
           db_backup_after = 5,
@@ -87,11 +88,11 @@ test_that("db_load: returns a data frame", {
     ## expect_equal(nrow(db_as_df), 5)
     ## expect_equal(nrow(filter(db_as_df, is.na(lat))), 4)
     expect_equal(ncol(db_as_df), 11)
-    expect_vector(db_as_df$City, ptype = character())
+    expect_vector(db_as_df$city, ptype = character())
     expect_vector(db_as_df$lon, ptype = double())
     expect_vector(db_as_df$lat, ptype = double())
-    expect_vector(db_as_df$Year_start, ptype = integer())
-    expect_setequal(unique(db_as_df$Country), "MX")
+    expect_vector(db_as_df$year_start, ptype = integer())
+    expect_setequal(unique(db_as_df$country), "MX")
 })
 
 
@@ -118,8 +119,8 @@ test_that("db_compare_data: returns a data frame", {
     expect_s3_class(missing, "data.frame")
     ## expect_equal(nrow(missing), 4)
     expect_equal(ncol(missing), 9)
-    expect_vector(missing$City, ptype = character())
-    ## expect_setequal(missing$Country, rep("MX", 4))
+    expect_vector(missing$city, ptype = character())
+    ## expect_setequal(missing$country, rep("MX", 4))
 })
 
 
@@ -130,46 +131,46 @@ test_that("db_join_original_data", {
     expect_s3_class(combined, "data.frame")
     ## expect_equal(nrow(combined), 6)
     expect_equal(ncol(combined), 16)
-    expect_vector(combined$City, ptype = character())
+    expect_vector(combined$city, ptype = character())
     expect_vector(combined$lon, ptype = double())
     expect_vector(combined$lat, ptype = double())
-    expect_setequal(combined$Country, rep("MX", 6))
+    expect_setequal(combined$country, rep("MX", 6))
 })
 
 
 test_that("add_coords_manually", {
-  to_add <- data.frame(ID = 1,
-                       Year_start = 1900, Year_end = NA,
-                       City = "CD Mex",
-                       Country = "MX", Region = "",
-                       State = "Mexico", County = "",
+  to_add <- data.frame(id = 1,
+                       year_start = 1900, year_end = NA,
+                       city = "CD Mex",
+                       country = "MX", region = "",
+                       state = "Mexico", county = "",
                        lon = 12, lat = 13, osm_name = "")
   add_coords_manually(to_add, mock_mdb)
   df_added <- db_load(mock_mdb)
-  api_to_db(mock_mdb, mock_data, state = "Region", silent = TRUE)
+  api_to_db(mock_mdb, mock_data, state = "region", silent = TRUE)
   df_complete <- db_load(mock_mdb)
-  expect_true(1 %in% df_complete$ID)
-  expect_true(!is.na(df_complete[df_complete$ID == 1, ]$lat))
-  expect_equal(df_complete$lon[df_complete$ID == 1], 12)
+  expect_true(1 %in% df_complete$id)
+  expect_true(!is.na(df_complete[df_complete$id == 1, ]$lat))
+  expect_equal(df_complete$lon[df_complete$id == 1], 12)
   ## expect_equal(nrow(df_added), 7)
   ## expect_equal(nrow(df_complete), 9)
 })
 
 
 test_that("api_no_city", {
-  new_state <- data.frame(ID = 11,
+  new_state <- data.frame(id = 11,
                           Name = "org11",
                           Type = "none",
                           Registration_year = 2005,
                           End_year = NA,
-                          Country = "MX",
-                          Region = "Tlaxcala",
-                          City = NA,
+                          country = "MX",
+                          region = "Tlaxcala",
+                          city = NA,
                           Source = "none")
-  api_no_city(mock_mdb, new_state, "Country", state = "Region", silent = T)
+  api_no_city(mock_mdb, new_state, "country", state = "region", silent = T)
   df_added <- db_load(mock_mdb)
-  expect_true(11 %in% df_added$ID)
-  expect_true(!is.na(df_added[df_added$ID == 11, ]$lat))
+  expect_true(11 %in% df_added$id)
+  expect_true(!is.na(df_added[df_added$id == 11, ]$lat))
   ## expect_equal(nrow(df_added), 10)
 })
 
