@@ -54,3 +54,23 @@ db_remove_empty.mdb_SQLite <- function(mdb) {
             paste0("DELETE FROM ", table,  " WHERE lon IS NULL OR lat IS NULL"))
   dbDisconnect(con)
 }
+
+#' @method db_remove_empty mdb_PostgreSQL
+#' @describeIn db_remove_empty mdb_PostgreSQL
+#' @export
+db_remove_empty.mdb_PostgreSQL <- function(mdb) {
+  require(RPostgreSQL)
+  schema <- mdb$schema
+  table <- mdb$table
+
+  driv <- DBI::dbDriver("PostgreSQL")
+  con <- DBI::dbConnect(driv,
+                        dbname =  mdb$database,
+                        host = mdb$host,
+                        port = mdb$port,
+                        user = mdb$user,
+                        password = mdb$password)
+  dbExecute(conn = con,
+            paste0("DELETE FROM ", schema, ".", table,  " WHERE lon IS NULL OR lat IS NULL"))
+  dbDisconnect(con)
+}

@@ -34,7 +34,12 @@
 #'
 database_configuration <- function(db_type,
                                    table,
-                                   database) {
+                                   database = NULL,
+                                   schema = NULL,
+                                   host = NULL,
+                                   port = NULL,
+                                   user = NULL,
+                                   password = NULL) {
   if (tolower(db_type) == "data frame" || tolower(db_type) == "data.frame") {
     mdb_obj <- structure(
       list(table = table),
@@ -49,6 +54,20 @@ database_configuration <- function(db_type,
         table = table,
         database = database),
       class = c("mdb_SQLite"))
+  } else if (tolower(db_type) == "postgres" || tolower(db_type) == "postgresql") {
+    mdb_obj <- structure(
+      list(
+        table = table,
+        database = database,
+        schema = schema,
+        host = host,
+        port = port,
+        user = user,
+        password = password),
+      class = c("mdb_PostgreSQL"))
+  } else {
+    stop("Format not recognized for object mdb.")
   }
+  
   return(mdb_obj)
 }

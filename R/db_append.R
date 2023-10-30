@@ -53,3 +53,27 @@ db_append.mdb_SQLite <- function(mdb, df) {
   dbWriteTable(con, table, df, append = TRUE)
   dbDisconnect(con)
 }
+
+#' @method db_append mdb_PostgreSQL
+#' @describeIn db_append mdb_PostgreSQL
+#' @export
+db_append.mdb_PostgreSQL <- function(mdb, df) {
+  require(RPostgreSQL)
+  path_to_db <- mdb$database
+  table <- mdb$table
+
+  driv <- DBI::dbDriver("PostgreSQL")
+  con <- DBI::dbConnect(driv,
+                        dbname =  mdb$database,
+                        host = mdb$host,
+                        port = mdb$port,
+                        user = mdb$user,
+                        password = mdb$password)
+  
+  dbWriteTable(con,
+               name = c(mdb$schema, mdb$table),
+               value = df,
+               row.names = FALSE,
+               append = TRUE)
+  dbDisconnect(con)
+}

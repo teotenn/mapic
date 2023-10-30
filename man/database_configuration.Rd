@@ -4,7 +4,16 @@
 \alias{database_configuration}
 \title{database configuration}
 \usage{
-database_configuration(db_type, table, database)
+database_configuration(
+  db_type,
+  table,
+  database = NULL,
+  schema = NULL,
+  host = NULL,
+  port = NULL,
+  user = NULL,
+  password = NULL
+)
 }
 \arguments{
 \item{db_type}{String describing the type of database to use. Options are

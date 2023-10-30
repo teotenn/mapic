@@ -106,3 +106,40 @@ db_load.mdb_SQLite <- function(mdb) {
   dbDisconnect(con)
   return(db)
 }
+
+
+#' @method db_load mdb_PostgreSQL
+#' @describeIn db_load mdb_PostgreSQL
+#' @export
+db_load.mdb_PostgreSQL <- function(mdb) {
+  require(RPostgreSQL)
+  table <- mdb$table
+  schema <- mdb$schema
+
+  driv <- DBI::dbDriver("PostgreSQL")
+  con <- DBI::dbConnect(driv,
+                        dbname =  mdb$database,
+                        host = mdb$host,
+                        port = mdb$port,
+                        user = mdb$user,
+                        password = mdb$password)
+  query_create_table <- paste0(
+    "CREATE TABLE IF NOT EXISTS ",
+    schema, ".", table,
+    "(ID INTEGER UNIQUE,
+       Year_start INTEGER,
+       Year_end INTEGER,
+       City TEXT,
+       Country TEXT,
+       Region TEXT,
+       State TEXT,
+       County TEXT,
+       lon REAL,
+       lat REAL,
+       osm_name TEXT)"
+  )
+  DBI::dbExecute(conn = con, query_create_table)
+  db <- DBI::dbReadTable(con, name, c(schema, table))
+  DBI::dbDisconnect(con)
+  return(db)
+}
