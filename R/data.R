@@ -5,15 +5,15 @@
 #'
 #' @format A data frame with 10 rows and 9 columns:
 #' \describe{
-#'   \item{ID}{Unique ID}
-#'   \item{Name}{Name of the organization}
-#'   \item{Type}{The type of organization}
-#'   \item{Registration_year}{Year of its official registration}
-#'   \item{End_year}{Year of clossing or ending, if any}
-#'   \item{Country}{Two letter code of the country}
-#'   \item{Region}{The state of the country}
-#'   \item{City}{The city where it is registered}
-#'   \item{Source}{The spurce of the data}
+#'   \item{id}{Unique ID}
+#'   \item{name}{Name of the organization}
+#'   \item{type}{The type of organization}
+#'   \item{registration_year}{Year of its official registration}
+#'   \item{end_year}{Year of clossing or ending, if any}
+#'   \item{country}{Two letter code of the country}
+#'   \item{region}{The state of the country}
+#'   \item{city}{The city where it is registered}
+#'   \item{source}{The spurce of the data}
 #' }
 #'
 "mexico"
