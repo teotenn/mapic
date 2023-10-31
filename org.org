@@ -2,7 +2,7 @@
 * Plans and TO-DO file
 ** v2.5.2 - Database alternatives
 *** TODO Allow using summarized tables of data
-*** TODO Add support for PostgreSQL
+*** DONE Add support for PostgreSQL
 *** TODO Change year for dates in general
 
 ** TODO v2.5.3 - Graphic improvements

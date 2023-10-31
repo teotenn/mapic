@@ -1,7 +1,6 @@
 library(testthat)
 data(mexico)
 t_dat <- mexico
-names(t_dat) <- c("id", "Name", "Type", "Registration_year", "end_year", "country", "region", "city", "Source")
 
 ### ---------- T E S T S ---------- ###
 test_that("database_configuration", {
@@ -119,7 +118,7 @@ test_that("db_compare_data: returns a data frame", {
     ## TESTS
     expect_s3_class(missing, "data.frame")
     ## expect_equal(nrow(missing), 4)
-    expect_equal(ncol(missing), 9)
+    expect_equal(ncol(missing), 8)
     expect_vector(missing$city, ptype = character())
     ## expect_setequal(missing$country, rep("MX", 4))
 })
@@ -131,7 +130,7 @@ test_that("db_join_original_data", {
     ## TESTS
     expect_s3_class(combined, "data.frame")
     #expect_equal(nrow(combined), 6)
-    expect_equal(ncol(combined), 16)
+    expect_equal(ncol(combined), 15)
     expect_vector(combined$city, ptype = character())
     expect_vector(combined$lon, ptype = double())
     expect_vector(combined$lat, ptype = double())

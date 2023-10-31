@@ -1,7 +1,6 @@
 library(testthat)
 data(mexico)
 t_dat <- mexico
-names(t_dat) <- c("id", "Name", "Type", "Registration_year", "end_year", "country", "region", "city", "Source")
 
 ### ---------- T E S T S ---------- ###
 test_that("database_configuration", {
@@ -71,8 +70,8 @@ api_to_db(mock_mdb,
           city = "city",
           country = "country",
           state = "region",
-          start_year = "Registration_year",
-          end_year = "End_year",
+          start_year = "registration_year",
+          end_year = "end_year",
           db_backup_after = 5,
           silent = TRUE)
 ## RESULTS:
@@ -91,7 +90,7 @@ test_that("db_load: returns a data frame", {
     expect_vector(db_as_df$city, ptype = character())
     expect_vector(db_as_df$lon, ptype = double())
     expect_vector(db_as_df$lat, ptype = double())
-    expect_vector(db_as_df$year_start, ptype = integer())
+    expect_true(is.numeric(db_as_df$year_start))
     expect_setequal(unique(db_as_df$country), "MX")
 })
 
@@ -118,7 +117,7 @@ test_that("db_compare_data: returns a data frame", {
     ## TESTS
     expect_s3_class(missing, "data.frame")
     ## expect_equal(nrow(missing), 4)
-    expect_equal(ncol(missing), 9)
+    expect_equal(ncol(missing), 8)
     expect_vector(missing$city, ptype = character())
     ## expect_setequal(missing$country, rep("MX", 4))
 })
@@ -130,7 +129,7 @@ test_that("db_join_original_data", {
     ## TESTS
     expect_s3_class(combined, "data.frame")
     ## expect_equal(nrow(combined), 6)
-    expect_equal(ncol(combined), 16)
+    expect_equal(ncol(combined), 15)
     expect_vector(combined$city, ptype = character())
     expect_vector(combined$lon, ptype = double())
     expect_vector(combined$lat, ptype = double())
