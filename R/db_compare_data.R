@@ -13,6 +13,6 @@
 #' @export
 db_compare_data  <- function(mdb, df) {
   mdb_df <- db_load(mdb)
-  filtered <- filter(df, !(as.character(id) %in% as.character(mdb_df$id)))
+  filtered <- dplyr::filter(df, !(as.character(id) %in% as.character(mdb_df$id)))
   return(filtered)
 }

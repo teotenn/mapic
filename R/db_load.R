@@ -139,7 +139,7 @@ db_load.mdb_PostgreSQL <- function(mdb) {
        osm_name TEXT)"
   )
   DBI::dbExecute(conn = con, query_create_table)
-  db <- DBI::dbReadTable(con, name, c(schema, table))
+  db <- DBI::dbReadTable(con, name = c(schema, table))
   DBI::dbDisconnect(con)
   return(db)
 }
