@@ -27,10 +27,8 @@ coords_from_city <- function(city = NULL,
                              county = NULL,
                              choose_when_multiple = FALSE,
                              silent = FALSE) {
-  require(RJSONIO)
-  require(httr)
-
-  countryCoded <- paste("&countrycodes=", country_code, sep = "")
+  CityCoded <- gsub(" ", "%20", city) #remove space for URLs
+  CountryCoded <- paste("&countrycodes=", country_code, sep = "")
   extras <- c(city = city, state = state, region = region, county = county)
   extrasCoded <- ""
   if (!is.null(extras)) {
@@ -41,50 +39,30 @@ coords_from_city <- function(city = NULL,
       }
     }
   }
-
+  
   ## get data
-  link <- paste(
-    "https://nominatim.openstreetmap.org/search?city="
-  , extrasCoded
-  , countryCoded
-  , "&format=json"
-  , sep = ""
+  response <- paste(
+    "http://nominatim.openstreetmap.org/search?city=",
+    extrasCoded,
+    CountryCoded,
+    "&format=json",
+    sep = ""
   )
-
-  response <- try({fromJSON(link)},
-                  silent = TRUE)
-
-  if (class(response) == "try-error") {
-    stop(response[1])
-  } else if (class(response) == "response") {
-    response_status <- http_status(response)
-    if (response_status$category != "Success") {
-      stop(response_status$message)
-    }
-  } else if (is.list(response)) {
-
-    if (length(response) == 0) {
-      if (!silent) message(paste("No results found for", extrasCoded))
-      coords <- data.frame("lon" = NA, "lat" = NA, "osm_name" = as.character(NA))
-
-    } else if (length(response) == 1) {
-      if (!silent) message(paste("Found", response[[1]]$display_name))
-      coords <- data.frame(
-        lon = as.numeric(response[[1]]$lon),
-        lat = as.numeric(response[[1]]$lat),
-        osm_name = response[[1]]$display_name
-      )
-
-    } else {
-      if (!silent) message(paste("Several entries found for", city, country_code))
-      coords <- data.frame(
-        lon = as.numeric(response[[1]]$lon),
-        lat = as.numeric(response[[1]]$lat),
-        osm_name = response[[1]]$display_name
-      )
-    }
-
-    ## return a df
-    return(coords)
+  x <- RJSONIO::fromJSON(response)
+  
+  ## retrieve coords
+  if (is.vector(x)) {
+    message(paste("Found", x[[1]]$display_name))
+    lon <- x[[1]]$lon
+    lat <- x[[1]]$lat
+    osm_name <- x[[1]]$display_name
+    coords <- data.frame("lon" = lon, "lat" = lat, "osm_name" = osm_name)
+  } else {
+    message(paste("No results found for", extrasCoded, country_code))
+    coords <- data.frame("lon" = NA, "lat" = NA, "osm_name" = as.character(NA))
   }
+  
+  ## return a df
+  return(coords)
 }
+
