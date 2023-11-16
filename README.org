@@ -6,6 +6,10 @@
 
 * Maps of Infrastructure per City (MAPIC)
 
+Home repository in [[https://codeberg.org/teoten/mapic][codeberg.org/teoten/mapic]]
+
+Mirror [[https://github.com/teotenn/mapic][github.com/teotenn/mapic]]
+
 ** About
 
 *Mapic* is an opinionated R package with the single purpose of creating geographic maps showing uni variate numerical data as dots. Time can be considered a second variable that can be visualized by creating several maps, resulting in dynamic maps as video or gif files.
