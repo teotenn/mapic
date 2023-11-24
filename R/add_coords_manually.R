@@ -35,6 +35,13 @@ add_coords_manually <- function(complementary_data, mdb) {
     stop("Incorrect data format for complementary_data.")
   }
 
+  ## id as character
+  if ("id" %in% names(local_df)) {
+    local_df$id <- as.character(local_df$id)
+  } else {
+    stop("Column <id> was not found and it is mandatory.")
+  }
+
   db_df <- db_load(mdb)
   if (any(!names(db_df) %in% names(local_df))) {
     stop(cat("The complementary data is missing columns or the names are not correct.\nCorrect names of the fields/columns are:\n",

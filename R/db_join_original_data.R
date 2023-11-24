@@ -19,6 +19,13 @@
 db_join_original_data <- function(mdb, original_data, city = "city") {
   require(dplyr)
 
+  ## id as character
+  if ("id" %in% names(original_data)) {
+    original_data$id <- as.character(original_data$id)
+  } else {
+    stop("Column <id> was not found and it is mandatory.")
+  }
+  
   stopifnot(is.data.frame(original_data))
   local_df <- original_data
 

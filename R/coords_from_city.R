@@ -52,13 +52,13 @@ coords_from_city <- function(city = NULL,
   
   ## retrieve coords
   if (is.vector(x)) {
-    message(paste("Found", x[[1]]$display_name))
+    if (!silent) message(paste("Found", x[[1]]$display_name))
     lon <- x[[1]]$lon
     lat <- x[[1]]$lat
     osm_name <- x[[1]]$display_name
     coords <- data.frame("lon" = lon, "lat" = lat, "osm_name" = osm_name)
   } else {
-    message(paste("No results found for", extrasCoded, country_code))
+    if (!silent) message(paste("No results found for", extrasCoded, country_code))
     coords <- data.frame("lon" = NA, "lat" = NA, "osm_name" = as.character(NA))
   }
   

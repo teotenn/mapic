@@ -75,6 +75,20 @@ db_load.mdb_csv <- function(mdb) {
   } else {
     local_df <- read.csv(path_csv)
   }
+
+  local_df <- dplyr::mutate(
+    local_df,
+    id = as.character(id),
+    year_start = as.numeric(year_start),
+    year_end = as.numeric(year_end),
+    city = as.character(city),
+    country = as.character(country),
+    region = as.character(region),
+    state = as.character(state),
+    county = as.character(county),
+    lon = as.numeric(lon),
+    lat = as.numeric(lat),
+    osm_name = as.character(osm_name))
   return(local_df)
 }
 
@@ -89,7 +103,7 @@ db_load.mdb_SQLite <- function(mdb) {
   con <- dbConnect(drv = RSQLite::SQLite(), dbname = path_to_db)
   query_create_table <- paste0(
     "CREATE TABLE IF NOT EXISTS ", table,
-    "(id INTEGER UNIQUE,
+    "(id TEXT UNIQUE,
        year_start INTEGER,
        year_end INTEGER,
        city TEXT,

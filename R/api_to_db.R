@@ -45,6 +45,13 @@ api_to_db <- function(mdb,
   ## require(RSQLite)
   require(dplyr)
 
+  ## id as character
+  if ("id" %in% names(dat)) {
+    dat$id <- as.character(dat$id)
+  } else {
+    stop("Column <id> was not found and it is mandatory.")
+  }
+
   ## load db
   db <- db_load(mdb)
   ## Filtering the data
