@@ -9,14 +9,14 @@
 #' @param year The year to be plot, as \code{numeric}.
 #' @param column_names A \code{list} with the names of the columns containing the values to be used for the map.
 #' \enumerate{
-#' \item lat : Column containing the latitude.
-#' \item lon : Column containing the longitude.
-#' \item city : Column containing the names of the cities.
-#' \item year_start : Column containing the starting year.
-#' \item state : Column containing the names of the states.
-#' \item county : Column containing the names of the county.
-#' \item region : Column containing the names of the region.
-#' \item year_end : Optional. Column containing the ending year.
+#' \item lat: Column containing the latitude.
+#' \item lon: Column containing the longitude.
+#' \item city: Column containing the names of the cities.
+#' \item year_start: Column containing the starting year.
+#' \item state: Column containing the names of the states.
+#' \item county: Column containing the names of the county.
+#' \item region: Column containing the names of the region.
+#' \item year_end: Optional. Column containing the ending year.
 #' }
 #' @param legend_position Overwrites ggplot's \code{theme(legend.position)}. See theme's help for details.
 #' @param legend_external Boolean. If an object of class \code{mapicHolder} is used, the legends can be
