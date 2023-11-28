@@ -11,8 +11,8 @@ mapic_city_dots(x, ...)
 \method{mapic_city_dots}{default}(
   .df,
   year,
-  column_names = list(lat = "lat", lon = "lon", cities = "city", start_year =
-    "year_start", end_year = NULL),
+  column_names = list(lat = "lat", lon = "lon", city = "city", state = NULL, county =
+    NULL, region = NULL, year_start = "year_start", year_end = NULL),
   legend_position = "bottom",
   dot_size = 1,
   map_colors = default_map_colors
@@ -22,8 +22,8 @@ mapic_city_dots(x, ...)
   .mapic_holder,
   .df,
   year,
-  column_names = list(lat = "lat", lon = "lon", cities = "city", start_year =
-    "year_start", end_year = "year_end"),
+  column_names = list(lat = "lat", lon = "lon", city = "city", state = NULL, county =
+    NULL, region = NULL, year_start = "year_start", year_end = NULL),
   legend_external = TRUE,
   legend_position = "bottom",
   dot_size = 1
@@ -40,9 +40,12 @@ See \code{column_names} below for a list of required fields.}
 \enumerate{
 \item lat : Column containing the latitude.
 \item lon : Column containing the longitude.
-\item cities : Column containing the names of the cities.
-\item start_year : Column containing the starting year.
-\item end_year : Optional. Column containing the ending year.
+\item city : Column containing the names of the cities.
+\item year_start : Column containing the starting year.
+\item state : Column containing the names of the states.
+\item county : Column containing the names of the county.
+\item region : Column containing the names of the region.
+\item year_end : Optional. Column containing the ending year.
 }}
 
 \item{legend_position}{Overwrites ggplot's \code{theme(legend.position)}. See theme's help for details.}
