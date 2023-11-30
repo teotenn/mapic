@@ -30,6 +30,8 @@ api_no_city <- function(mdb,
 
   api_to_db(mdb = mdb,
             dat = dat,
+            city = "city",
+            country = country,
             region = region,
             state = state,
             county = county,
