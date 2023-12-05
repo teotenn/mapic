@@ -46,7 +46,7 @@ base_map <- function(country,
   stopifnot("Name of the country should be character" = is.character(country))
 
   if (!country %in% map_data("world")$region) {
-    stop(paste("Country name not recognized",
+    stop(paste("country name not recognized",
                "To see a list of recognized countries run",
                "<unique(maps::map_data('world')$region)>", sep = "\n"))
   }
@@ -89,7 +89,7 @@ base_map <- function(country,
                  aes(x = long, y = lat, group = group),
                  color = map_colors$border_countries,
                  fill = map_colors$empty_countries) +
-    ## Second layer: Country map
+    ## Second layer: country map
     geom_polygon(data = map_data_country,
                  aes(x = long, y = lat, group = group),
                  color = map_colors$border_countries,

@@ -5,7 +5,7 @@
 #'
 #' @param complementary_data file containing the missing values. The dataset
 #' providing the values must contain the exact same fields as the ones in the
-#' database. Fields can be empty except for "ID", "lat" and "lon".
+#' database. Fields can be empty except for "id", "lat" and "lon".
 #' @param mdb Mapic database configuration object (See
 #' \link{database_configuration} for a reference).
 #'
@@ -35,18 +35,25 @@ add_coords_manually <- function(complementary_data, mdb) {
     stop("Incorrect data format for complementary_data.")
   }
 
+  ## id as character
+  if ("id" %in% names(local_df)) {
+    local_df$id <- as.character(local_df$id)
+  } else {
+    stop("Column <id> was not found and it is mandatory.")
+  }
+
   db_df <- db_load(mdb)
   if (any(!names(db_df) %in% names(local_df))) {
     stop(cat("The complementary data is missing columns or the names are not correct.\nCorrect names of the fields/columns are:\n",
              names(db_df), "\n"))
-  } else if (any(local_df$ID %in% db_df$ID)) {
-    stop(cat("The following ID fields are already present in the database:\n",
-             local_df$ID[local_df$ID %in% db_df$ID], "\n"))
-  } else if (any(is.na(local_df$lon) | is.na(local_df$lat) | is.na(local_df$ID))) {
-    stop("Data missing for either ID, lat or long")
+  } else if (any(local_df$id %in% db_df$id)) {
+    stop(cat("The following id fields are already present in the database:\n",
+             local_df$id[local_df$id %in% db_df$id], "\n"))
+  } else if (any(is.na(local_df$lon) | is.na(local_df$lat) | is.na(local_df$id))) {
+    stop("Data missing for either id, lat or long")
   } else {
     local_df <- local_df %>%
-      mutate_at(c("City", "Country", "Region", "State", "County", "osm_name"), ~replace(., is.na(.), ""))
+      mutate_at(c("city", "country", "region", "state", "county", "osm_name"), ~replace(., is.na(.), ""))
     ## Send the values to DB and
     db_append(mdb, local_df)
   }

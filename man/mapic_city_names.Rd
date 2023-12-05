@@ -4,7 +4,7 @@
 \alias{mapic_city_names}
 \alias{mapic_city_names.default}
 \alias{mapic_city_names.mapicHolder}
-\title{Mapic City Names}
+\title{Mapic city Names}
 \usage{
 mapic_city_names(x, ...)
 
@@ -13,7 +13,7 @@ mapic_city_names(x, ...)
   list_cities,
   lat = "lat",
   lon = "lon",
-  cities = "City",
+  city = "city",
   font_family = "Arial",
   text_size = 4,
   map_colors = default_map_colors
@@ -39,7 +39,7 @@ class \code{mapicHolder} is used.}
 \item{lon}{Name of the column containing the longitude. Not necessary if an object of
 class \code{mapicHolder} is used.}
 
-\item{cities}{Name of the column containing the city names. Not necessary if an object
+\item{city}{Name of the column containing the city names. Not necessary if an object
 of class \code{mapicHolder} is used.}
 
 \item{font_family}{Font to be used.}

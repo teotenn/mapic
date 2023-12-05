@@ -5,7 +5,7 @@
 #'
 #' @param mdb Mapic database configuration object (See
 #' \link{database_configuration} for a reference).
-#' @param dat The data frame containing the data. It MUST contain a collumn called 'ID' with UNIQUE identification
+#' @param dat The data frame containing the data. It MUST contain a collumn called 'id' with UNIQUE identification
 #' numbers, and at least names of the cities and country.
 #' @param city String with the name of the column with the city names
 #' @param country String with the name of the column with the country codes (2-letter)
@@ -22,7 +22,7 @@
 #' the function \code{coords_from_city} and send the results to a database
 #'
 #' @details The data must be provided as a data frame, the unique identification
-#' numbers must be provided in a column called "ID". Other values that MUST be
+#' numbers must be provided in a column called "id". Other values that MUST be
 #' provided are name of the cities and country in a 2-letter code.
 #'
 #' The function uses \code{coords_from_city} for retreiving the data from the API,
@@ -33,8 +33,8 @@
 #' @export
 api_to_db <- function(mdb,
                       dat,
-                      city = "City",
-                      country = "Country",
+                      city = "city",
+                      country = "country",
                       region = NULL,
                       state = NULL,
                       county = NULL,
@@ -44,6 +44,13 @@ api_to_db <- function(mdb,
                       silent = FALSE) {
   ## require(RSQLite)
   require(dplyr)
+
+  ## id as character
+  if ("id" %in% names(dat)) {
+    dat$id <- as.character(dat$id)
+  } else {
+    stop("Column <id> was not found and it is mandatory.")
+  }
 
   ## load db
   db <- db_load(mdb)
@@ -61,7 +68,7 @@ api_to_db <- function(mdb,
     ## ---- Iteration to web-scrap data ---- ##
     ## For loop to api connection
     for (i in 1:nrow(dat_local)) {
-      if (!silent) print(paste0("Searching entry ", dat_local[["ID"]][i]))
+      if (!silent) print(paste0("Searching entry ", dat_local[["id"]][i]))
       ## Abstracting info
       rg <- ifelse(is.null(region), "", dat_local[[region]][i])
       st <- ifelse(is.null(state), "", dat_local[[state]][i])
@@ -71,11 +78,11 @@ api_to_db <- function(mdb,
 
       ##-- Get the coords -- ##
       ## First search in DB
-      search_query <- filter(db, City == rcity, Country == rcountry,
-                             Region == rg, State == st, County == ct)
+      search_query <- filter(db, city == rcity, country == rcountry,
+                             region == rg, state == st, county == ct)
       if (nrow(search_query) != 0) {
         coords <- search_query[1, ]
-        coords$ID <- dat_local[["ID"]][i]
+        coords$id <- dat_local[["id"]][i]
         if (!silent) print("Found from memory")
       } else {
         ## If not not yet exists, go to OSM API
@@ -83,14 +90,14 @@ api_to_db <- function(mdb,
                                    region = rg, state = st, county = ct,
                                    silent = silent)
         ## DF exact replica of DB
-        coords <- cbind(ID = dat_local[["ID"]][i],
-                        Year_start = ifelse(is.null(start_year), NA, as.numeric(dat_local[[start_year]][i])),
-                        Year_end = ifelse(is.null(end_year), NA, as.numeric(dat_local[[end_year]][i])),
-                        City = rcity,
-                        Country = rcountry,
-                        Region = rg,
-                        State = st,
-                        County = ct,
+        coords <- cbind(id = dat_local[["id"]][i],
+                        year_start = ifelse(is.null(start_year), NA, as.numeric(dat_local[[start_year]][i])),
+                        year_end = ifelse(is.null(end_year), NA, as.numeric(dat_local[[end_year]][i])),
+                        city = rcity,
+                        country = rcountry,
+                        region = rg,
+                        state = st,
+                        county = ct,
                         coords)
       }
       new_coords <- rbind(new_coords, coords)

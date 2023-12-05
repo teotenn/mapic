@@ -37,7 +37,7 @@ Returns a 1-row data frame, containing latitude, longitude and osm name.
 Get coordinates of a city per country.
 }
 \details{
-Get the coordinates of a City, given the Country 2-letter code.
+Get the coordinates of a city, given the Country 2-letter code.
 The search can be supported by region, state and/or county (optional).
 The function uses open street maps nominatim api.
 

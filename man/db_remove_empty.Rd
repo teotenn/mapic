@@ -6,6 +6,7 @@
 \alias{db_remove_empty.mdb_df}
 \alias{db_remove_empty.mdb_csv}
 \alias{db_remove_empty.mdb_SQLite}
+\alias{db_remove_empty.mdb_PostgreSQL}
 \title{Removes empty entries from database table}
 \usage{
 db_remove_empty(mdb, ...)
@@ -17,6 +18,8 @@ db_remove_empty(mdb, ...)
 \method{db_remove_empty}{mdb_csv}(mdb)
 
 \method{db_remove_empty}{mdb_SQLite}(mdb)
+
+\method{db_remove_empty}{mdb_PostgreSQL}(mdb)
 }
 \arguments{
 \item{mdb}{Mapic database configuration object (See
@@ -39,5 +42,7 @@ present function removes those entries from the database completely.
 \item \code{db_remove_empty(mdb_csv)}: mdb_csv
 
 \item \code{db_remove_empty(mdb_SQLite)}: mdb_SQLite
+
+\item \code{db_remove_empty(mdb_PostgreSQL)}: mdb_PostgreSQL
 
 }}

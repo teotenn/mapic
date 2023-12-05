@@ -148,7 +148,7 @@ mapic_totals_external.default <- function(totals,
       aes(
         x = text_position_x,
         y = text_position_y,
-        label = "Organizations"),
+        label = totals_label),
       size = text_size,
       family = font_family,
       fontface = "bold",

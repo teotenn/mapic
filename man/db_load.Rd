@@ -6,6 +6,7 @@
 \alias{db_load.mdb_df}
 \alias{db_load.mdb_csv}
 \alias{db_load.mdb_SQLite}
+\alias{db_load.mdb_PostgreSQL}
 \title{Loads the database table}
 \usage{
 db_load(mdb, ...)
@@ -17,6 +18,8 @@ db_load(mdb, ...)
 \method{db_load}{mdb_csv}(mdb)
 
 \method{db_load}{mdb_SQLite}(mdb)
+
+\method{db_load}{mdb_PostgreSQL}(mdb)
 }
 \arguments{
 \item{mdb}{Mapic database configuration object (See
@@ -46,6 +49,8 @@ environment, both with the structure required by mapic to store the coordinates.
 \item \code{db_load(mdb_csv)}: mdb_csv
 
 \item \code{db_load(mdb_SQLite)}: mdb_SQLite
+
+\item \code{db_load(mdb_PostgreSQL)}: mdb_PostgreSQL
 
 }}
 \seealso{

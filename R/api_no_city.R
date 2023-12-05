@@ -14,7 +14,7 @@
 #' @export
 api_no_city <- function(mdb,
                         dat,
-                        country = "Country",
+                        country = "country",
                         region = NULL,
                         state = NULL,
                         county = NULL,
@@ -26,10 +26,12 @@ api_no_city <- function(mdb,
   if (length(parameters) == 0) {
     stop("Provide at least one of the following parameters: region, state, county")
   }
-  dat$City <- as.character(NA)
+  dat$city <- as.character(NA)
 
   api_to_db(mdb = mdb,
             dat = dat,
+            city = "city",
+            country = country,
             region = region,
             state = state,
             county = county,

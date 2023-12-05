@@ -33,17 +33,17 @@ db_load.default <- function(mdb) {
 #' @describeIn db_load mdb_df
 #' @export
 db_load.mdb_df <- function(mdb) {
-  df_name <- mdb$location
+  df_name <- mdb$table
 
   if (!df_name %in% ls(envir = .GlobalEnv)) {
-    initial_df <- data.frame(ID = character(0),
-                             Year_start = numeric(0),
-                             Year_end = numeric(0),
-                             City = character(0),
-                             Country = character(0),
-                             Region = character(0),
-                             State = character(0),
-                             County = character(0),
+    initial_df <- data.frame(id = character(0),
+                             year_start = numeric(0),
+                             year_end = numeric(0),
+                             city = character(0),
+                             country = character(0),
+                             region = character(0),
+                             state = character(0),
+                             county = character(0),
                              lon = numeric(0),
                              lat = numeric(0),
                              osm_name = character(0))
@@ -56,15 +56,15 @@ db_load.mdb_df <- function(mdb) {
 #' @describeIn db_load mdb_csv
 #' @export
 db_load.mdb_csv <- function(mdb) {
-  path_csv <- mdb$location
-  initial_df <- data.frame(ID = character(0),
-                           Year_start = numeric(0),
-                           Year_end = numeric(0),
-                           City = character(0),
-                           Country = character(0),
-                           Region = character(0),
-                           State = character(0),
-                           County = character(0),
+  path_csv <- mdb$table
+  initial_df <- data.frame(id = character(0),
+                           year_start = numeric(0),
+                           year_end = numeric(0),
+                           city = character(0),
+                           country = character(0),
+                           region = character(0),
+                           state = character(0),
+                           county = character(0),
                            lon = numeric(0),
                            lat = numeric(0),
                            osm_name = character(0))
@@ -75,6 +75,20 @@ db_load.mdb_csv <- function(mdb) {
   } else {
     local_df <- read.csv(path_csv)
   }
+
+  local_df <- dplyr::mutate(
+    local_df,
+    id = as.character(id),
+    year_start = as.numeric(year_start),
+    year_end = as.numeric(year_end),
+    city = as.character(city),
+    country = as.character(country),
+    region = as.character(region),
+    state = as.character(state),
+    county = as.character(county),
+    lon = as.numeric(lon),
+    lat = as.numeric(lat),
+    osm_name = as.character(osm_name))
   return(local_df)
 }
 
@@ -83,26 +97,63 @@ db_load.mdb_csv <- function(mdb) {
 #' @export
 db_load.mdb_SQLite <- function(mdb) {
   require(RSQLite)
-  path_to_db <- mdb$location
-  table_name <- mdb$table
+  path_to_db <- mdb$database
+  table <- mdb$table
 
   con <- dbConnect(drv = RSQLite::SQLite(), dbname = path_to_db)
   query_create_table <- paste0(
-    "CREATE TABLE IF NOT EXISTS ", table_name,
-    "(ID INTEGER UNIQUE,
-       Year_start INTEGER,
-       Year_end INTEGER,
-       City TEXT,
-       Country TEXT,
-       Region TEXT,
-       State TEXT,
-       County TEXT,
+    "CREATE TABLE IF NOT EXISTS ", table,
+    "(id TEXT UNIQUE,
+       year_start INTEGER,
+       year_end INTEGER,
+       city TEXT,
+       country TEXT,
+       region TEXT,
+       state TEXT,
+       county TEXT,
        lon REAL,
        lat REAL,
        osm_name TEXT)"
   )
   dbExecute(conn = con, query_create_table)
-  db <- dbReadTable(con, table_name)
+  db <- dbReadTable(con, table)
   dbDisconnect(con)
+  return(db)
+}
+
+
+#' @method db_load mdb_PostgreSQL
+#' @describeIn db_load mdb_PostgreSQL
+#' @export
+db_load.mdb_PostgreSQL <- function(mdb) {
+  require(RPostgreSQL)
+  table <- mdb$table
+  schema <- mdb$schema
+
+  driv <- DBI::dbDriver("PostgreSQL")
+  con <- DBI::dbConnect(driv,
+                        dbname =  mdb$database,
+                        host = mdb$host,
+                        port = mdb$port,
+                        user = mdb$user,
+                        password = mdb$password)
+  query_create_table <- paste0(
+    "CREATE TABLE IF NOT EXISTS ",
+    schema, ".", table,
+    "(id INTEGER UNIQUE,
+       year_start INTEGER,
+       year_end INTEGER,
+       city TEXT,
+       country TEXT,
+       region TEXT,
+       state TEXT,
+       county TEXT,
+       lon REAL,
+       lat REAL,
+       osm_name TEXT)"
+  )
+  DBI::dbExecute(conn = con, query_create_table)
+  db <- DBI::dbReadTable(con, name = c(schema, table))
+  DBI::dbDisconnect(con)
   return(db)
 }

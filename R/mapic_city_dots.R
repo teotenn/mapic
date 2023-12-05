@@ -9,11 +9,14 @@
 #' @param year The year to be plot, as \code{numeric}.
 #' @param column_names A \code{list} with the names of the columns containing the values to be used for the map.
 #' \enumerate{
-#' \item lat : Column containing the latitude.
-#' \item lon : Column containing the longitude.
-#' \item cities : Column containing the names of the cities.
-#' \item start_year : Column containing the starting year.
-#' \item end_year : Optional. Column containing the ending year.
+#' \item lat: Column containing the latitude.
+#' \item lon: Column containing the longitude.
+#' \item city: Column containing the names of the cities.
+#' \item year_start: Column containing the starting year.
+#' \item state: Column containing the names of the states.
+#' \item county: Column containing the names of the county.
+#' \item region: Column containing the names of the region.
+#' \item year_end: Optional. Column containing the ending year.
 #' }
 #' @param legend_position Overwrites ggplot's \code{theme(legend.position)}. See theme's help for details.
 #' @param legend_external Boolean. If an object of class \code{mapicHolder} is used, the legends can be
@@ -38,9 +41,12 @@ mapic_city_dots.default <- function(.df,
                                     column_names = list(
                                       lat = "lat",
                                       lon = "lon",
-                                      cities = "City",
-                                      start_year = "Year_start",
-                                      end_year = NULL),
+                                      city = "city",
+                                      state = NULL,
+                                      county = NULL,
+                                      region = NULL,
+                                      year_start = "year_start",
+                                      year_end = NULL),
                                     legend_position = "bottom",
                                     dot_size = 1,
                                     map_colors = default_map_colors) {
@@ -52,15 +58,18 @@ mapic_city_dots.default <- function(.df,
   column_names <- column_names[lengths(column_names) != 0]
   year__ <- year
 
-  mandatory_cols <- c("lat", "lon", "cities", "start_year")
+  mandatory_cols <- c("lat", "lon", "city", "year_start")
   if (!all(mandatory_cols %in% names(column_names))) {
     stop("Column names missing!")
-  } else {
-    if (!"end_year" %in% names(column_names)) {
-      .df$final_year <- NA_real_
-      column_names[["end_year"]] <- "final_year"
-    }
   }
+  ## Optional columns
+  if (!"year_end" %in% names(column_names)) {
+    .df$final_year <- NA_real_
+    column_names[["year_end"]] <- "final_year"
+  }
+  if (!"state" %in% names(column_names)) .df$state <- NA_character_
+  if (!"county" %in% names(column_names)) .df$county <- NA_character_
+  if (!"region" %in% names(column_names)) .df$region <- NA_character_
 
   ## Dots base size
   base_size <- 5
@@ -76,11 +85,11 @@ mapic_city_dots.default <- function(.df,
 
   ## Main data to plot
   filt <- .df  %>%
-    mutate_at(vars(column_names$end_year), ~replace_na(., year__ + 1)) %>%
-    mutate(year_final = !!sym(column_names$end_year),
-           city_name = str_to_sentence(!!sym(column_names$cities))) %>%
-    filter(year_final > year__ & !!sym(column_names$start_year) <= year__) %>%
-    group_by(city_name) %>%
+    mutate_at(vars(column_names$year_end), ~replace_na(., year__ + 1)) %>%
+    mutate(year_final = !!sym(column_names$year_end),
+           city_name = str_to_sentence(!!sym(column_names$city))) %>%
+    filter(year_final > year__ & !!sym(column_names$year_start) <= year__) %>%
+    group_by(city_name, state, county, region) %>%
     summarise(x = mean(!!sym(column_names$lon), na.rm = TRUE),
               y = mean(!!sym(column_names$lat), na.rm = TRUE),
               n = n()) %>%
@@ -134,9 +143,12 @@ mapic_city_dots.mapicHolder <- function(.mapic_holder,
                                         column_names = list(
                                           lat = "lat",
                                           lon = "lon",
-                                          cities = "City",
-                                          start_year = "Year_start",
-                                          end_year = "Year_end"),
+                                          city = "city",
+                                          state = NULL,
+                                          county = NULL,
+                                          region = NULL,
+                                          year_start = "year_start",
+                                          year_end = NULL),
                                         legend_external = TRUE,
                                         legend_position = "bottom",
                                         dot_size = 1) {
@@ -147,16 +159,18 @@ mapic_city_dots.mapicHolder <- function(.mapic_holder,
   column_names <- column_names[lengths(column_names) != 0]
   year__ <- year
 
-  ## Check required fields
-  mandatory_cols <- c("lat", "lon", "cities", "start_year")
+  mandatory_cols <- c("lat", "lon", "city", "year_start")
   if (!all(mandatory_cols %in% names(column_names))) {
     stop("Column names missing!")
-  } else {
-    if (!"end_year" %in% names(column_names)) {
-      .df$final_year <- NA_real_
-      column_names[["end_year"]] <- "final_year"
-    }
   }
+  ## Optional columns
+  if (!"year_end" %in% names(column_names)) {
+    .df$final_year <- NA_real_
+    column_names[["year_end"]] <- "final_year"
+  }
+  if (!"state" %in% names(column_names)) .df$state <- NA_character_
+  if (!"county" %in% names(column_names)) .df$county <- NA_character_
+  if (!"region" %in% names(column_names)) .df$region <- NA_character_
 
   ## Make map using default method
   if (legend_external) {
@@ -175,13 +189,13 @@ mapic_city_dots.mapicHolder <- function(.mapic_holder,
                                     map_colors = .mapic_holder$colors)
     }
 
-  ## Papere the data
+  ## Prepare the data
   data_for_map <- .df  %>%
-    mutate_at(vars(column_names$end_year), ~replace_na(., year__ + 1)) %>%
-    mutate(year_final = !!sym(column_names$end_year),
-           city_name = str_to_sentence(!!sym(column_names$cities))) %>%
-    filter(year_final > year__ & !!sym(column_names$start_year) <= year__) %>%
-    group_by(city_name) %>%
+    mutate_at(vars(column_names$year_end), ~replace_na(., year__ + 1)) %>%
+    mutate(year_final = !!sym(column_names$year_end),
+           city_name = str_to_sentence(!!sym(column_names$city))) %>%
+    filter(year_final > year__ & !!sym(column_names$year_start) <= year__) %>%
+    group_by(city_name, state, county, region) %>%
     summarise(x = median(!!sym(column_names$lon), na.rm = TRUE),
               y = median(!!sym(column_names$lat), na.rm = TRUE),
               n = n())

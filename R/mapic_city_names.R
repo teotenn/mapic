@@ -1,4 +1,4 @@
-#' @title Mapic City Names
+#' @title Mapic city Names
 #' @description Generates labels to show city names.
 #' 
 #' @param .df Object of class \code{data.frame} containing the data to be mapped
@@ -9,7 +9,7 @@
 #' class \code{mapicHolder} is used.
 #' @param lon Name of the column containing the longitude. Not necessary if an object of
 #' class \code{mapicHolder} is used.
-#' @param cities Name of the column containing the city names. Not necessary if an object
+#' @param city Name of the column containing the city names. Not necessary if an object
 #' of class \code{mapicHolder} is used.
 #' @param font_family Font to be used.
 #' @param text_size Size of the text in the plot.
@@ -32,13 +32,13 @@ mapic_city_names.default <- function(.df,
                                      list_cities,
                                      lat = "lat",
                                      lon = "lon",
-                                     cities = "City",
+                                     city = "city",
                                      font_family = "Arial",
                                      text_size = 4,
                                      map_colors = default_map_colors) {
   list_cities <- purrr::map_chr(list_cities, str_to_title)
   coord_cities <-.df %>%
-    mutate(city_name = str_to_title(!!ensym(cities))) %>%
+    mutate(city_name = str_to_title(!!ensym(city))) %>%
     group_by(city_name) %>%
     summarise(x = median(!!ensym(lon), na.rm = T),
               y = median(!!ensym(lat), na.rm = T),
@@ -70,7 +70,7 @@ mapic_city_names.mapicHolder <- function(.mapic_holder,
                                   list_cities = list_cities,
                                   lat = "lat",
                                   lon = "lon",
-                                  cities = "City",
+                                  city = "city",
                                   font_family = font_family,
                                   text_size = text_size,
                                   map_colors = .mapic_holder$colors)

@@ -3,8 +3,8 @@
 #'
 #' @param db_type String describing the type of database to use. Options are
 #' "data.frame", "csv" and "SQLite".
-#' @param location A string with the location of the database. For data frame, the name of the object; for csv and SQLite the path to the file; for others the server.
-#' @param table_name A string with the name of the table. Not necessary for csv and data frame.
+#' @param table A string with the name of thetable. For data frame, the name of the object; for csv the path to the file; for SQL the table name.
+#' @param database A string with the name of the database. Not necessary for csv and data frame.
 #'
 #' @return Returns an S3 object of different class (mapic db configuration object),
 #' depending on the type of database selected.
@@ -13,15 +13,14 @@
 #' \itemize{
 #'  \item "data.frame" returns object of class "mdb_df". Here,
 #' all the data obtained from the API
-#' connection is stored internally in R only, which means that by clossing
-#' the session the information will disappear. When the object \code{mdb_df} is
+#' connection is stored internally in R memory. When the object \code{mdb_df} is
 #' passed to \code{\link{db_load}}, it creates a data frame in the global environment
-#' with the name specified in \code{location}. Therefore, it is important that an
+#' with the name specified in \code{table}. Therefore, it is important that an
 #' object with the same name does not exist yet, or it will create a conflict.
 #'  \item "csv" returns object of class "mdb_csv". It uses a text-based csv file
 #' to store the data obtained from the API connection. When the object
 #' \code{mdb_csv} is passed to \code{\link{db_load}}, it will create a csv file in the
-#' path specified in \code{location}. It is recommended that such file is not
+#' path specified in \code{table}. It is recommended that such file is not
 #' created manually or it can generate conflicts.
 #'  \item "SQLite" returns object of class "mdb_SQLite". It uses SQLite as a
 #' database. When the object \code{mdb_SQLite} is passed to \code{\link{db_load}},
@@ -34,22 +33,41 @@
 #' @export
 #'
 database_configuration <- function(db_type,
-                                   location,
-                                   table_name) {
+                                   table,
+                                   database = NULL,
+                                   schema = NULL,
+                                   host = NULL,
+                                   port = NULL,
+                                   user = NULL,
+                                   password = NULL) {
   if (tolower(db_type) == "data frame" || tolower(db_type) == "data.frame") {
     mdb_obj <- structure(
-      list(location = location),
+      list(table = table),
       class = c("mdb_df"))
   } else if (tolower(db_type) == "csv") {
     mdb_obj <- structure(
-      list(location = location),
+      list(table = table),
       class = c("mdb_csv"))
   } else if (tolower(db_type) == "sqlite") {
     mdb_obj <- structure(
       list(
-        location = location,
-        table = table_name),
+        table = table,
+        database = database),
       class = c("mdb_SQLite"))
+  } else if (tolower(db_type) == "postgres" || tolower(db_type) == "postgresql") {
+    mdb_obj <- structure(
+      list(
+        table = table,
+        database = database,
+        schema = schema,
+        host = host,
+        port = port,
+        user = user,
+        password = password),
+      class = c("mdb_PostgreSQL"))
+  } else {
+    stop("Format not recognized for object mdb.")
   }
+  
   return(mdb_obj)
 }
