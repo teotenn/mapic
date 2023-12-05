@@ -6,9 +6,9 @@
 
 * Maps of Infrastructure per City (MAPIC)
 
-Home repository in [[https://codeberg.org/teoten/mapic][codeberg.org/teoten/mapic]]
+The main repository of this package is stored in [[https://codeberg.org/teoten/mapic][codeberg.org/teoten/mapic]]
 
-Mirror [[https://github.com/teotenn/mapic][github.com/teotenn/mapic]]
+A mirror is kept under [[https://github.com/teotenn/mapic][github.com/teotenn/mapic]] for major releases only, but it might be removed any time. We recommend using the main repository.
 
 ** About
 
@@ -25,22 +25,15 @@ The documentation for its usage is still to be improved. In the meantime, detail
 The project is under the GNU GENERAL PUBLIC LICENSE Version 3 (GPL-3). Your are free to copy it and reproduce it with no guarantee.
 
 * Installation
-It is recommended to have the following packages pre-installed: R (>= 4.0.0), maps (>= 3.3.0), ggplot2, httr, stringr (>= 1.5.0), dplyr, RJSONIO, purrr, tidyr. Depending on the database type to be used, the following packages could be also necessary: RSQLite (>= 2.2.3).
+It is recommended to have the following packages pre-installed: R (>= 4.0.0), maps (>= 3.3.0), ggplot2, httr, stringr (>= 1.5.0), dplyr, RJSONIO, purrr, tidyr. Depending on the database type to be used, the following packages could be also necessary: RSQLite (>= 2.2.3), RPostgreSQL.
 
-The easiest way to install is by using the function ~devtools::install_github~. First install =devtools= if you don't have it yet.
-
-#+begin_src R :eval no
-install.packages("devtools")
-devtools::install_github("teotenn/mapic")
-#+end_src
-
-Alternatively you can clone the repository and install from source. You also need =devtools= for that.
+The easiest way to install for now is to clone the repository and install from source. You can use =devtools= to do it in the simplest way:
 
 #+begin_src R :eval no
 devtools::install("/path_to_mapic/mapic", quick = TRUE, build = FALSE, keep_source = TRUE)
 #+end_src
 
-You can also download the compressed files from the tags and/or releases.
+You can also try `devtools::install_git("https://codeberg.org/teoten/mapic")`, or download the compressed files from the tags and/or releases.
 
 * A basic workflow
 

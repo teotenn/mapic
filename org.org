@@ -1,11 +1,10 @@
 #+TODO: TODO(t) PROGRESS(p) | DONE(d) CANCELLED(x)
 * Plans and TO-DO file
-** v2.5.2 - Database alternatives
-*** TODO Allow using summarized tables of data
-*** DONE Add support for PostgreSQL
-*** TODO Change year for dates in general
+** v2.5.3 - Unit Test
+*** TODO Improve existent UT
+*** TODO Complete UT
 
-** TODO v2.5.3 - Graphic improvements
+** v2.5.4 - Graphic improvements
 *** TODO Test missing functionalities (graphical)
 *** TODO Overall, improve UT
 *** TODO More positions for internal labels, copyrights and logo
@@ -15,9 +14,11 @@
 *** Other
 - Add support for postal code; remove region.
 
-** v2.5.3 - API response
+** v2.5.5 - API response and data organization
 *** TODO Add changelog
 *** TODO Allow to interactively select when more than 1 option found.
+*** TODO Change year for dates in general
+*** TODO Allow using summarized tables of data
 
 ** v2.6
 *** TODO Provide possibility for regional maps (several countries, continent) and worldwide.
@@ -28,6 +29,15 @@
 ** Consider adding watermark
 
 * LOG
+** DONE v2.5.2 - Database alternatives
+*** DONE Add support for PostgreSQL
+*** DONE Debugging
+**** DONE =coords_from_city= now takes different characters
+**** DONE labels for totals.
+**** DONE Grouping of dots per city now includes other regions
+**** DONE DB as data.frame bugs in data type
+**** DONE Other minor debugging
+
 ** DONE v2.5.1 Missing functionalities
 *** DONE add years to the DB
 *** DONE Remove empty from DB from main function
