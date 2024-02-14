@@ -81,25 +81,26 @@ api_to_db <- function(mdb,
       search_query <- filter(db, city == rcity, country == rcountry,
                              region == rg, state == st, county == ct)
       if (nrow(search_query) != 0) {
-        coords <- search_query[1, ]
-        coords$id <- dat_local[["id"]][i]
+        coords <- search_query[1, c("lon", "lat", "osm_name")]
+        ## coords$id <- dat_local[["id"]][i]
         if (!silent) print("Found from memory")
       } else {
         ## If not not yet exists, go to OSM API
         coords <- coords_from_city(rcity, rcountry,
                                    region = rg, state = st, county = ct,
                                    silent = silent)
-        ## DF exact replica of DB
-        coords <- cbind(id = dat_local[["id"]][i],
-                        year_start = ifelse(is.null(start_year), NA, as.numeric(dat_local[[start_year]][i])),
-                        year_end = ifelse(is.null(end_year), NA, as.numeric(dat_local[[end_year]][i])),
-                        city = rcity,
-                        country = rcountry,
-                        region = rg,
-                        state = st,
-                        county = ct,
-                        coords)
       }
+      ## DF exact replica of DB
+      coords <- cbind(id = dat_local[["id"]][i],
+                      year_start = ifelse(is.null(start_year), NA, as.numeric(dat_local[[start_year]][i])),
+                      year_end = ifelse(is.null(end_year), NA, as.numeric(dat_local[[end_year]][i])),
+                      city = rcity,
+                      country = rcountry,
+                      region = rg,
+                      state = st,
+                      county = ct,
+                      coords)
+
       new_coords <- rbind(new_coords, coords)
     }
 
