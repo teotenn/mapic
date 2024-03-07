@@ -63,7 +63,6 @@ is.map_colors <- function(x) inherits(x, "map_colors")
 #' @export
 print.map_colors <- function(x, ...) {
   stopifnot(is.map_colors(x))
-  print("The chosen colors")
   for (argg in names(x)) {
     message(paste(argg, x[argg], sep = " : "))
   }

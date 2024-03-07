@@ -1,10 +1,10 @@
 #+TODO: TODO(t) PROGRESS(p) | DONE(d) CANCELLED(x)
 * Plans and TO-DO file
-** v2.5.3 - Unit Test
+** v2.6.0 - Unit Test
 *** TODO Improve existent UT
 *** TODO Complete UT
 
-** v2.5.4 - Graphic improvements
+** v2.7.0 - Graphic improvements
 *** TODO Test missing functionalities (graphical)
 *** TODO Overall, improve UT
 *** TODO More positions for internal labels, copyrights and logo
@@ -14,13 +14,13 @@
 *** Other
 - Add support for postal code; remove region.
 
-** v2.5.5 - API response and data organization
+** v2.8.0 - API response and data organization
 *** TODO Add changelog
 *** TODO Allow to interactively select when more than 1 option found.
 *** TODO Change year for dates in general
 *** TODO Allow using summarized tables of data
 
-** v2.6
+** v2.9.0
 *** TODO Provide possibility for regional maps (several countries, continent) and worldwide.
 *** TODO Provide flexibility to modify more elements of the ggplot resulted maps (i.e., font face)
 

@@ -12,8 +12,8 @@
 #' @param state Optional. String with the name of the column with the state names
 #' @param county Optional. String with the name of the column with the county names
 #' @param region String with the name of the column with the region names. NOT RECOMENDED.
-#' @param start_year String with the name of the column with the year of start.
-#' @param end_year String with the name of the column with the end.
+#' @param year_start String with the name of the column with the year of start.
+#' @param year_end String with the name of the column with the end.
 #' @param db_backup_after Number of iterations after which the data is sent to the database.
 #' @param silent If TRUE, silences the messages from the function.
 #'
@@ -38,8 +38,8 @@ api_to_db <- function(mdb,
                       region = NULL,
                       state = NULL,
                       county = NULL,
-                      start_year = NULL,
-                      end_year = NULL,
+                      year_start = NULL,
+                      year_end = NULL,
                       db_backup_after = 10,
                       silent = FALSE) {
   ## require(RSQLite)
@@ -92,8 +92,8 @@ api_to_db <- function(mdb,
       }
       ## DF exact replica of DB
       coords <- cbind(id = dat_local[["id"]][i],
-                      year_start = ifelse(is.null(start_year), NA, as.numeric(dat_local[[start_year]][i])),
-                      year_end = ifelse(is.null(end_year), NA, as.numeric(dat_local[[end_year]][i])),
+                      year_start = ifelse(is.null(year_start), NA, as.numeric(dat_local[[year_start]][i])),
+                      year_end = ifelse(is.null(year_end), NA, as.numeric(dat_local[[year_end]][i])),
                       city = rcity,
                       country = rcountry,
                       region = rg,
@@ -115,8 +115,8 @@ api_to_db <- function(mdb,
               region = region,
               state = state,
               county = county,
-              start_year = start_year,
-              end_year = end_year,
+              year_start = year_start,
+              year_end = year_end,
               db_backup_after = db_backup_after,
               silent = silent)
   } else { ## Exit info
