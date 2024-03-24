@@ -9,7 +9,7 @@
 #'   \item{name}{Name of the organization}
 #'   \item{type}{The type of organization}
 #'   \item{registration_year}{Year of its official registration}
-#'   \item{end_year}{Year of clossing or ending, if any}
+#'   \item{year_end}{Year of clossing or ending, if any}
 #'   \item{country}{Two letter code of the country}
 #'   \item{region}{The state of the country}
 #'   \item{city}{The city where it is registered}

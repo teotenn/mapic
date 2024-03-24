@@ -42,7 +42,6 @@ api_to_db <- function(mdb,
                       year_end = NULL,
                       db_backup_after = 10,
                       silent = FALSE) {
-  ## require(RSQLite)
   require(dplyr)
 
   ## id as character

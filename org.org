@@ -29,7 +29,11 @@
 ** Consider adding watermark
 
 * LOG
-** DONE v2.5.2 - Database alternatives
+** v2.5.4 Fixed bug in =api_no_city=
+Renamed variables =start_year= and =end_year= for =year_start= and =year_end=.
+** v2.5.3 Bug in api_to_db fixed
+Entries found from DB were passing wrong info
+** v2.5.2 - Database alternatives
 *** DONE Add support for PostgreSQL
 *** DONE Debugging
 **** DONE =coords_from_city= now takes different characters
@@ -38,7 +42,7 @@
 **** DONE DB as data.frame bugs in data type
 **** DONE Other minor debugging
 
-** DONE v2.5.1 Missing functionalities
+** v2.5.1 Missing functionalities
 *** DONE add years to the DB
 *** DONE Remove empty from DB from main function
 *** DONE Adapt UT to it
@@ -48,12 +52,12 @@
 - Functions inside =coords_manipulation.R= moved to their own script each.
 - Possibility for labels to choose text font type
 
-** DONE v2.5.0 - Database alternatives
+** v2.5.0 - Database alternatives
 *** DONE Dev possibility to use other database alternatives aside of SQLite.
 - Allow more flexibility in the use of the database (i.e., table name, right now is set to "orgs")
 - Create objects data.frame and SQLite, etc., each with the required details. Then, apply the method based on the class of object selected.
 
-** DONE v2.4.2 Basic map
+** v2.4.2 Basic map
 *** DONE OOP for colors
 *** DONE Create the basic map with cities on top of the prev map using ggplot style
 *** DONE Test missing functionalities (non-graphical)

@@ -18,8 +18,8 @@ api_no_city <- function(mdb,
                         region = NULL,
                         state = NULL,
                         county = NULL,
-                        start_year = NULL,
-                        end_year = NULL,
+                        year_start = NULL,
+                        year_end = NULL,
                         db_backup_after = 10,
                         silent = FALSE) {
   parameters <- c(region, state, county)
@@ -35,8 +35,8 @@ api_no_city <- function(mdb,
             region = region,
             state = state,
             county = county,
-            start_year = start_year,
-            end_year = end_year,
+            year_start = year_start,
+            year_end = year_end,
             db_backup_after = db_backup_after,
             silent = silent)
 }

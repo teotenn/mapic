@@ -72,7 +72,7 @@ api_to_db(mock_mdb,
           country = "country",
           state = "region",
           year_start = "registration_year",
-          year_end = "end_year",
+          year_end = "year_end",
           db_backup_after = 5,
           silent = TRUE)
 ## RESULTS:

@@ -59,7 +59,7 @@ mexico[,c(-3, -9)]
 
 #+RESULTS:
 #+begin_example
-   id  name registration_year end_year country                region
+   id  name registration_year year_end country                region
 1   1  org1              2001     2021      MX                Mexico
 2   2  org2              2002     2021      MX Baja California Norte
 3   3  org3              2003     2021      MX                Mexico
@@ -109,8 +109,8 @@ api_to_db(mx_db,
           city = "city",
           country = "country",
           state = "region",
-          start_year = "Registration_year",
-          end_year = "End_year",
+          year_start = "Registration_year",
+          year_end = "year_end",
           db_backup_after = 5)
 #+end_src
 
@@ -168,7 +168,7 @@ When some of the entries are not found we can add them "manually" using ~add_coo
 rown <- 10
 to_add <- data.frame(id = rown,
                      year_start = mexico$registration_year[rown],
-                     year_end = mexico$end_year[rown],
+                     year_end = mexico$year_end[rown],
                      city = "Texcoco",
                      country = mexico$country[rown],
                      region = "",
@@ -450,8 +450,8 @@ base_map(
                     lat = "lat",
                     lon = "lon",
                     cities = "city",
-                    start_year = "year_start",
-                    end_year = "year_end")) +
+                    year_start = "year_start",
+                    year_end = "year_end")) +
   mapic_city_names(.df = mx,
                    list_cities = c("Ciudad de Mexico", "Guadalajara", "Tijuana")) +
   mapic_year_internal(year = 2020,
